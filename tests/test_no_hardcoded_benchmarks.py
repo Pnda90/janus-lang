@@ -67,3 +67,17 @@ def test_all_10_examples_compile_cleanly():
         assert not errs, f"Errori di tipo in {f_name}: {[e.message for e in errs]}"
         py = CodeGenerator().generate(ast)
         assert len(py) > 0, f"Codice Python vuoto generato per {f_name}"
+
+
+def test_all_benchmarks_run_without_error():
+    from benchmarks.tokens import run_benchmark as run_tokens_benchmark
+    from benchmarks.agent_eval import run_benchmark as run_agent_benchmark
+
+    tokens_res = run_tokens_benchmark()
+    assert tokens_res is not None
+    assert "programs" in tokens_res
+    assert len(tokens_res["programs"]) == 10
+
+    agent_res = run_agent_benchmark(dry_run=True)
+    assert agent_res is not None
+    assert agent_res["janus_gbnf"]["perfect_calls"] == 20

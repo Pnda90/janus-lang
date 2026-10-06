@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "commit": "1b26444",
-    "timestamp": "2026-10-06T01:33:37.939761+00:00",
+    "commit": "28a542d",
+    "timestamp": "2026-10-06T11:45:01.388922+00:00",
     "provider": "mock",
     "model": "simulated-mock-v1",
     "is_dry_run": true,
@@ -9,7 +9,7 @@
     "samples_n": 5,
     "max_repairs": 2,
     "num_tasks": 30,
-    "elapsed_seconds": 0.19
+    "elapsed_seconds": 0.27
   },
   "summary": {
     "janus": {

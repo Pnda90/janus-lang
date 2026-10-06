@@ -1,0 +1,536 @@
+{
+  "metadata": {
+    "commit": "28a542d31d33a3294743a8ea0aa3a76eba8fbb61",
+    "timestamp": "2026-10-06T11:45:01.759907+00:00",
+    "is_dry_run": true,
+    "warning": "SIMULATED / DRY-RUN DATA: DO NOT REPORT AS REAL MEASUREMENTS",
+    "num_tasks": 20,
+    "elapsed_seconds": 0.0091
+  },
+  "summary": {
+    "unconstrained": {
+      "syntax_validity_rate": 0.95,
+      "schema_conformance_rate": 0.8,
+      "type_conformance_rate": 0.75,
+      "perfect_execution_rate": 0.75,
+      "total_tokens": 484
+    },
+    "janus_gbnf": {
+      "syntax_validity_rate": 1.0,
+      "schema_conformance_rate": 1.0,
+      "type_conformance_rate": 1.0,
+      "perfect_execution_rate": 1.0,
+      "total_tokens": 411
+    }
+  },
+  "results": {
+    "unconstrained": {
+      "syntax_valid": 19,
+      "schema_conformance": 16,
+      "type_conformance": 15,
+      "perfect_calls": 15,
+      "total_tokens": 484,
+      "details": [
+        {
+          "task_id": "tool_01",
+          "output": "{\"query\": \"PyTorch release notes\", \"max_results\": 5}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 17
+        },
+        {
+          "task_id": "tool_02",
+          "output": "{\"table\": \"users\", \"record_id\": 1042}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 14
+        },
+        {
+          "task_id": "tool_03",
+          "output": "{\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_04",
+          "output": "{\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 26
+        },
+        {
+          "task_id": "tool_05",
+          "output": "{\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024, \"reasoning_step\": \"Checking database cache first\", \"tool_version\": \"1.0.0\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": false,
+            "type_conformance": false,
+            "errors": [
+              "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+            ]
+          },
+          "perfect": false,
+          "tokens": 38
+        },
+        {
+          "task_id": "tool_06",
+          "output": "{\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 21
+        },
+        {
+          "task_id": "tool_07",
+          "output": "{\"symbol\": \"NVDA\", \"currency\": \"USD\", \"trailing\": true, }",
+          "validation": {
+            "syntax_valid": false,
+            "schema_conformance": false,
+            "type_conformance": false,
+            "errors": [
+              "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 55 (char 54)"
+            ]
+          },
+          "perfect": false,
+          "tokens": 20
+        },
+        {
+          "task_id": "tool_08",
+          "output": "{\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 25
+        },
+        {
+          "task_id": "tool_09",
+          "output": "{\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 32
+        },
+        {
+          "task_id": "tool_10",
+          "output": "{\"collection\": \"kb_articles\", \"vector_dim\": \"1536\", \"top_k\": 3}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": false,
+            "errors": [
+              "Field 'vector_dim': expected int, got str"
+            ]
+          },
+          "perfect": false,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_11",
+          "output": "{\"branch\": \"feature/agent-dsl\", \"create_new\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 16
+        },
+        {
+          "task_id": "tool_12",
+          "output": "{\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 24
+        },
+        {
+          "task_id": "tool_13",
+          "output": "{\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 23
+        },
+        {
+          "task_id": "tool_14",
+          "output": "{\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 20
+        },
+        {
+          "task_id": "tool_15",
+          "output": "{\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\", \"reasoning_step\": \"Checking database cache first\", \"tool_version\": \"1.0.0\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": false,
+            "type_conformance": false,
+            "errors": [
+              "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+            ]
+          },
+          "perfect": false,
+          "tokens": 41
+        },
+        {
+          "task_id": "tool_16",
+          "output": "{\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 18
+        },
+        {
+          "task_id": "tool_17",
+          "output": "{\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_18",
+          "output": "{\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_19",
+          "output": "{\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 27
+        },
+        {
+          "task_id": "tool_20",
+          "output": "{\"pid\": 8421, \"force\": true, \"reasoning_step\": \"Checking database cache first\", \"tool_version\": \"1.0.0\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": false,
+            "type_conformance": false,
+            "errors": [
+              "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+            ]
+          },
+          "perfect": false,
+          "tokens": 34
+        }
+      ]
+    },
+    "janus_gbnf": {
+      "syntax_valid": 20,
+      "schema_conformance": 20,
+      "type_conformance": 20,
+      "perfect_calls": 20,
+      "total_tokens": 411,
+      "details": [
+        {
+          "task_id": "tool_01",
+          "output": "{\"query\": \"PyTorch release notes\", \"max_results\": 5}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 17
+        },
+        {
+          "task_id": "tool_02",
+          "output": "{\"table\": \"users\", \"record_id\": 1042}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 14
+        },
+        {
+          "task_id": "tool_03",
+          "output": "{\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_04",
+          "output": "{\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 26
+        },
+        {
+          "task_id": "tool_05",
+          "output": "{\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 16
+        },
+        {
+          "task_id": "tool_06",
+          "output": "{\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 21
+        },
+        {
+          "task_id": "tool_07",
+          "output": "{\"symbol\": \"NVDA\", \"currency\": \"USD\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 13
+        },
+        {
+          "task_id": "tool_08",
+          "output": "{\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 25
+        },
+        {
+          "task_id": "tool_09",
+          "output": "{\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 32
+        },
+        {
+          "task_id": "tool_10",
+          "output": "{\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_11",
+          "output": "{\"branch\": \"feature/agent-dsl\", \"create_new\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 16
+        },
+        {
+          "task_id": "tool_12",
+          "output": "{\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 24
+        },
+        {
+          "task_id": "tool_13",
+          "output": "{\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 23
+        },
+        {
+          "task_id": "tool_14",
+          "output": "{\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 20
+        },
+        {
+          "task_id": "tool_15",
+          "output": "{\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 19
+        },
+        {
+          "task_id": "tool_16",
+          "output": "{\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 18
+        },
+        {
+          "task_id": "tool_17",
+          "output": "{\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_18",
+          "output": "{\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 22
+        },
+        {
+          "task_id": "tool_19",
+          "output": "{\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 27
+        },
+        {
+          "task_id": "tool_20",
+          "output": "{\"pid\": 8421, \"force\": true}",
+          "validation": {
+            "syntax_valid": true,
+            "schema_conformance": true,
+            "type_conformance": true,
+            "errors": []
+          },
+          "perfect": true,
+          "tokens": 12
+        }
+      ]
+    }
+  }
+}

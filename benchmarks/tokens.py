@@ -242,8 +242,8 @@ def run_benchmark():
     total_py_idio_o200k = 0
     total_py_comp_o200k = 0
 
-    # Leggi i 10 esempi reali su disco
-    files = sorted([f for f in os.listdir("examples") if f.endswith(".jn")])
+    # Leggi i 10 esempi reali su disco appartenenti alla suite tensoriale
+    files = sorted([f for f in os.listdir("examples") if f.endswith(".jn") and f.replace(".jn", "") in PYTHON_PROGRAMS])
 
     for fname in files:
         key = fname.replace(".jn", "")
@@ -289,16 +289,16 @@ def run_benchmark():
             "loc": {"janus": j_loc, "py_idiomatic": pi_loc, "py_compact": pc_loc},
             "tokens_cl100k": {"janus": j_tok_cl, "py_idiomatic": pi_tok_cl, "py_compact": pc_tok_cl},
             "tokens_o200k": {"janus": j_tok_o, "py_idiomatic": pi_tok_o, "py_compact": pc_tok_o},
-            "diff_vs_idiomatic_pct_cl100k": round((j_tok_cl - pi_tok_cl) / pi_tok_cl * 100, 2),
-            "diff_vs_compact_pct_cl100k": round((j_tok_cl - pc_tok_cl) / pc_tok_cl * 100, 2),
+            "diff_vs_idiomatic_pct_cl100k": round((j_tok_cl - pi_tok_cl) / pi_tok_cl * 100, 2) if pi_tok_cl > 0 else 0.0,
+            "diff_vs_compact_pct_cl100k": round((j_tok_cl - pc_tok_cl) / pc_tok_cl * 100, 2) if pc_tok_cl > 0 else 0.0,
         })
 
     # Calcolo totali e percentuali complessive
-    total_diff_idio_cl100k_pct = round((total_janus_cl100k - total_py_idio_cl100k) / total_py_idio_cl100k * 100, 2)
-    total_diff_comp_cl100k_pct = round((total_janus_cl100k - total_py_comp_cl100k) / total_py_comp_cl100k * 100, 2)
+    total_diff_idio_cl100k_pct = round((total_janus_cl100k - total_py_idio_cl100k) / total_py_idio_cl100k * 100, 2) if total_py_idio_cl100k > 0 else 0.0
+    total_diff_comp_cl100k_pct = round((total_janus_cl100k - total_py_comp_cl100k) / total_py_comp_cl100k * 100, 2) if total_py_comp_cl100k > 0 else 0.0
 
-    total_diff_idio_o200k_pct = round((total_janus_o200k - total_py_idio_o200k) / total_py_idio_o200k * 100, 2)
-    total_diff_comp_o200k_pct = round((total_janus_o200k - total_py_comp_o200k) / total_py_comp_o200k * 100, 2)
+    total_diff_idio_o200k_pct = round((total_janus_o200k - total_py_idio_o200k) / total_py_idio_o200k * 100, 2) if total_py_idio_o200k > 0 else 0.0
+    total_diff_comp_o200k_pct = round((total_janus_o200k - total_py_comp_o200k) / total_py_comp_o200k * 100, 2) if total_py_comp_o200k > 0 else 0.0
 
     # Break-even cl100k
     saved_per_prog_vs_idio_cl100k = (total_py_idio_cl100k - total_janus_cl100k) / len(results)
