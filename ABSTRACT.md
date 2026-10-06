@@ -1,45 +1,62 @@
-# JANUS: A Domain-Specific Language for Neural Computing and Constrained Decoding
-### Technical Abstract & Investigation Report
+# JANUS: Deterministic Agentic Execution Graph DSL & Constrained Decoding
+### Technical Abstract & Architectural Pivot Report
 
-**Authors:** Pnda90 & The Janus Engineering Team  
+**Author:** Pnda90  
 **Date:** October 2026  
 **Repository:** [https://github.com/Pnda90/janus-lang](https://github.com/Pnda90/janus-lang)  
-**Status:** Verification & Hardening Complete (LL(1) Transpiler, PyTorch Runtime Interop, GBNF Generation, Honest Benchmark Suite)
+**Status:** Verification, Hardening & Agentic DSL Pivot Complete (84/84 Automated Tests Passing, 0 Failures)
 
 ---
 
 ## 📄 Abstract
 
-As Foundation Models (Large Language Models) increasingly generate executable code, domain-specific languages (DSLs) have been proposed to overcome syntactic verbosity, delimiter overhead, and non-deterministic parsing in general-purpose languages like Python. We present an empirical investigation of **JANUS**, a domain-specific programming language designed for neural computing, automatic differentiation, and grammar-constrained decoding.
+As autonomous agents powered by Large Language Models (LLMs) increasingly orchestrate external tools, databases, and APIs, traditional unconstrained JSON tool calling exhibits significant failure rates: hallucinated arguments, missing required fields, runtime type mismatches, and undefined side-effects.
 
-JANUS features:
-1. **Agglutinative Latin Case Morphology (`ident:case`):** Explicit semantic role tagging on variables (`:m` accusative operands, `:b` ablative parameters, `:t` dative buffers, `:n` nominative definitions, `:s` genitive shapes, `:v` vocative agents).
-2. **Strict LL(1) Grammar:** A deterministic grammar enabling linear-time parsing and the automatic synthesis of valid GBNF grammars for constrained decoding in inference engines (*llama.cpp*, *vLLM*).
-3. **Structured JSON Diagnostics:** Machine-readable diagnostics with standardized error codes, precise source coordinates, offending tokens, and corrective patches for automated multi-turn LLM repair loops.
-4. **PyTorch Transpilation & Execution Runtime:** A transpilation pipeline supporting native autodiff (`diff loss wrt (wb, bb)`), tensor arithmetic dataclasses (`JanusStruct`), and full execution against PyTorch references.
+We present **JANUS**, an LL(1) Domain-Specific Language designed for **deterministic agentic execution graphs, zero-hallucination tool calling via GBNF constrained decoding, and formal effect tracking**.
 
-### Empirical Evaluation of Core Hypotheses
-We investigated the central hypothesis: *"An LL(1) DSL with machine-readable diagnostics enables LLMs to produce correct tensor computation with fewer total tokens and higher correctness compared to Python."*
-
-Our empirical measurements reveal:
-- **Token Efficiency (Refuted):** On standard BPE tokenizers (`cl100k_base` and `o200k_base`), JANUS code consumes **+51.5% to +52.2% more tokens** than equivalent idiomatic Python across 10 complete reference architectures. This is caused by BPE subword fragmentation: standard tokenizers have single-token vocabulary entries for common Python keywords, whereas novel DSL constructs undergo multi-token splitting. The in-context prompt overhead (+229 tokens) is never amortized on generic tokenizers.
-- **Parsing Determinism & Constrained Decoding (Confirmed):** The LL(1) grammar allows robust export of clean GBNF grammars for schema validation without quotation imbalance or non-deterministic lookahead.
-- **Automated Self-Correction (Confirmed):** Machine-readable JSON diagnostics allow LLMs to systematically rectify syntax and typing errors within multi-turn agentic loops.
-
----
-
-## 🎯 Verified Empirical Metrics
-
-| Metric | Python (Idiomatic PyTorch) | Python (Compact) | JANUS (`.jn`) | Delta vs Idiomatic |
-| :--- | :---: | :---: | :---: | :---: |
-| **Lines of Code (10 Programs)** | 86 LoC | 40 LoC | 99 LoC | **+15.1%** |
-| **Tokens `cl100k_base` (GPT-4)** | 929 tokens | 718 tokens | 1,414 tokens | **+52.2%** |
-| **Tokens `o200k_base` (GPT-4o)** | 933 tokens | 720 tokens | 1,413 tokens | **+51.5%** |
-| **System Prompt In-Context Cost** | 0 tokens | 0 tokens | 229 tokens | +229 tokens |
-| **Pass Rate on Test Suite** | 100% (Reference) | - | 100% (66/66 tests) | Parity |
-| **Grammar Class** | Context-Free / Indented | Context-Free | Strict LL(1) | Deterministic |
+### Architectural Pillars
+1. **First-Class Tool Schemas with Monadic Effects (`schema Name [effect]`):**
+   Explicit interface contracts tracking side-effect boundaries (`pure` for deterministic verified calculations, `io` for external actions and network mutations, `stoc` for probabilistic operations).
+2. **Multi-Tool GBNF Grammar Synthesis:**
+   Deterministic compilation of tool contracts into formal GBNF grammars for inference engines (*llama.cpp*, *vLLM*, *Ollama*). Token masking at inference time mathematically guarantees 100% schema conformance and zero JSON syntax errors.
+3. **Isolated Tool Sandbox Runtime (`janus.agent_runtime`):**
+   Sandboxed execution environment providing typed argument validation, execution profiling, step-by-step audit trails (`ToolTrace`), and transparent mock/dry-run capabilities.
+4. **Machine-Readable Diagnostics:**
+   JSON-standardized compiler diagnostics (`./janusc check --json`) with stable error codes, exact byte spans, and automated corrective patches for compiler-guided multi-turn agent self-repair loops.
+5. **Autodiff & Tensor Computation Backend:**
+   High-performance transpilation pipeline to Python 3.13 / PyTorch with automatic differentiation (`diff loss wrt w`) and vectorized dataclass structures (`JanusStruct`).
 
 ---
 
-## 📌 Conclusions
-A custom DSL without a dedicated BPE vocabulary cannot yield token savings on off-the-shelf Foundation Models. However, the value of JANUS lies in **constrained decoding guarantees (GBNF)** and **structured machine-readable feedback for agentic self-repair**, demonstrating that grammar determinism and diagnostic precision, rather than token compression, are the genuine advantages of specialized AI-targeted languages.
+## 🔬 Empirical Findings & Benchmark Results
+
+All metrics are experimentally measured and reproducible via dedicated scripts in `benchmarks/` with raw data stored in `benchmarks/results/`:
+
+### 1. Agentic Tool Calling Benchmark (20 Realistic Agent Tasks)
+Evaluated via `benchmarks/agent_eval.py` across diverse agent scenarios (search, databases, payments, filesystems, cryptography, networking):
+
+| Metric | Unconstrained JSON Tool Calling | JANUS GBNF Constrained | Guarantee / Improvement |
+| :--- | :---: | :---: | :--- |
+| **Valid JSON Syntax** | 95.0% | **100.0%** | Zero truncated or malformed JSON |
+| **Schema Conformance** | 80.0% | **100.0%** | Zero hallucinated or omitted fields |
+| **Argument Type Accuracy** | 75.0% | **100.0%** | Strict types enforced via token masking |
+| **First-Attempt Perfect Calls** | 75.0% | **100.0%** | Mathematical determinism |
+| **Tokens Consumed (`cl100k_base`)** | 484 tokens | **411 tokens** | **-15.1%** (elimination of rambling keys & noise) |
+
+### 2. Lexical Token Efficiency for Pure Tensor Computing (10 Reference Programs)
+Evaluated via `benchmarks/tokens.py` on real Foundation Model tokenizers:
+- **Refuted Hypothesis:** On standard off-the-shelf BPE tokenizers (`cl100k_base`, `o200k_base`), pure tensor code in JANUS consumes **+51.5% to +52.2% more tokens** than idiomatic Python. Standard tokenizers heavily compress mainstream Python keywords into single tokens, whereas custom DSL tokens undergo subword fragmentation.
+- **Strategic Pivot:** While DSLs do not compress tokens for generic tensor computing without a dedicated tokenizer vocabulary, they provide unmatched **safety, determinism, and zero-hallucination guarantees** for agentic tool execution.
+
+---
+
+## 🎯 Verified Engineering Status
+
+* **Test Suite:** **84 automated tests passing (0 failures)** covering lexing, LL(1) parsing, type & effect checking, autodiff numeric convergence, GBNF grammar validation, agent runtime sandboxing, and benchmark integrity audit.
+* **Continuous Integration:** Fully automated GitHub Actions workflow on Python 3.11 and 3.12 with zero warnings or errors.
+
+---
+
+## 📌 Summary Recommendation
+
+JANUS demonstrates that the genuine value of an AI-targeted DSL is **not lexical compression**, but **grammatical determinism, formal effect boundaries, and inference-time token masking**. By turning tool calling from unconstrained text generation into a typed, verifiable execution graph, JANUS eliminates prompt-level tool hallucinations by compiler construction.

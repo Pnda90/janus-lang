@@ -99,7 +99,7 @@ Il compilatore applica rigorosamente le regole di purezza monadica:
 | **Tool Sandbox Runtime** | ✅ Implementato | `ToolSandbox`, tracciamento `ToolTrace`, audit trail, modalità dry-run |
 | **Sintetizzatore GBNF** | ✅ Implementato | Generatore multi-tool, validatore sintattico formale, test accept/reject |
 | **Transpiler Python/PyTorch**| ✅ Implementato | Generazione codice per 12 esempi verificati con autodiff reale |
-| **Suite di Test (83 test)** | ✅ Implementato | Regressione B1-B5, test Hypothesis, esecuzione PyTorch CPU, benchmark audit |
+| **Suite di Test (84 test)** | ✅ Implementato | Regressione B1-B5, test Hypothesis, esecuzione PyTorch CPU, benchmark audit |
 | **Backend Nativo MLIR / LLVM** | 📋 Pianificato | Compilazione nativa C/WASM senza interprete Python |
 
 ---
@@ -116,7 +116,7 @@ pip install pytest hypothesis tiktoken requests
 pip install -e .
 ```
 
-### 2. Esecuzione dei Test (83 test verdi)
+### 2. Esecuzione dei Test (84 test verdi)
 ```bash
 pytest -v
 ```

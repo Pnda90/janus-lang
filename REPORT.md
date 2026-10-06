@@ -12,7 +12,7 @@
 
 Il progetto **JANUS** è stato sottoposto a una revisione ingegneristica completa, transitando dallo stato di prototipo con affermazioni non verificate a un compilatore deterministico solido, i cui risultati sono integralmente misurati, riproducibili e tracciati.
 
-Tutti i 5 bug critici (B1–B5) identificati nella baseline sono stati riprodotti con test di regressione dedicati e risolti. La test suite conta **83 test automatici passati con successo (0 fallimenti)** che includono test di proprietà (Hypothesis), esecuzione numerica su CPU PyTorch, validazione formale delle grammatiche GBNF, audit sui dati dei benchmark, verifica sui 12 programmi di riferimento e test del Tool Sandbox Runtime.
+Tutti i 5 bug critici (B1–B5) identificati nella baseline sono stati riprodotti con test di regressione dedicati e risolti. La test suite conta **84 test automatici passati con successo (0 fallimenti)** che includono test di proprietà (Hypothesis), esecuzione numerica su CPU PyTorch, validazione formale delle grammatiche GBNF, audit sui dati dei benchmark, verifica sui 12 programmi di riferimento e test del Tool Sandbox Runtime.
 
 ---
 
@@ -183,4 +183,4 @@ In seguito all'evidenza empirica che ha confutato la compressione lessicale pura
      - **Token Consumati:** 411 token (JANUS GBNF) vs 484 token (Unconstrained JSON) (**-15.1%** grazie all'eliminazione di chiavi e metadati spuri allucinati).
 5. **Esempi di Produzione e Suite Completa (Fase A.5):**
    - Aggiunti [`examples/11_safe_tool_pipeline.jn`](examples/11_safe_tool_pipeline.jn) e [`examples/12_agent_guardrails.jn`](examples/12_agent_guardrails.jn).
-   - Test suite estesa a **83 test automatici passati con successo (0 fallimenti)**.
+   - Test suite estesa a **84 test automatici passati con successo (0 fallimenti)**.
