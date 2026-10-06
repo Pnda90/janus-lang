@@ -1,0 +1,3056 @@
+{
+  "metadata": {
+    "commit": "1b26444",
+    "timestamp": "2026-10-06T01:33:37.939761+00:00",
+    "provider": "mock",
+    "model": "simulated-mock-v1",
+    "is_dry_run": true,
+    "warning": "SIMULATED / DRY-RUN DATA: DO NOT REPORT AS REAL MEASUREMENTS",
+    "samples_n": 5,
+    "max_repairs": 2,
+    "num_tasks": 30,
+    "elapsed_seconds": 0.19
+  },
+  "summary": {
+    "janus": {
+      "mean_pass@1": 1.0,
+      "mean_pass@5": 1.0,
+      "avg_attempts": 1.01,
+      "repair_success_rate": 1.0,
+      "total_tokens": 45726
+    },
+    "python": {
+      "mean_pass@1": 1.0,
+      "mean_pass@5": 1.0,
+      "avg_attempts": 1.01,
+      "repair_success_rate": 1.0,
+      "total_tokens": 17732
+    }
+  },
+  "results": {
+    "janus": {
+      "system_prompt_tokens": 219,
+      "total_tokens_consumed": 45726,
+      "mean_pass@1": 1.0,
+      "mean_pass@5": 1.0,
+      "avg_attempts_to_solve": 1.01,
+      "repair_attempts": 1,
+      "repairs_succeeded": 1,
+      "repair_success_rate": 1.0,
+      "tasks": [
+        {
+          "task_id": "task_01",
+          "task_name": "Linear Regression Forward",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 2,
+              "tokens": 442,
+              "final_code": "fn linreg_fwd(x:m, w:b, b:b) pure {\n    ret x:m * w:b + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 311,
+              "final_code": "fn linreg_fwd(x:m, w:b, b:b) pure {\n    ret x:m * w:b + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 311,
+              "final_code": "fn linreg_fwd(x:m, w:b, b:b) pure {\n    ret x:m * w:b + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 311,
+              "final_code": "fn linreg_fwd(x:m, w:b, b:b) pure {\n    ret x:m * w:b + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 311,
+              "final_code": "fn linreg_fwd(x:m, w:b, b:b) pure {\n    ret x:m * w:b + b:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_02",
+          "task_name": "Mean Squared Error Loss",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 322,
+              "final_code": "fn mse(y_pred:m, y_true:m) pure {\n    ret ((y_pred:m - y_true:m) pow 2) sum / y_pred:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 322,
+              "final_code": "fn mse(y_pred:m, y_true:m) pure {\n    ret ((y_pred:m - y_true:m) pow 2) sum / y_pred:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 322,
+              "final_code": "fn mse(y_pred:m, y_true:m) pure {\n    ret ((y_pred:m - y_true:m) pow 2) sum / y_pred:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 322,
+              "final_code": "fn mse(y_pred:m, y_true:m) pure {\n    ret ((y_pred:m - y_true:m) pow 2) sum / y_pred:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 322,
+              "final_code": "fn mse(y_pred:m, y_true:m) pure {\n    ret ((y_pred:m - y_true:m) pow 2) sum / y_pred:m.len\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_03",
+          "task_name": "ReLU Activation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn relu_op(x:m) pure {\n    ret x:m relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn relu_op(x:m) pure {\n    ret x:m relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn relu_op(x:m) pure {\n    ret x:m relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn relu_op(x:m) pure {\n    ret x:m relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn relu_op(x:m) pure {\n    ret x:m relu\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_04",
+          "task_name": "Matrix Multiplication",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 295,
+              "final_code": "fn mat_mul(a:m, b:b) pure {\n    ret a:m matmul b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 295,
+              "final_code": "fn mat_mul(a:m, b:b) pure {\n    ret a:m matmul b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 295,
+              "final_code": "fn mat_mul(a:m, b:b) pure {\n    ret a:m matmul b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 295,
+              "final_code": "fn mat_mul(a:m, b:b) pure {\n    ret a:m matmul b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 295,
+              "final_code": "fn mat_mul(a:m, b:b) pure {\n    ret a:m matmul b:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_05",
+          "task_name": "Vector Dot Product",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 303,
+              "final_code": "fn dot_product(a:m, b:m) pure {\n    ret (a:m * b:m) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 303,
+              "final_code": "fn dot_product(a:m, b:m) pure {\n    ret (a:m * b:m) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 303,
+              "final_code": "fn dot_product(a:m, b:m) pure {\n    ret (a:m * b:m) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 303,
+              "final_code": "fn dot_product(a:m, b:m) pure {\n    ret (a:m * b:m) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 303,
+              "final_code": "fn dot_product(a:m, b:m) pure {\n    ret (a:m * b:m) sum\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_06",
+          "task_name": "Squared L2 Norm",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn l2_sq(w:m) pure {\n    ret (w:m pow 2) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn l2_sq(w:m) pure {\n    ret (w:m pow 2) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn l2_sq(w:m) pure {\n    ret (w:m pow 2) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn l2_sq(w:m) pure {\n    ret (w:m pow 2) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn l2_sq(w:m) pure {\n    ret (w:m pow 2) sum\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_07",
+          "task_name": "SGD Parameter Step",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 314,
+              "final_code": "fn sgd_step(w:m, g:m, lr: f32) pure {\n    ret w:m - lr * g:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 314,
+              "final_code": "fn sgd_step(w:m, g:m, lr: f32) pure {\n    ret w:m - lr * g:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 314,
+              "final_code": "fn sgd_step(w:m, g:m, lr: f32) pure {\n    ret w:m - lr * g:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 314,
+              "final_code": "fn sgd_step(w:m, g:m, lr: f32) pure {\n    ret w:m - lr * g:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 314,
+              "final_code": "fn sgd_step(w:m, g:m, lr: f32) pure {\n    ret w:m - lr * g:m\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_08",
+          "task_name": "RMSNorm",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 370,
+              "final_code": "fn rmsnorm(x:m, w:b, eps: f32) pure {\n    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last\n    ret (x:m / (variance + eps sqrt)) * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 370,
+              "final_code": "fn rmsnorm(x:m, w:b, eps: f32) pure {\n    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last\n    ret (x:m / (variance + eps sqrt)) * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 370,
+              "final_code": "fn rmsnorm(x:m, w:b, eps: f32) pure {\n    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last\n    ret (x:m / (variance + eps sqrt)) * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 370,
+              "final_code": "fn rmsnorm(x:m, w:b, eps: f32) pure {\n    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last\n    ret (x:m / (variance + eps sqrt)) * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 370,
+              "final_code": "fn rmsnorm(x:m, w:b, eps: f32) pure {\n    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last\n    ret (x:m / (variance + eps sqrt)) * w:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_09",
+          "task_name": "Softmax",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 286,
+              "final_code": "fn softmax_last(x:m) pure {\n    ret x:m smax\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 286,
+              "final_code": "fn softmax_last(x:m) pure {\n    ret x:m smax\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 286,
+              "final_code": "fn softmax_last(x:m) pure {\n    ret x:m smax\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 286,
+              "final_code": "fn softmax_last(x:m) pure {\n    ret x:m smax\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 286,
+              "final_code": "fn softmax_last(x:m) pure {\n    ret x:m smax\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_10",
+          "task_name": "Scaled Dot-Product Attention",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 357,
+              "final_code": "fn scaled_attn(q:m, k:b, v:b, scale: f32) pure {\n    scores = (q:m matmul k:b.trans) * scale\n    weights = scores smax\n    ret weights matmul v:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 357,
+              "final_code": "fn scaled_attn(q:m, k:b, v:b, scale: f32) pure {\n    scores = (q:m matmul k:b.trans) * scale\n    weights = scores smax\n    ret weights matmul v:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 357,
+              "final_code": "fn scaled_attn(q:m, k:b, v:b, scale: f32) pure {\n    scores = (q:m matmul k:b.trans) * scale\n    weights = scores smax\n    ret weights matmul v:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 357,
+              "final_code": "fn scaled_attn(q:m, k:b, v:b, scale: f32) pure {\n    scores = (q:m matmul k:b.trans) * scale\n    weights = scores smax\n    ret weights matmul v:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 357,
+              "final_code": "fn scaled_attn(q:m, k:b, v:b, scale: f32) pure {\n    scores = (q:m matmul k:b.trans) * scale\n    weights = scores smax\n    ret weights matmul v:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_11",
+          "task_name": "Residual Addition",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn res_add(x:m, res:m) pure {\n    ret x:m + res:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn res_add(x:m, res:m) pure {\n    ret x:m + res:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn res_add(x:m, res:m) pure {\n    ret x:m + res:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn res_add(x:m, res:m) pure {\n    ret x:m + res:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn res_add(x:m, res:m) pure {\n    ret x:m + res:m\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_12",
+          "task_name": "Scale Tensor by Constant",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn scale_tensor(x:m, alpha: f32) pure {\n    ret x:m * alpha\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn scale_tensor(x:m, alpha: f32) pure {\n    ret x:m * alpha\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn scale_tensor(x:m, alpha: f32) pure {\n    ret x:m * alpha\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn scale_tensor(x:m, alpha: f32) pure {\n    ret x:m * alpha\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn scale_tensor(x:m, alpha: f32) pure {\n    ret x:m * alpha\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_13",
+          "task_name": "Vector Subtraction",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn vec_sub(a:m, b:m) pure {\n    ret a:m - b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn vec_sub(a:m, b:m) pure {\n    ret a:m - b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn vec_sub(a:m, b:m) pure {\n    ret a:m - b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn vec_sub(a:m, b:m) pure {\n    ret a:m - b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 291,
+              "final_code": "fn vec_sub(a:m, b:m) pure {\n    ret a:m - b:m\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_14",
+          "task_name": "Single Dense Layer with ReLU",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 313,
+              "final_code": "fn mlp_layer(x:m, w:b, b:b) pure {\n    ret (x:m matmul w:b + b:b) relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 313,
+              "final_code": "fn mlp_layer(x:m, w:b, b:b) pure {\n    ret (x:m matmul w:b + b:b) relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 313,
+              "final_code": "fn mlp_layer(x:m, w:b, b:b) pure {\n    ret (x:m matmul w:b + b:b) relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 313,
+              "final_code": "fn mlp_layer(x:m, w:b, b:b) pure {\n    ret (x:m matmul w:b + b:b) relu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 313,
+              "final_code": "fn mlp_layer(x:m, w:b, b:b) pure {\n    ret (x:m matmul w:b + b:b) relu\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_15",
+          "task_name": "Cosine Similarity",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 360,
+              "final_code": "fn cos_sim(u:m, v:m) pure {\n    prod = (u:m * v:m) sum\n    nu = (u:m pow 2) sum sqrt\n    nv = (v:m pow 2) sum sqrt\n    ret prod / (nu * nv)\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 360,
+              "final_code": "fn cos_sim(u:m, v:m) pure {\n    prod = (u:m * v:m) sum\n    nu = (u:m pow 2) sum sqrt\n    nv = (v:m pow 2) sum sqrt\n    ret prod / (nu * nv)\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 360,
+              "final_code": "fn cos_sim(u:m, v:m) pure {\n    prod = (u:m * v:m) sum\n    nu = (u:m pow 2) sum sqrt\n    nv = (v:m pow 2) sum sqrt\n    ret prod / (nu * nv)\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 360,
+              "final_code": "fn cos_sim(u:m, v:m) pure {\n    prod = (u:m * v:m) sum\n    nu = (u:m pow 2) sum sqrt\n    nv = (v:m pow 2) sum sqrt\n    ret prod / (nu * nv)\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 360,
+              "final_code": "fn cos_sim(u:m, v:m) pure {\n    prod = (u:m * v:m) sum\n    nu = (u:m pow 2) sum sqrt\n    nv = (v:m pow 2) sum sqrt\n    ret prod / (nu * nv)\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_16",
+          "task_name": "GELU Activation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn gelu_act(x:m) pure {\n    ret x:m gelu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn gelu_act(x:m) pure {\n    ret x:m gelu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn gelu_act(x:m) pure {\n    ret x:m gelu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn gelu_act(x:m) pure {\n    ret x:m gelu\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn gelu_act(x:m) pure {\n    ret x:m gelu\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_17",
+          "task_name": "Power Operation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn pow_op(x:m, p: f32) pure {\n    ret x:m pow p\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn pow_op(x:m, p: f32) pure {\n    ret x:m pow p\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn pow_op(x:m, p: f32) pure {\n    ret x:m pow p\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn pow_op(x:m, p: f32) pure {\n    ret x:m pow p\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn pow_op(x:m, p: f32) pure {\n    ret x:m pow p\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_18",
+          "task_name": "Square Root",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn sqrt_op(x:m) pure {\n    ret x:m sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn sqrt_op(x:m) pure {\n    ret x:m sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn sqrt_op(x:m) pure {\n    ret x:m sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn sqrt_op(x:m) pure {\n    ret x:m sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 283,
+              "final_code": "fn sqrt_op(x:m) pure {\n    ret x:m sqrt\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_19",
+          "task_name": "Sum All Elements",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 284,
+              "final_code": "fn sum_all(x:m) pure {\n    ret x:m sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 284,
+              "final_code": "fn sum_all(x:m) pure {\n    ret x:m sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 284,
+              "final_code": "fn sum_all(x:m) pure {\n    ret x:m sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 284,
+              "final_code": "fn sum_all(x:m) pure {\n    ret x:m sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 284,
+              "final_code": "fn sum_all(x:m) pure {\n    ret x:m sum\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_20",
+          "task_name": "Weight Decay Step",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 308,
+              "final_code": "fn weight_decay(g:m, w:b, decay: f32) pure {\n    ret g:m + decay * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 308,
+              "final_code": "fn weight_decay(g:m, w:b, decay: f32) pure {\n    ret g:m + decay * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 308,
+              "final_code": "fn weight_decay(g:m, w:b, decay: f32) pure {\n    ret g:m + decay * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 308,
+              "final_code": "fn weight_decay(g:m, w:b, decay: f32) pure {\n    ret g:m + decay * w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 308,
+              "final_code": "fn weight_decay(g:m, w:b, decay: f32) pure {\n    ret g:m + decay * w:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_21",
+          "task_name": "Linear Projection",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn linear_proj(x:m, w:b) pure {\n    ret x:m matmul w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn linear_proj(x:m, w:b) pure {\n    ret x:m matmul w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn linear_proj(x:m, w:b) pure {\n    ret x:m matmul w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn linear_proj(x:m, w:b) pure {\n    ret x:m matmul w:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn linear_proj(x:m, w:b) pure {\n    ret x:m matmul w:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_22",
+          "task_name": "Squared Difference",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 302,
+              "final_code": "fn diff_sq(a:m, b:m) pure {\n    ret (a:m - b:m) pow 2\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 302,
+              "final_code": "fn diff_sq(a:m, b:m) pure {\n    ret (a:m - b:m) pow 2\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 302,
+              "final_code": "fn diff_sq(a:m, b:m) pure {\n    ret (a:m - b:m) pow 2\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 302,
+              "final_code": "fn diff_sq(a:m, b:m) pure {\n    ret (a:m - b:m) pow 2\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 302,
+              "final_code": "fn diff_sq(a:m, b:m) pure {\n    ret (a:m - b:m) pow 2\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_23",
+          "task_name": "1D Mean",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 301,
+              "final_code": "fn mean_1d(x:m) pure {\n    ret x:m sum / x:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 301,
+              "final_code": "fn mean_1d(x:m) pure {\n    ret x:m sum / x:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 301,
+              "final_code": "fn mean_1d(x:m) pure {\n    ret x:m sum / x:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 301,
+              "final_code": "fn mean_1d(x:m) pure {\n    ret x:m sum / x:m.len\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 301,
+              "final_code": "fn mean_1d(x:m) pure {\n    ret x:m sum / x:m.len\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_24",
+          "task_name": "Weighted Sum",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn weighted_sum(x:m, w:b) pure {\n    ret (x:m * w:b) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn weighted_sum(x:m, w:b) pure {\n    ret (x:m * w:b) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn weighted_sum(x:m, w:b) pure {\n    ret (x:m * w:b) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn weighted_sum(x:m, w:b) pure {\n    ret (x:m * w:b) sum\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 294,
+              "final_code": "fn weighted_sum(x:m, w:b) pure {\n    ret (x:m * w:b) sum\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_25",
+          "task_name": "Euclidean Norm (L2)",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 300,
+              "final_code": "fn norm_l2(x:m) pure {\n    ret ((x:m pow 2) sum) sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 300,
+              "final_code": "fn norm_l2(x:m) pure {\n    ret ((x:m pow 2) sum) sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 300,
+              "final_code": "fn norm_l2(x:m) pure {\n    ret ((x:m pow 2) sum) sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 300,
+              "final_code": "fn norm_l2(x:m) pure {\n    ret ((x:m pow 2) sum) sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 300,
+              "final_code": "fn norm_l2(x:m) pure {\n    ret ((x:m pow 2) sum) sqrt\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_26",
+          "task_name": "Sum Last Dimension with Keepdim",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn sum_last_dim(x:m) pure {\n    ret x:m sum ax:b -1 keep:b true\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn sum_last_dim(x:m) pure {\n    ret x:m sum ax:b -1 keep:b true\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn sum_last_dim(x:m) pure {\n    ret x:m sum ax:b -1 keep:b true\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn sum_last_dim(x:m) pure {\n    ret x:m sum ax:b -1 keep:b true\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 296,
+              "final_code": "fn sum_last_dim(x:m) pure {\n    ret x:m sum ax:b -1 keep:b true\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_27",
+          "task_name": "Flatten 2D Tensor",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn flatten_op(x:m) pure {\n    ret x:m flat 1\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn flatten_op(x:m) pure {\n    ret x:m flat 1\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn flatten_op(x:m) pure {\n    ret x:m flat 1\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn flatten_op(x:m) pure {\n    ret x:m flat 1\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn flatten_op(x:m) pure {\n    ret x:m flat 1\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_28",
+          "task_name": "Add Bias Vector",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn add_bias(x:m, b:b) pure {\n    ret x:m + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn add_bias(x:m, b:b) pure {\n    ret x:m + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn add_bias(x:m, b:b) pure {\n    ret x:m + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn add_bias(x:m, b:b) pure {\n    ret x:m + b:b\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn add_bias(x:m, b:b) pure {\n    ret x:m + b:b\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_29",
+          "task_name": "Element-wise Multiplication",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn mul_elem(a:m, b:m) pure {\n    ret a:m * b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn mul_elem(a:m, b:m) pure {\n    ret a:m * b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn mul_elem(a:m, b:m) pure {\n    ret a:m * b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn mul_elem(a:m, b:m) pure {\n    ret a:m * b:m\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 289,
+              "final_code": "fn mul_elem(a:m, b:m) pure {\n    ret a:m * b:m\n}",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_30",
+          "task_name": "Euclidean Distance (Norm of Difference)",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 317,
+              "final_code": "fn norm_diff(a:m, b:m) pure {\n    ret ((a:m - b:m) pow 2) sum sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 317,
+              "final_code": "fn norm_diff(a:m, b:m) pure {\n    ret ((a:m - b:m) pow 2) sum sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 317,
+              "final_code": "fn norm_diff(a:m, b:m) pure {\n    ret ((a:m - b:m) pow 2) sum sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 317,
+              "final_code": "fn norm_diff(a:m, b:m) pure {\n    ret ((a:m - b:m) pow 2) sum sqrt\n}",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 317,
+              "final_code": "fn norm_diff(a:m, b:m) pure {\n    ret ((a:m - b:m) pow 2) sum sqrt\n}",
+              "last_error": null
+            }
+          ]
+        }
+      ]
+    },
+    "python": {
+      "system_prompt_tokens": 45,
+      "total_tokens_consumed": 17732,
+      "mean_pass@1": 1.0,
+      "mean_pass@5": 1.0,
+      "avg_attempts_to_solve": 1.01,
+      "repair_attempts": 1,
+      "repairs_succeeded": 1,
+      "repair_success_rate": 1.0,
+      "tasks": [
+        {
+          "task_id": "task_01",
+          "task_name": "Linear Regression Forward",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 2,
+              "tokens": 164,
+              "final_code": "def linreg_fwd(x, w, b):\n    return x * w + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def linreg_fwd(x, w, b):\n    return x * w + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def linreg_fwd(x, w, b):\n    return x * w + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def linreg_fwd(x, w, b):\n    return x * w + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def linreg_fwd(x, w, b):\n    return x * w + b",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_02",
+          "task_name": "Mean Squared Error Loss",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 136,
+              "final_code": "def mse(y_pred, y_true):\n    return ((y_pred - y_true) ** 2).sum() / len(y_pred)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 136,
+              "final_code": "def mse(y_pred, y_true):\n    return ((y_pred - y_true) ** 2).sum() / len(y_pred)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 136,
+              "final_code": "def mse(y_pred, y_true):\n    return ((y_pred - y_true) ** 2).sum() / len(y_pred)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 136,
+              "final_code": "def mse(y_pred, y_true):\n    return ((y_pred - y_true) ** 2).sum() / len(y_pred)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 136,
+              "final_code": "def mse(y_pred, y_true):\n    return ((y_pred - y_true) ** 2).sum() / len(y_pred)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_03",
+          "task_name": "ReLU Activation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def relu_op(x):\n    return torch.relu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def relu_op(x):\n    return torch.relu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def relu_op(x):\n    return torch.relu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def relu_op(x):\n    return torch.relu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def relu_op(x):\n    return torch.relu(x)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_04",
+          "task_name": "Matrix Multiplication",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def mat_mul(a, b):\n    return a @ b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def mat_mul(a, b):\n    return a @ b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def mat_mul(a, b):\n    return a @ b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def mat_mul(a, b):\n    return a @ b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def mat_mul(a, b):\n    return a @ b",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_05",
+          "task_name": "Vector Dot Product",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def dot_product(a, b):\n    return (a * b).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def dot_product(a, b):\n    return (a * b).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def dot_product(a, b):\n    return (a * b).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def dot_product(a, b):\n    return (a * b).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def dot_product(a, b):\n    return (a * b).sum()",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_06",
+          "task_name": "Squared L2 Norm",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 113,
+              "final_code": "def l2_sq(w):\n    return (w ** 2).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 113,
+              "final_code": "def l2_sq(w):\n    return (w ** 2).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 113,
+              "final_code": "def l2_sq(w):\n    return (w ** 2).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 113,
+              "final_code": "def l2_sq(w):\n    return (w ** 2).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 113,
+              "final_code": "def l2_sq(w):\n    return (w ** 2).sum()",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_07",
+          "task_name": "SGD Parameter Step",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def sgd_step(w, g, lr):\n    return w - lr * g",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def sgd_step(w, g, lr):\n    return w - lr * g",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def sgd_step(w, g, lr):\n    return w - lr * g",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def sgd_step(w, g, lr):\n    return w - lr * g",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def sgd_step(w, g, lr):\n    return w - lr * g",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_08",
+          "task_name": "RMSNorm",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 177,
+              "final_code": "def rmsnorm(x, w, eps):\n    v = (x ** 2).sum(dim=-1, keepdim=True) / x.size(-1)\n    return (x / torch.sqrt(v + eps)) * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 177,
+              "final_code": "def rmsnorm(x, w, eps):\n    v = (x ** 2).sum(dim=-1, keepdim=True) / x.size(-1)\n    return (x / torch.sqrt(v + eps)) * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 177,
+              "final_code": "def rmsnorm(x, w, eps):\n    v = (x ** 2).sum(dim=-1, keepdim=True) / x.size(-1)\n    return (x / torch.sqrt(v + eps)) * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 177,
+              "final_code": "def rmsnorm(x, w, eps):\n    v = (x ** 2).sum(dim=-1, keepdim=True) / x.size(-1)\n    return (x / torch.sqrt(v + eps)) * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 177,
+              "final_code": "def rmsnorm(x, w, eps):\n    v = (x ** 2).sum(dim=-1, keepdim=True) / x.size(-1)\n    return (x / torch.sqrt(v + eps)) * w",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_09",
+          "task_name": "Softmax",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def softmax_last(x):\n    return torch.softmax(x, dim=-1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def softmax_last(x):\n    return torch.softmax(x, dim=-1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def softmax_last(x):\n    return torch.softmax(x, dim=-1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def softmax_last(x):\n    return torch.softmax(x, dim=-1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def softmax_last(x):\n    return torch.softmax(x, dim=-1)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_10",
+          "task_name": "Scaled Dot-Product Attention",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 165,
+              "final_code": "def scaled_attn(q, k, v, scale):\n    scores = (q @ k.transpose(-2, -1)) * scale\n    return torch.softmax(scores, dim=-1) @ v",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 165,
+              "final_code": "def scaled_attn(q, k, v, scale):\n    scores = (q @ k.transpose(-2, -1)) * scale\n    return torch.softmax(scores, dim=-1) @ v",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 165,
+              "final_code": "def scaled_attn(q, k, v, scale):\n    scores = (q @ k.transpose(-2, -1)) * scale\n    return torch.softmax(scores, dim=-1) @ v",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 165,
+              "final_code": "def scaled_attn(q, k, v, scale):\n    scores = (q @ k.transpose(-2, -1)) * scale\n    return torch.softmax(scores, dim=-1) @ v",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 165,
+              "final_code": "def scaled_attn(q, k, v, scale):\n    scores = (q @ k.transpose(-2, -1)) * scale\n    return torch.softmax(scores, dim=-1) @ v",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_11",
+          "task_name": "Residual Addition",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def res_add(x, res):\n    return x + res",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def res_add(x, res):\n    return x + res",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def res_add(x, res):\n    return x + res",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def res_add(x, res):\n    return x + res",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def res_add(x, res):\n    return x + res",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_12",
+          "task_name": "Scale Tensor by Constant",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def scale_tensor(x, alpha):\n    return x * alpha",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def scale_tensor(x, alpha):\n    return x * alpha",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def scale_tensor(x, alpha):\n    return x * alpha",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def scale_tensor(x, alpha):\n    return x * alpha",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def scale_tensor(x, alpha):\n    return x * alpha",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_13",
+          "task_name": "Vector Subtraction",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def vec_sub(a, b):\n    return a - b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def vec_sub(a, b):\n    return a - b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def vec_sub(a, b):\n    return a - b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def vec_sub(a, b):\n    return a - b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 105,
+              "final_code": "def vec_sub(a, b):\n    return a - b",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_14",
+          "task_name": "Single Dense Layer with ReLU",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def mlp_layer(x, w, b):\n    return torch.relu(x @ w + b)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def mlp_layer(x, w, b):\n    return torch.relu(x @ w + b)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def mlp_layer(x, w, b):\n    return torch.relu(x @ w + b)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def mlp_layer(x, w, b):\n    return torch.relu(x @ w + b)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 122,
+              "final_code": "def mlp_layer(x, w, b):\n    return torch.relu(x @ w + b)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_15",
+          "task_name": "Cosine Similarity",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 159,
+              "final_code": "def cos_sim(u, v):\n    return (u * v).sum() / (torch.sqrt((u**2).sum()) * torch.sqrt((v**2).sum()))",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 159,
+              "final_code": "def cos_sim(u, v):\n    return (u * v).sum() / (torch.sqrt((u**2).sum()) * torch.sqrt((v**2).sum()))",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 159,
+              "final_code": "def cos_sim(u, v):\n    return (u * v).sum() / (torch.sqrt((u**2).sum()) * torch.sqrt((v**2).sum()))",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 159,
+              "final_code": "def cos_sim(u, v):\n    return (u * v).sum() / (torch.sqrt((u**2).sum()) * torch.sqrt((v**2).sum()))",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 159,
+              "final_code": "def cos_sim(u, v):\n    return (u * v).sum() / (torch.sqrt((u**2).sum()) * torch.sqrt((v**2).sum()))",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_16",
+          "task_name": "GELU Activation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def gelu_act(x):\n    import torch.nn.functional as F\n    return F.gelu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def gelu_act(x):\n    import torch.nn.functional as F\n    return F.gelu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def gelu_act(x):\n    import torch.nn.functional as F\n    return F.gelu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def gelu_act(x):\n    import torch.nn.functional as F\n    return F.gelu(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def gelu_act(x):\n    import torch.nn.functional as F\n    return F.gelu(x)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_17",
+          "task_name": "Power Operation",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 109,
+              "final_code": "def pow_op(x, p):\n    return torch.pow(x, p)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 109,
+              "final_code": "def pow_op(x, p):\n    return torch.pow(x, p)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 109,
+              "final_code": "def pow_op(x, p):\n    return torch.pow(x, p)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 109,
+              "final_code": "def pow_op(x, p):\n    return torch.pow(x, p)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 109,
+              "final_code": "def pow_op(x, p):\n    return torch.pow(x, p)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_18",
+          "task_name": "Square Root",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def sqrt_op(x):\n    return torch.sqrt(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def sqrt_op(x):\n    return torch.sqrt(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def sqrt_op(x):\n    return torch.sqrt(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def sqrt_op(x):\n    return torch.sqrt(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 101,
+              "final_code": "def sqrt_op(x):\n    return torch.sqrt(x)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_19",
+          "task_name": "Sum All Elements",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 102,
+              "final_code": "def sum_all(x):\n    return torch.sum(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 102,
+              "final_code": "def sum_all(x):\n    return torch.sum(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 102,
+              "final_code": "def sum_all(x):\n    return torch.sum(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 102,
+              "final_code": "def sum_all(x):\n    return torch.sum(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 102,
+              "final_code": "def sum_all(x):\n    return torch.sum(x)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_20",
+          "task_name": "Weight Decay Step",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def weight_decay(g, w, decay):\n    return g + decay * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def weight_decay(g, w, decay):\n    return g + decay * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def weight_decay(g, w, decay):\n    return g + decay * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def weight_decay(g, w, decay):\n    return g + decay * w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def weight_decay(g, w, decay):\n    return g + decay * w",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_21",
+          "task_name": "Linear Projection",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def linear_proj(x, w):\n    return x @ w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def linear_proj(x, w):\n    return x @ w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def linear_proj(x, w):\n    return x @ w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def linear_proj(x, w):\n    return x @ w",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 107,
+              "final_code": "def linear_proj(x, w):\n    return x @ w",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_22",
+          "task_name": "Squared Difference",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def diff_sq(a, b):\n    return (a - b) ** 2",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def diff_sq(a, b):\n    return (a - b) ** 2",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def diff_sq(a, b):\n    return (a - b) ** 2",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def diff_sq(a, b):\n    return (a - b) ** 2",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 116,
+              "final_code": "def diff_sq(a, b):\n    return (a - b) ** 2",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_23",
+          "task_name": "1D Mean",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 118,
+              "final_code": "def mean_1d(x):\n    return x.sum() / len(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 118,
+              "final_code": "def mean_1d(x):\n    return x.sum() / len(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 118,
+              "final_code": "def mean_1d(x):\n    return x.sum() / len(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 118,
+              "final_code": "def mean_1d(x):\n    return x.sum() / len(x)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 118,
+              "final_code": "def mean_1d(x):\n    return x.sum() / len(x)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_24",
+          "task_name": "Weighted Sum",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def weighted_sum(x, w):\n    return (x * w).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def weighted_sum(x, w):\n    return (x * w).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def weighted_sum(x, w):\n    return (x * w).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def weighted_sum(x, w):\n    return (x * w).sum()",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 108,
+              "final_code": "def weighted_sum(x, w):\n    return (x * w).sum()",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_25",
+          "task_name": "Euclidean Norm (L2)",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def norm_l2(x):\n    return torch.sqrt((x ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def norm_l2(x):\n    return torch.sqrt((x ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def norm_l2(x):\n    return torch.sqrt((x ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def norm_l2(x):\n    return torch.sqrt((x ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 117,
+              "final_code": "def norm_l2(x):\n    return torch.sqrt((x ** 2).sum())",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_26",
+          "task_name": "Sum Last Dimension with Keepdim",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def sum_last_dim(x):\n    return torch.sum(x, dim=-1, keepdim=True)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def sum_last_dim(x):\n    return torch.sum(x, dim=-1, keepdim=True)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def sum_last_dim(x):\n    return torch.sum(x, dim=-1, keepdim=True)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def sum_last_dim(x):\n    return torch.sum(x, dim=-1, keepdim=True)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 115,
+              "final_code": "def sum_last_dim(x):\n    return torch.sum(x, dim=-1, keepdim=True)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_27",
+          "task_name": "Flatten 2D Tensor",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 110,
+              "final_code": "def flatten_op(x):\n    return torch.flatten(x, start_dim=1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 110,
+              "final_code": "def flatten_op(x):\n    return torch.flatten(x, start_dim=1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 110,
+              "final_code": "def flatten_op(x):\n    return torch.flatten(x, start_dim=1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 110,
+              "final_code": "def flatten_op(x):\n    return torch.flatten(x, start_dim=1)",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 110,
+              "final_code": "def flatten_op(x):\n    return torch.flatten(x, start_dim=1)",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_28",
+          "task_name": "Add Bias Vector",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def add_bias(x, b):\n    return x + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def add_bias(x, b):\n    return x + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def add_bias(x, b):\n    return x + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def add_bias(x, b):\n    return x + b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def add_bias(x, b):\n    return x + b",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_29",
+          "task_name": "Element-wise Multiplication",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def mul_elem(a, b):\n    return a * b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def mul_elem(a, b):\n    return a * b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def mul_elem(a, b):\n    return a * b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def mul_elem(a, b):\n    return a * b",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 103,
+              "final_code": "def mul_elem(a, b):\n    return a * b",
+              "last_error": null
+            }
+          ]
+        },
+        {
+          "task_id": "task_30",
+          "task_name": "Euclidean Distance (Norm of Difference)",
+          "correct_samples": 5,
+          "total_samples": 5,
+          "pass@1": 1.0,
+          "pass@5": 1.0,
+          "samples": [
+            {
+              "sample_idx": 0,
+              "success": true,
+              "attempts": 1,
+              "tokens": 132,
+              "final_code": "def norm_diff(a, b):\n    return torch.sqrt(((a - b) ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 1,
+              "success": true,
+              "attempts": 1,
+              "tokens": 132,
+              "final_code": "def norm_diff(a, b):\n    return torch.sqrt(((a - b) ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 2,
+              "success": true,
+              "attempts": 1,
+              "tokens": 132,
+              "final_code": "def norm_diff(a, b):\n    return torch.sqrt(((a - b) ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 3,
+              "success": true,
+              "attempts": 1,
+              "tokens": 132,
+              "final_code": "def norm_diff(a, b):\n    return torch.sqrt(((a - b) ** 2).sum())",
+              "last_error": null
+            },
+            {
+              "sample_idx": 4,
+              "success": true,
+              "attempts": 1,
+              "tokens": 132,
+              "final_code": "def norm_diff(a, b):\n    return torch.sqrt(((a - b) ** 2).sum())",
+              "last_error": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

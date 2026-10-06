@@ -1,0 +1,251 @@
+{
+  "metadata": {
+    "commit": "1b26444",
+    "date": "2026-10-06T01:26:25.383921+00:00",
+    "tokenizers": [
+      "tiktoken/cl100k_base",
+      "tiktoken/o200k_base"
+    ],
+    "transformers_llama_qwen": "non scaricato / saltato (richiede download pesi/vocabolario offline)"
+  },
+  "system_prompt": {
+    "tokens_cl100k": 229,
+    "tokens_o200k": 229,
+    "text": "You are an expert compiler and programmer for JANUS (.jn), a domain-specific language for neural computing.\nSyntax:\n- Functions: `fn name(params) effect { body }` where effect is `pure`, `io`, or `stoc`.\n- Morphological cases: `:m` (accusative operand), `:b` (base parameter), `:t` (transitive buffer), `:n` (nominative assignment), `:s` (structural shape), `:v` (vocative agent).\n- Pipeline expressions: chain postfix operators `matmul`, `relu`, `smax`, `sqrt`, `pow`, `sum`, `conv2d`, `pool max`.\n- Autodiff: `g = diff loss:n wrt target:b`.\n- State mutation: `mut x = ...`.\n- Control flow: `for i in start..end { ... }`, `ret val`.\n- Data types: `type Name { field: type }`, `schema Name { input } -> { output }`.\nAlways write correct, idiomatic JANUS code according to this specification."
+  },
+  "totals": {
+    "loc": {
+      "janus": 99,
+      "py_idiomatic": 86,
+      "py_compact": 40
+    },
+    "tokens_cl100k": {
+      "janus": 1414,
+      "py_idiomatic": 929,
+      "py_compact": 718,
+      "diff_vs_idiomatic_pct": 52.21,
+      "diff_vs_compact_pct": 96.94,
+      "breakeven_vs_idiomatic_programs": null,
+      "breakeven_vs_compact_programs": null
+    },
+    "tokens_o200k": {
+      "janus": 1413,
+      "py_idiomatic": 933,
+      "py_compact": 720,
+      "diff_vs_idiomatic_pct": 51.45,
+      "diff_vs_compact_pct": 96.25
+    }
+  },
+  "programs": [
+    {
+      "key": "01_linreg",
+      "title": "1. Linear Regression (LinReg + SGD)",
+      "loc": {
+        "janus": 12,
+        "py_idiomatic": 14,
+        "py_compact": 7
+      },
+      "tokens_cl100k": {
+        "janus": 168,
+        "py_idiomatic": 125,
+        "py_compact": 119
+      },
+      "tokens_o200k": {
+        "janus": 167,
+        "py_idiomatic": 127,
+        "py_compact": 120
+      },
+      "diff_vs_idiomatic_pct_cl100k": 34.4,
+      "diff_vs_compact_pct_cl100k": 41.18
+    },
+    {
+      "key": "02_mlp",
+      "title": "2. Multi-Layer Perceptron (MLP)",
+      "loc": {
+        "janus": 12,
+        "py_idiomatic": 15,
+        "py_compact": 5
+      },
+      "tokens_cl100k": {
+        "janus": 191,
+        "py_idiomatic": 149,
+        "py_compact": 127
+      },
+      "tokens_o200k": {
+        "janus": 195,
+        "py_idiomatic": 151,
+        "py_compact": 127
+      },
+      "diff_vs_idiomatic_pct_cl100k": 28.19,
+      "diff_vs_compact_pct_cl100k": 50.39
+    },
+    {
+      "key": "03_attention",
+      "title": "3. Scaled Multi-Head Attention",
+      "loc": {
+        "janus": 4,
+        "py_idiomatic": 6,
+        "py_compact": 2
+      },
+      "tokens_cl100k": {
+        "janus": 71,
+        "py_idiomatic": 69,
+        "py_compact": 38
+      },
+      "tokens_o200k": {
+        "janus": 70,
+        "py_idiomatic": 69,
+        "py_compact": 37
+      },
+      "diff_vs_idiomatic_pct_cl100k": 2.9,
+      "diff_vs_compact_pct_cl100k": 86.84
+    },
+    {
+      "key": "04_training_loop",
+      "title": "4. Training Loop (Batched)",
+      "loc": {
+        "janus": 20,
+        "py_idiomatic": 7,
+        "py_compact": 4
+      },
+      "tokens_cl100k": {
+        "janus": 255,
+        "py_idiomatic": 85,
+        "py_compact": 68
+      },
+      "tokens_o200k": {
+        "janus": 254,
+        "py_idiomatic": 85,
+        "py_compact": 68
+      },
+      "diff_vs_idiomatic_pct_cl100k": 200.0,
+      "diff_vs_compact_pct_cl100k": 275.0
+    },
+    {
+      "key": "05_conv2d",
+      "title": "5. Conv2D Feature Extractor",
+      "loc": {
+        "janus": 3,
+        "py_idiomatic": 5,
+        "py_compact": 2
+      },
+      "tokens_cl100k": {
+        "janus": 84,
+        "py_idiomatic": 64,
+        "py_compact": 44
+      },
+      "tokens_o200k": {
+        "janus": 85,
+        "py_idiomatic": 65,
+        "py_compact": 45
+      },
+      "diff_vs_idiomatic_pct_cl100k": 31.25,
+      "diff_vs_compact_pct_cl100k": 90.91
+    },
+    {
+      "key": "06_rmsnorm",
+      "title": "6. Root Mean Square Normalization",
+      "loc": {
+        "janus": 4,
+        "py_idiomatic": 8,
+        "py_compact": 2
+      },
+      "tokens_cl100k": {
+        "janus": 95,
+        "py_idiomatic": 85,
+        "py_compact": 41
+      },
+      "tokens_o200k": {
+        "janus": 94,
+        "py_idiomatic": 87,
+        "py_compact": 41
+      },
+      "diff_vs_idiomatic_pct_cl100k": 11.76,
+      "diff_vs_compact_pct_cl100k": 131.71
+    },
+    {
+      "key": "07_diffusion",
+      "title": "7. Diffusion Denoising Step",
+      "loc": {
+        "janus": 7,
+        "py_idiomatic": 7,
+        "py_compact": 5
+      },
+      "tokens_cl100k": {
+        "janus": 176,
+        "py_idiomatic": 133,
+        "py_compact": 122
+      },
+      "tokens_o200k": {
+        "janus": 177,
+        "py_idiomatic": 133,
+        "py_compact": 122
+      },
+      "diff_vs_idiomatic_pct_cl100k": 32.33,
+      "diff_vs_compact_pct_cl100k": 44.26
+    },
+    {
+      "key": "08_rag_pipeline",
+      "title": "8. RAG Agent Pipeline",
+      "loc": {
+        "janus": 13,
+        "py_idiomatic": 8,
+        "py_compact": 3
+      },
+      "tokens_cl100k": {
+        "janus": 132,
+        "py_idiomatic": 81,
+        "py_compact": 44
+      },
+      "tokens_o200k": {
+        "janus": 130,
+        "py_idiomatic": 79,
+        "py_compact": 42
+      },
+      "diff_vs_idiomatic_pct_cl100k": 62.96,
+      "diff_vs_compact_pct_cl100k": 200.0
+    },
+    {
+      "key": "09_react_agent",
+      "title": "9. Autonomous ReAct Agent",
+      "loc": {
+        "janus": 18,
+        "py_idiomatic": 11,
+        "py_compact": 7
+      },
+      "tokens_cl100k": {
+        "janus": 146,
+        "py_idiomatic": 95,
+        "py_compact": 74
+      },
+      "tokens_o200k": {
+        "janus": 146,
+        "py_idiomatic": 94,
+        "py_compact": 74
+      },
+      "diff_vs_idiomatic_pct_cl100k": 53.68,
+      "diff_vs_compact_pct_cl100k": 97.3
+    },
+    {
+      "key": "10_gpu_saxpy",
+      "title": "10. Parallel GPU SAXPY",
+      "loc": {
+        "janus": 6,
+        "py_idiomatic": 5,
+        "py_compact": 3
+      },
+      "tokens_cl100k": {
+        "janus": 96,
+        "py_idiomatic": 43,
+        "py_compact": 41
+      },
+      "tokens_o200k": {
+        "janus": 95,
+        "py_idiomatic": 43,
+        "py_compact": 44
+      },
+      "diff_vs_idiomatic_pct_cl100k": 123.26,
+      "diff_vs_compact_pct_cl100k": 134.15
+    }
+  ]
+}
