@@ -15,16 +15,25 @@ class GBNFGenerator:
         pass
 
     def generate_for_schema(self, schema: SchemaDecl) -> str:
+        field_parts = []
+        for o in schema.outputs:
+            type_rule = self._map_type(o.type_expr)
+            field_parts.append(f'"\\"{o.name}\\": " ws {type_rule}')
+
+        fields_str = ' "," ws '.join(field_parts)
+        if fields_str:
+            output_rule = f'{schema.name}Output ::= "{{" ws "\\"status\\": \\"ok\\"," ws {fields_str} ws "}}"'
+        else:
+            output_rule = f'{schema.name}Output ::= "{{" ws "\\"status\\": \\"ok\\"" ws "}}"'
+
         lines = [
             f"# GBNF Grammar for JANUS Schema: {schema.name}",
             f"root ::= {schema.name}Output",
             "",
-            f'{schema.name}Output ::= "{{" ws "\"status\":" ws "\"ok\"" "," ws ' + 
-            f'{"\"" + ",\\\" ws \\\"".join(f"\\\"{o.name}\\\":" + f" ws {self._map_type(o.type_expr)}" for o in schema.outputs)}' + 
-            f' ws "}}"',
+            output_rule,
             "",
             'ws ::= [ \\t\\n\\r]*',
-            'string ::= "\\"" [^"\\\\]* "\\""',
+            'string ::= ["] [^"\\\\]* ["]',
             'number ::= ("-"? [0-9]+ ("." [0-9]+)?)',
             'boolean ::= ("true" | "false")',
             'string_list ::= "[" ws (string ("," ws string)*)? ws "]"',
@@ -41,5 +50,7 @@ class GBNFGenerator:
             elif type_expr.name == "bool":
                 return "boolean"
         elif isinstance(type_expr, TensorType):
+            if type_expr.dtype == "str":
+                return "string_list"
             return "number_list"
         return "string"
