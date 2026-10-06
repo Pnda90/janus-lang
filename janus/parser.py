@@ -48,11 +48,14 @@ class Parser:
             return tok
         raise ParseError(err_msg, tok)
 
-    def _expect_ident(self, err_msg: str) -> Token:
+    def _expect_ident(self, err_msg: str, allow_keywords: bool = False) -> Token:
         tok = self._current()
         if tok.type in (TokenType.IDENT, TokenType.CASE_IDENT):
             self.cursor += 1
             return tok
+        if allow_keywords and (tok.type.name.startswith("KW_") or tok.type.name.startswith("OP_") or tok.type.name.startswith("EFF_")):
+            self.cursor += 1
+            return Token(TokenType.IDENT, tok.value, tok.line, tok.col, tok.length)
         raise ParseError(err_msg, tok)
 
     def parse(self) -> Program:
@@ -84,7 +87,7 @@ class Parser:
         self._expect(TokenType.LBRACE, "Atteso '{' nella dichiarazione type")
         fields = []
         while not self._match(TokenType.RBRACE):
-            fname = self._expect_ident("Atteso nome campo")
+            fname = self._expect_ident("Atteso nome campo", allow_keywords=True)
             case = fname.case if fname.type == TokenType.CASE_IDENT else None
             
             ftype = None
@@ -102,14 +105,17 @@ class Parser:
         kw = self._expect(TokenType.KW_SCHEMA, "Atteso 'schema'")
         name_tok = self._expect_ident("Atteso nome schema")
         effect = "io"
+        has_bracket = self._match(TokenType.LBRACKET)
         if self._current().type in (TokenType.EFF_PURE, TokenType.EFF_IO, TokenType.EFF_STOC):
             effect = self._current().value
             self.cursor += 1
+        if has_bracket:
+            self._expect(TokenType.RBRACKET, "Atteso ']' dopo l'effetto dello schema")
 
         self._expect(TokenType.LBRACE, "Atteso '{'")
         inputs = []
         while not self._match(TokenType.RBRACE):
-            pname = self._expect_ident("Atteso nome parametro schema")
+            pname = self._expect_ident("Atteso nome parametro schema", allow_keywords=True)
             self._expect(TokenType.COLON, "Atteso ':'")
             ptype = self._parse_type_expr()
             pdefault = None
@@ -122,7 +128,7 @@ class Parser:
         self._expect(TokenType.LBRACE, "Atteso '{' per output schema")
         outputs = []
         while not self._match(TokenType.RBRACE):
-            oname = self._expect_ident("Atteso nome campo output")
+            oname = self._expect_ident("Atteso nome campo output", allow_keywords=True)
             self._expect(TokenType.COLON, "Atteso ':'")
             otype = self._parse_type_expr()
             outputs.append(FieldDecl(name=oname.value, type_expr=otype, line=oname.line, col=oname.col))
