@@ -26,6 +26,7 @@ class TokenType(Enum):
     KW_GPU = auto()
     KW_CALL = auto()
     KW_AGENTV = auto()
+    KW_TOOL = auto()
     KW_WRT = auto()
 
     # Effetti

@@ -19,9 +19,11 @@ KEYWORDS = {
     "trans", "diff", "alloc", "copy", "free", "rand", "true", "false"
 }
 
+import keyword
+
 # Strategy generating valid lowercase identifier base names
 valid_base_names = st.from_regex(r"[a-z][a-z0-9_]{0,8}", fullmatch=True).filter(
-    lambda s: s not in KEYWORDS
+    lambda s: s not in KEYWORDS and not keyword.iskeyword(s)
 )
 
 case_suffixes = st.sampled_from(["m", "b", "t", "n", "s", "v"])

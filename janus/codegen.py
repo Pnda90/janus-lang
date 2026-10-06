@@ -3,12 +3,13 @@ Code Generator / Transpiler per JANUS:
 Traduce l'AST di JANUS in codice Python 3.13 / PyTorch / NumPy ad alte prestazioni.
 """
 
+import keyword
 from typing import List, Optional, Any
 from janus.ast_nodes import (
     Program, ASTNode, TypeDecl, FieldDecl, SchemaDecl, FnDecl, KernelDecl, Param,
     Stmt, BindingStmt, RetStmt, IfStmt, ForStmt, LoopStmt, BreakStmt, ContinueStmt, ExprStmt,
     Expr, LiteralExpr, IdentExpr, CaseIdentExpr, BinaryExpr, UnaryExpr,
-    CaseArg, PipeStep, PipelineExpr, CallExpr, AgentCallExpr, DiffExpr,
+    CaseArg, PipeStep, PipelineExpr, CallExpr, AgentCallExpr, ToolCallExpr, DiffExpr,
     IndexExpr, FieldAccessExpr, TupleExpr, ListExpr, RangeExpr
 )
 
@@ -16,6 +17,11 @@ class CodeGenerator:
     def __init__(self, target: str = "pytorch"):
         self.target = target
         self.indent_level = 0
+
+    def _py_ident(self, name: str) -> str:
+        if keyword.iskeyword(name):
+            return f"{name}_"
+        return name
 
     def _indent(self) -> str:
         return "    " * self.indent_level
@@ -45,6 +51,22 @@ class CodeGenerator:
             "",
             "def _janus_agent_call(agent, prompt, tool=None):",
             "    return f'[Agent {agent}: prompt=\"{prompt}\"]'",
+            "",
+            "_JANUS_TOOL_REGISTRY = {}",
+            "",
+            "def register_janus_tool(name):",
+            "    def decorator(fn):",
+            "        _JANUS_TOOL_REGISTRY[name] = fn",
+            "        return fn",
+            "    return decorator",
+            "",
+            "def _janus_call_tool(tool_name, *args, **kwargs):",
+            "    if tool_name in _JANUS_TOOL_REGISTRY:",
+            "        return _JANUS_TOOL_REGISTRY[tool_name](*args, **kwargs)",
+            "    out_cls = globals().get(f'{tool_name}Output')",
+            "    if out_cls:",
+            "        return out_cls(**{k: v for k, v in kwargs.items() if hasattr(out_cls, '__dataclass_fields__') and k in out_cls.__dataclass_fields__})",
+            "    return {'tool': tool_name, 'args': kwargs, 'status': 'simulated'}",
             "",
             "class JanusStruct:",
             "    def __sub__(self, other):",
@@ -409,6 +431,12 @@ class CodeGenerator:
             prompt_s = self._gen_expr(expr.prompt)
             tool_s = self._gen_expr(expr.tool) if expr.tool else "None"
             return f"_janus_agent_call(agent='{expr.agent_name}', prompt={prompt_s}, tool={tool_s})"
+
+        elif isinstance(expr, ToolCallExpr):
+            kwargs_list = [f"{k}={self._gen_expr(v)}" for k, v in expr.named_args.items()]
+            pos_list = [self._gen_expr(v) for v in expr.positional_args]
+            all_args = ", ".join([f"'{expr.tool_name}'"] + pos_list + kwargs_list)
+            return f"_janus_call_tool({all_args})"
 
         elif isinstance(expr, PipelineExpr):
             current = self._gen_expr(expr.head)

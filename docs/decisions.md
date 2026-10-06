@@ -77,3 +77,34 @@ I vecchi file di benchmark nel repository (`bench_10_programs.py`, `test_hypothe
 ### Decisione
 Rimuovere i 10 script obsoleti e stabilire `benchmarks/tokens.py` e `benchmarks/llm_eval.py` come unici punti di riferimento per la misurazione empirica, tracciando i risultati grezzi esclusivamente in `benchmarks/results/*.json`. In CI, il test `tests/test_no_hardcoded_benchmarks.py` verifica in modo continuativo l'assenza di pattern di dati inventati o hardcoded.
 
+## ADR 004: Pivot Architetturale verso Agentic Execution Graph DSL e Safe Tool Orchestration
+
+### Data
+2026-10-06
+
+### Contesto
+I risultati empirici delle Fasi 0–5 hanno dimostrato che:
+1. Come alternativa generica a PyTorch per calcolo tensoriale puro, un transpiler a Python è penalizzato dalla tokenizzazione BPE (+52% di token rispetto a Python) e non offre vantaggi di velocità d'esecuzione a runtime.
+2. I veri differenziatori ingegneristici di JANUS sono:
+   - La grammatica deterministica **LL(1)** che abilita la **decodifica vincolata (GBNF)** a zero errori sintattici su motori di inferenza locali (*llama.cpp*, *Ollama*, *vLLM*).
+   - La **diagnostica JSON-first** con coordinate precise e patch correttive che velocizza l'autoriparazione degli agenti.
+   - L'algebra degli **effetti monadici** (`pure`, `io`, `stoc`) che garantisce la separazione formale tra calcolo deterministico e chiamate con effetti collaterali (I/O, tool di rete).
+3. Nel settore degli agenti AI (LangChain, CrewAI, OpenAI tool-calling), i problemi critici aperti sono: allucinazioni di schemi JSON, chiamate di tool con parametri e tipi incompatibili, assenza di controllo sui side-effect e rischi di sicurezza da esecuzione di codice Python arbitrario.
+
+### Alternative Considerate
+1. **Mantenere il focus su calcolo tensoriale puro contro PyTorch:**
+   - *Contro:* Nessun vantaggio competitivo reale rispetto all'ecosistema Python nativo; gli sviluppatori non abbandoneranno PyTorch per una sintassi proprietaria che compila comunque in PyTorch.
+2. **Riscrivere l'intero compilatore con backend nativo MLIR/C/WASM:**
+   - *Pro:* Indipendenza dal runtime Python.
+   - *Contro:* Sforzo ingegneristico sproporzionato (anni-uomo) che non risolve il problema primario degli agenti AI contemporanei.
+3. **Pivot verso Agentic Execution Graph DSL (Road A):**
+   - *Pro:* Capitalizza interamente l'infrastruttura già creata (parser LL(1), validatore GBNF, type checker, runtime e test suite). Risolve un problema non risolto da Python: fornire a un agente un linguaggio formale sicuro, con tipi verificati a monte e decodifica vincolata a zero allucinazioni di schema.
+
+### Decisione
+Adottare l'Opzione 3 ("Strada A"):
+- JANUS evolve in un **Deterministic Agentic Execution Graph DSL**.
+- `schema` diventa il costrutto primario per tipizzare formalmente Tool e API (input, output, permessi ed effetti).
+- Il generatore GBNF viene esteso per sintetizzare grammatiche che vincolano non solo singoli oggetti JSON, ma interi piani di esecuzione composti da tool-calls, pipeline e calcolo puro.
+- Viene introdotto un **Tool Sandbox Runtime** in cui i tool registrati vengono eseguiti con isolamento, controllo di tipo a runtime e tracciabilità sicura.
+
+

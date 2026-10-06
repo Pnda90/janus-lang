@@ -9,7 +9,7 @@ from janus.ast_nodes import (
     Stmt, BindingStmt, RetStmt, IfStmt, ForStmt, LoopStmt, ExprStmt,
     Expr, LiteralExpr, IdentExpr, CaseIdentExpr, BinaryExpr, UnaryExpr,
     RangeExpr, TupleExpr, ListExpr, IndexExpr, FieldAccessExpr,
-    PipelineExpr, PipeStep, CallExpr, AgentCallExpr, DiffExpr,
+    PipelineExpr, PipeStep, CallExpr, AgentCallExpr, ToolCallExpr, DiffExpr,
     TypeExpr, PrimitiveType, TensorType, CustomType
 )
 from janus.diagnostics import Diagnostic, SourceSpan, DiagnosticPatch
@@ -287,6 +287,66 @@ class TypeChecker:
             for v in expr.extra_args.values():
                 self._check_expr(v, scope)
             return PrimitiveType("str")
+
+        if isinstance(expr, ToolCallExpr):
+            if expr.tool_name not in self.schemas:
+                self.diagnostics.append(Diagnostic(
+                    code="ERR_UNDEFINED_TOOL",
+                    phase="type_check",
+                    message=f"Tool o Schema '{expr.tool_name}' non dichiarato nel programma.",
+                    span=SourceSpan(expr.line, expr.col, len(expr.tool_name)),
+                    offending=expr.tool_name,
+                    patch=None
+                ))
+                return None
+
+            schema = self.schemas[expr.tool_name]
+
+            # Controllo purezza effetti
+            if schema.effect == "io" and self.current_fn and self.current_fn.effect == "pure":
+                self.diagnostics.append(Diagnostic(
+                    code="ERR_EFFECT_PURITY_VIOLATION",
+                    phase="type_check",
+                    message=f"Invocazione del tool I/O '{expr.tool_name}' proibita in funzione 'pure'.",
+                    span=SourceSpan(expr.line, expr.col, len(expr.tool_name)),
+                    offending=expr.tool_name,
+                    patch=DiagnosticPatch(target="pure", replacement="io")
+                ))
+
+            # Controllo argomenti richiesti
+            expected_inputs = {p.name: p for p in schema.inputs}
+            provided_args = set(expr.named_args.keys())
+
+            for param_name, param in expected_inputs.items():
+                if param.default is None and param_name not in provided_args:
+                    self.diagnostics.append(Diagnostic(
+                        code="ERR_MISSING_TOOL_ARGUMENT",
+                        phase="type_check",
+                        message=f"Argomento obbligatorio mancante '{param_name}' per il tool '{expr.tool_name}'.",
+                        span=SourceSpan(expr.line, expr.col, len(expr.tool_name)),
+                        offending=param_name,
+                        patch=None
+                    ))
+
+            # Controllo argomenti sconosciuti
+            for arg_name in expr.named_args:
+                if arg_name not in expected_inputs:
+                    self.diagnostics.append(Diagnostic(
+                        code="ERR_UNKNOWN_TOOL_ARGUMENT",
+                        phase="type_check",
+                        message=f"Argomento sconosciuto '{arg_name}' per il tool '{expr.tool_name}'.",
+                        span=SourceSpan(expr.line, expr.col, len(arg_name)),
+                        offending=arg_name,
+                        patch=None
+                    ))
+
+            # Type check delle sotto-espressioni degli argomenti
+            for val in expr.named_args.values():
+                self._check_expr(val, scope)
+            for pos in expr.positional_args:
+                self._check_expr(pos, scope)
+
+            return CustomType(f"{expr.tool_name}Output")
 
         if isinstance(expr, DiffExpr):
             self._check_expr(expr.target, scope)

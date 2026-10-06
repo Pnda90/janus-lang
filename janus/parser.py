@@ -8,7 +8,7 @@ from janus.ast_nodes import (
     Program, ASTNode, TypeDecl, FieldDecl, SchemaDecl, FnDecl, KernelDecl, Param,
     Stmt, BindingStmt, RetStmt, IfStmt, ForStmt, LoopStmt, BreakStmt, ContinueStmt, ExprStmt,
     Expr, LiteralExpr, IdentExpr, CaseIdentExpr, BinaryExpr, UnaryExpr,
-    CaseArg, PipeStep, PipelineExpr, CallExpr, AgentCallExpr, DiffExpr,
+    CaseArg, PipeStep, PipelineExpr, CallExpr, AgentCallExpr, ToolCallExpr, DiffExpr,
     IndexExpr, FieldAccessExpr, TupleExpr, ListExpr, RangeExpr,
     TypeExpr, PrimitiveType, TensorType, CustomType, ListType
 )
@@ -101,6 +101,11 @@ class Parser:
     def _parse_schema_decl(self) -> SchemaDecl:
         kw = self._expect(TokenType.KW_SCHEMA, "Atteso 'schema'")
         name_tok = self._expect_ident("Atteso nome schema")
+        effect = "io"
+        if self._current().type in (TokenType.EFF_PURE, TokenType.EFF_IO, TokenType.EFF_STOC):
+            effect = self._current().value
+            self.cursor += 1
+
         self._expect(TokenType.LBRACE, "Atteso '{'")
         inputs = []
         while not self._match(TokenType.RBRACE):
@@ -123,7 +128,7 @@ class Parser:
             outputs.append(FieldDecl(name=oname.value, type_expr=otype, line=oname.line, col=oname.col))
             self._match(TokenType.COMMA)
 
-        return SchemaDecl(name=name_tok.value, inputs=inputs, outputs=outputs, line=kw.line, col=kw.col)
+        return SchemaDecl(name=name_tok.value, effect=effect, inputs=inputs, outputs=outputs, line=kw.line, col=kw.col)
 
     def _parse_fn_decl(self) -> FnDecl:
         kw = self._expect(TokenType.KW_FN, "Atteso 'fn'")
@@ -513,43 +518,77 @@ class Parser:
             wrt = self._parse_expr()
             return DiffExpr(target=target, wrt=wrt, line=diff_tok.line, col=diff_tok.col)
 
-        # Gestione speciale chiamata agente: call agentv Agent promptm p toolb T
+        # Gestione speciale chiamata: call tool ToolName(...) oppure call agentv Agent ...
         if cur.type == TokenType.KW_CALL:
             call_tok = cur
             self.cursor += 1
-            self._expect(TokenType.KW_AGENTV, "Atteso 'agentv' dopo 'call'")
-            agent_name = self._expect(TokenType.IDENT, "Atteso nome agente").value
-            
-            prompt_expr = None
-            tool_expr = None
-            timeout_expr = None
-            extra = {}
 
-            # Legge argomenti dell'agente
-            while self._current().type in (TokenType.IDENT, TokenType.CASE_IDENT):
-                if self._peek(1).type == TokenType.ASSIGN:
-                    break
-                arg_label = self._current()
-                is_label = any(k in arg_label.value for k in ("prompt", "tool", "timeout", "ctx")) or arg_label.type == TokenType.CASE_IDENT
-                if not is_label:
-                    break
+            # 1. Chiamata a Tool esplicita: call tool ToolName(arg = val, ...)
+            if self._current().value == "tool":
                 self.cursor += 1
-                val_expr = self._parse_postfix_expr()
-                
-                if "prompt" in arg_label.value:
-                    prompt_expr = val_expr
-                elif "tool" in arg_label.value:
-                    tool_expr = val_expr
-                elif "timeout" in arg_label.value:
-                    timeout_expr = val_expr
-                else:
-                    extra[arg_label.value] = val_expr
+                tool_tok = self._expect_ident("Atteso nome tool dopo 'call tool'")
+                tool_name = tool_tok.value
+                named_args = {}
+                positional_args = []
+                if self._match(TokenType.LPAREN):
+                    while not self._match(TokenType.RPAREN):
+                        tok = self._current()
+                        if (tok.type in (TokenType.IDENT, TokenType.CASE_IDENT) and 
+                            self._peek(1).type in (TokenType.ASSIGN, TokenType.COLON)):
+                            arg_name = tok.base_name if tok.type == TokenType.CASE_IDENT else tok.value
+                            self.cursor += 2
+                            val = self._parse_expr()
+                            named_args[arg_name] = val
+                        else:
+                            val = self._parse_expr()
+                            positional_args.append(val)
+                        self._match(TokenType.COMMA)
+                return ToolCallExpr(
+                    tool_name=tool_name,
+                    named_args=named_args,
+                    positional_args=positional_args,
+                    line=call_tok.line,
+                    col=call_tok.col
+                )
 
-            return AgentCallExpr(
-                agent_name=agent_name, prompt=prompt_expr or LiteralExpr(value=""),
-                tool=tool_expr, timeout=timeout_expr, extra_args=extra,
-                line=call_tok.line, col=call_tok.col
-            )
+            # 2. Chiamata ad Agente: call agentv Agent ... o call agent:v Agent ...
+            if self._match(TokenType.KW_AGENTV) or (self._current().type == TokenType.CASE_IDENT and self._current().case == "v" and self._current().base_name == "agent"):
+                if self._current().type == TokenType.CASE_IDENT:
+                    self.cursor += 1
+                agent_name = self._expect_ident("Atteso nome agente").value
+                
+                prompt_expr = None
+                tool_expr = None
+                timeout_expr = None
+                extra = {}
+
+                # Legge argomenti dell'agente
+                while self._current().type in (TokenType.IDENT, TokenType.CASE_IDENT):
+                    if self._peek(1).type == TokenType.ASSIGN:
+                        break
+                    arg_label = self._current()
+                    is_label = any(k in arg_label.value for k in ("prompt", "tool", "timeout", "ctx")) or arg_label.type == TokenType.CASE_IDENT
+                    if not is_label:
+                        break
+                    self.cursor += 1
+                    val_expr = self._parse_postfix_expr()
+                    
+                    if "prompt" in arg_label.value:
+                        prompt_expr = val_expr
+                    elif "tool" in arg_label.value:
+                        tool_expr = val_expr
+                    elif "timeout" in arg_label.value:
+                        timeout_expr = val_expr
+                    else:
+                        extra[arg_label.value] = val_expr
+
+                return AgentCallExpr(
+                    agent_name=agent_name, prompt=prompt_expr or LiteralExpr(value=""),
+                    tool=tool_expr, timeout=timeout_expr, extra_args=extra,
+                    line=call_tok.line, col=call_tok.col
+                )
+
+            raise ParseError("Atteso 'tool' o 'agentv' dopo 'call'", self._current())
 
         # Chiamata a funzione definita dall'utente in notazione prefissa (es. step x:b y:b model:t lr)
         AGENT_LABELS = {"promptm", "toolb", "timeoutb", "ctxb", "prompt:m", "tool:b", "timeout:b", "ctx:b"}

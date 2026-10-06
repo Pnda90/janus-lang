@@ -100,6 +100,12 @@ class AgentCallExpr(Expr):
     extra_args: Dict[str, Expr] = field(default_factory=dict)
 
 @dataclass
+class ToolCallExpr(Expr):
+    tool_name: str = ""
+    named_args: Dict[str, Expr] = field(default_factory=dict)
+    positional_args: List[Expr] = field(default_factory=list)
+
+@dataclass
 class DiffExpr(Expr):
     target: Expr = field(default_factory=Expr)
     wrt: Expr = field(default_factory=Expr)
@@ -199,6 +205,7 @@ class TypeDecl(ASTNode):
 @dataclass
 class SchemaDecl(ASTNode):
     name: str = ""
+    effect: str = "io"
     inputs: List[Param] = field(default_factory=list)
     outputs: List[FieldDecl] = field(default_factory=list)
 
