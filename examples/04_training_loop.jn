@@ -1,0 +1,25 @@
+# examples/04_training_loop.jn
+# Programma 4: Training Loop Completo con Batching e Mutazione di Stato
+
+type ModelWeights {
+    w: mat[f32, D, C],
+    b: vec[f32, C]
+}
+
+fn step(xm, ym, mut modelt: ModelWeights, lr: f32) pure {
+    pred = xm matmul modelt.w add modelt.b
+    loss = ((pred - ym) pow 2) sum / xm.len
+    g = diff loss wrt modelt
+    mut modelt = modelt - lr * g
+    ret loss
+}
+
+fn train_loop(datam, labelsm, mut modelt: ModelWeights, epochs: i32, bs: i32, lr: f32) pure {
+    for ep in 0..epochs {
+        for b in 0..(datam.len / bs) {
+            xb = datam[b * bs .. (b + 1) * bs]
+            yb = labelsm[b * bs .. (b + 1) * bs]
+            loss = step xb yb modelt lr
+        }
+    }
+}

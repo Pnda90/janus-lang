@@ -1,0 +1,23 @@
+# stdlib/agent.jn: Primitive per orchestrazione di agenti e schemi cognitivi
+
+schema SearchTool {
+    query: str,
+    top_k: i32 = 5
+} -> {
+    docs: vec[str],
+    scores: vec[f32]
+}
+
+schema CodeExecTool {
+    code: str,
+    timeout_sec: i32 = 10
+} -> {
+    stdout: str,
+    stderr: str,
+    exit_code: i32
+}
+
+fn query_knowledge(querym: str) io {
+    docs_out = call agentv Retriever promptm querym toolb SearchTool
+    ret docs_out
+}

@@ -1,0 +1,15 @@
+# examples/01_linreg.jn
+# Programma 1: Regressione Lineare con SGD e Differenziazione Automatica Nativa
+
+fn linreg(xm, ym, epochs: i32, lr: f32) pure {
+    mut w = 0.0
+    mut b = 0.0
+    for ep in 0..epochs {
+        pred = xm * wb + bb
+        loss = ((pred - ym) pow 2) sum / xm.len
+        gw, gb = diff loss wrt (wb, bb)
+        w = w - lr * gw
+        b = b - lr * gb
+    }
+    ret (w, b)
+}

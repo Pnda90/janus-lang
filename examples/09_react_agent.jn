@@ -1,0 +1,22 @@
+# examples/09_react_agent.jn
+# Programma 9: Agente Autonomo ReAct con Tool-Calling e Gestione Retry
+
+schema Action {
+    tool: str,
+    args: str
+} -> {
+    result: str,
+    ok: bool
+}
+
+fn agent_exec(taskm: str, max_retries: i32 = 3) io {
+    mut history = [taskm]
+    for r in 0..max_retries {
+        action = call agentv Planner promptm history toolb Action
+        if action.ok {
+            ret action.result
+        }
+        history = history cat ["Errore:", action.result]
+    }
+    ret "Fallimento task"
+}

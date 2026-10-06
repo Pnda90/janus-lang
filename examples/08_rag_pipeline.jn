@@ -1,0 +1,17 @@
+# examples/08_rag_pipeline.jn
+# Programma 8: Pipeline RAG Avanzata con Ranking e Chiamata ad Agente
+
+schema SearchQuery {
+    q: str,
+    topk: i32 = 5
+} -> {
+    docs: vec[str],
+    scores: vec[f32]
+}
+
+fn rag_pipeline(querym: str) io {
+    docs_out = call agentv Retriever promptm querym toolb SearchQuery
+    selected = docs_out.docs
+    ans = call agentv LLM promptm ["Contesto:", selected, "Domanda:", querym]
+    ret ans
+}

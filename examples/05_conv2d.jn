@@ -1,0 +1,6 @@
+# examples/05_conv2d.jn
+# Programma 5: Convoluzione 2D con Max Pooling e Flattening
+
+fn cnn_feature_extractor(imgm, kb) pure {
+    ret conv2d imgm kb strb [1, 1] padb [1, 1] relu pool max strb [2, 2] flat 1
+}

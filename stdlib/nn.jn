@@ -1,0 +1,24 @@
+# stdlib/nn.jn: Strati di reti neurali, attenzione e normalizzazione
+
+type Linear {
+    w: mat[f32, D_in, D_out],
+    b: vec[f32, D_out]
+}
+
+fn linear_fwd(xm, linb: Linear) pure {
+    ret xm matmul linb.w add linb.b
+}
+
+fn linear_relu(xm, linb: Linear) pure {
+    ret xm matmul linb.w add linb.b relu
+}
+
+fn rms_norm(xm, wb, eps: f32 = 1e-6) pure {
+    variance = (xm pow 2) sum axb -1 keepb true / xm.dim_last
+    ret (xm / (variance + eps sqrt)) * wb
+}
+
+fn multi_head_attention(qm, kb, vb) pure {
+    scale = 1.0 / (kb.dim_last.sqrt)
+    ret (qm @ kb.trans) * scale smax @ vb
+}

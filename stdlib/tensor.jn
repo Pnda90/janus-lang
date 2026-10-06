@@ -1,0 +1,18 @@
+# stdlib/tensor.jn: Operazioni fondamentali sui tensori
+
+fn dot_prod(am: vec[f32, D], bb: vec[f32, D]) -> scal[f32] pure {
+    ret dot am bb
+}
+
+fn mat_mul(xm: mat[f32, M, K], wb: mat[f32, K, N]) -> mat[f32, M, N] pure {
+    ret xm matmul wb
+}
+
+fn transpose_2d(xm: mat[f32, M, N]) -> mat[f32, N, M] pure {
+    ret xm.trans
+}
+
+fn tensor_norm(xm: tens[f32, B, S, D], eps: f32 = 1e-5) pure {
+    v = (xm pow 2) sum axb -1 keepb true / xm.dim_last
+    ret xm / (v + eps sqrt)
+}

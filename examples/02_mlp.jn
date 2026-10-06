@@ -1,0 +1,16 @@
+# examples/02_mlp.jn
+# Programma 2: Multi-Layer Perceptron (MLP) a 2 Strati con ReLU e Backward Pass
+
+type MLP {
+    w1: mat[f32, D, H],
+    b1: vec[f32, H],
+    w2: mat[f32, H, C],
+    b2: vec[f32, C]
+}
+
+fn mlp_step(xm, ym, mlpb: MLP, lr: f32) pure {
+    pred = xm matmul mlpb.w1 add mlpb.b1 relu matmul mlpb.w2 add mlpb.b2
+    loss = ((pred - ym) pow 2) sum / xm.len
+    g = diff loss wrt mlpb
+    ret (mlpb - lr * g, loss)
+}
