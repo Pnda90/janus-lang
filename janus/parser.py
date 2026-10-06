@@ -399,10 +399,18 @@ class Parser:
                     break
                 arg_expr = self._parse_postfix_expr()
                 args.append(CaseArg(case="b", expr=arg_expr, line=cur.line, col=cur.col))
+            elif cur.type == TokenType.MINUS and self._peek(1).type in (TokenType.LIT_INT, TokenType.LIT_FLOAT):
+                self.cursor += 2
+                nxt = self.tokens[self.cursor - 1]
+                val = -float(nxt.value) if '.' in nxt.value or 'e' in nxt.value else -int(nxt.value)
+                args.append(CaseArg(case="b", expr=LiteralExpr(value=val, lit_type="num", line=cur.line, col=cur.col), line=cur.line, col=cur.col))
             elif cur.type in (TokenType.LIT_INT, TokenType.LIT_FLOAT):
                 self.cursor += 1
                 val = float(cur.value) if '.' in cur.value or 'e' in cur.value else int(cur.value)
                 args.append(CaseArg(case="b", expr=LiteralExpr(value=val, lit_type="num", line=cur.line, col=cur.col), line=cur.line, col=cur.col))
+            elif cur.type == TokenType.LIT_BOOL:
+                self.cursor += 1
+                args.append(CaseArg(case="b", expr=LiteralExpr(value=(cur.value == "true"), lit_type="bool", line=cur.line, col=cur.col), line=cur.line, col=cur.col))
             elif cur.type == TokenType.LBRACKET:
                 # lista come argomento [1, 1]
                 list_expr = self._parse_primary()

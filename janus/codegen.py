@@ -40,11 +40,143 @@ class CodeGenerator:
             "    HAS_NUMPY = False",
             "",
             "# Runtime helper e fallback di JANUS",
+            "from dataclasses import dataclass, fields",
+            "from typing import List, Dict, Any, Tuple, Optional",
+            "",
             "def _janus_agent_call(agent, prompt, tool=None):",
             "    return f'[Agent {agent}: prompt=\"{prompt}\"]'",
             "",
-            "from dataclasses import dataclass",
-            "from typing import List, Dict, Any, Tuple, Optional",
+            "class JanusStruct:",
+            "    def __sub__(self, other):",
+            "        if isinstance(other, self.__class__):",
+            "            res = {}",
+            "            for f in self.__dataclass_fields__:",
+            "                v_s = getattr(self, f)",
+            "                v_o = getattr(other, f)",
+            "                if HAS_TORCH and isinstance(v_s, torch.Tensor) and isinstance(v_o, torch.Tensor):",
+            "                    res[f] = (v_s - v_o).detach().requires_grad_()",
+            "                else:",
+            "                    res[f] = v_s - v_o",
+            "            return self.__class__(**res)",
+            "        return NotImplemented",
+            "",
+            "    def __mul__(self, scalar):",
+            "        res = {}",
+            "        for f in self.__dataclass_fields__:",
+            "            v = getattr(self, f)",
+            "            res[f] = v * scalar",
+            "        return self.__class__(**res)",
+            "",
+            "    def __rmul__(self, scalar):",
+            "        res = {}",
+            "        for f in self.__dataclass_fields__:",
+            "            v = getattr(self, f)",
+            "            res[f] = scalar * v",
+            "        return self.__class__(**res)",
+            "",
+            "    def __add__(self, other):",
+            "        if isinstance(other, self.__class__):",
+            "            res = {}",
+            "            for f in self.__dataclass_fields__:",
+            "                v_s = getattr(self, f)",
+            "                v_o = getattr(other, f)",
+            "                if HAS_TORCH and isinstance(v_s, torch.Tensor) and isinstance(v_o, torch.Tensor):",
+            "                    res[f] = (v_s + v_o).detach().requires_grad_()",
+            "                else:",
+            "                    res[f] = v_s + v_o",
+            "            return self.__class__(**res)",
+            "        return NotImplemented",
+            "",
+            "def _janus_to_tensor(val, requires_grad=False):",
+            "    if HAS_TORCH and not isinstance(val, torch.Tensor):",
+            "        return torch.tensor(val, dtype=torch.float32, requires_grad=requires_grad)",
+            "    elif HAS_TORCH and requires_grad and not val.requires_grad:",
+            "        return val.clone().detach().requires_grad_(True)",
+            "    return val",
+            "",
+            "def _janus_param(val):",
+            "    if HAS_TORCH:",
+            "        if isinstance(val, (int, float)):",
+            "            return torch.tensor(float(val), requires_grad=True, dtype=torch.float32)",
+            "        elif isinstance(val, torch.Tensor):",
+            "            return val.clone().detach().requires_grad_(True)",
+            "    return val",
+            "",
+            "def _janus_step_val(val):",
+            "    if HAS_TORCH and isinstance(val, torch.Tensor):",
+            "        return val.detach().requires_grad_()",
+            "    elif hasattr(val, '__dataclass_fields__'):",
+            "        res = {}",
+            "        for f in val.__dataclass_fields__:",
+            "            v = getattr(val, f)",
+            "            if HAS_TORCH and isinstance(v, torch.Tensor):",
+            "                res[f] = v.detach().requires_grad_()",
+            "            else:",
+            "                res[f] = v",
+            "        return val.__class__(**res)",
+            "    return val",
+            "",
+            "def _janus_diff(loss, wrt):",
+            "    if not HAS_TORCH:",
+            "        raise RuntimeError('PyTorch is required for autodiff')",
+            "    if hasattr(wrt, '__dataclass_fields__'):",
+            "        f_names = list(wrt.__dataclass_fields__.keys())",
+            "        f_tensors = tuple(getattr(wrt, f) for f in f_names)",
+            "        grads = torch.autograd.grad(loss, f_tensors, allow_unused=True)",
+            "        return wrt.__class__(**{f: (g if g is not None else torch.zeros_like(getattr(wrt, f))) for f, g in zip(f_names, grads)})",
+            "    elif isinstance(wrt, (tuple, list)):",
+            "        grads = torch.autograd.grad(loss, tuple(wrt), allow_unused=True)",
+            "        return tuple(g if g is not None else torch.zeros_like(w) for g, w in zip(grads, wrt)) if isinstance(wrt, tuple) else list(grads)",
+            "    elif isinstance(wrt, torch.Tensor):",
+            "        g = torch.autograd.grad(loss, wrt, allow_unused=True)[0]",
+            "        return g if g is not None else torch.zeros_like(wrt)",
+            "    return 0.0",
+            "",
+            "def _janus_result(val):",
+            "    if HAS_TORCH and isinstance(val, torch.Tensor):",
+            "        if val.numel() == 1:",
+            "            return val.item()",
+            "        return val.detach()",
+            "    elif isinstance(val, tuple):",
+            "        return tuple(_janus_result(v) for v in val)",
+            "    elif isinstance(val, list):",
+            "        return [_janus_result(v) for v in val]",
+            "    return val",
+            "",
+            "def _janus_sqrt(val):",
+            "    if HAS_TORCH and isinstance(val, torch.Tensor):",
+            "        return torch.sqrt(torch.clamp(val, min=0.0))",
+            "    return math.sqrt(max(0.0, float(val)))",
+            "",
+            "def gauss(*args):",
+            "    shape = None",
+            "    seed = None",
+            "    for a in args:",
+            "        if isinstance(a, (tuple, list)) or hasattr(a, 'shape'):",
+            "            shape = a.shape if hasattr(a, 'shape') else a",
+            "        elif isinstance(a, int):",
+            "            seed = a",
+            "    return ('gauss', shape, seed)",
+            "",
+            "def rand(desc, *args):",
+            "    shape = None",
+            "    seed = None",
+            "    if isinstance(desc, tuple) and desc and desc[0] == 'gauss':",
+            "        shape = desc[1]",
+            "        seed = desc[2]",
+            "    else:",
+            "        for a in (desc,) + args:",
+            "            if isinstance(a, (tuple, list)) or hasattr(a, 'shape'):",
+            "                shape = a.shape if hasattr(a, 'shape') else a",
+            "            elif isinstance(a, int):",
+            "                seed = a",
+            "    if HAS_TORCH:",
+            "        eps = torch.randn(shape) if shape is not None else torch.randn(1)",
+            "    else:",
+            "        eps = 0.0",
+            "    return eps, (seed + 1 if seed is not None else 0)",
+            "",
+            "shapes = None",
             "",
         ]
 
@@ -68,7 +200,7 @@ class CodeGenerator:
         return ""
 
     def _gen_type_decl(self, node: TypeDecl) -> str:
-        lines = [f"@dataclass", f"class {node.name}:"]
+        lines = [f"@dataclass", f"class {node.name}(JanusStruct):"]
         if not node.fields:
             lines.append("    pass")
         else:
@@ -101,17 +233,23 @@ class CodeGenerator:
 
     def _gen_fn_decl(self, node: FnDecl) -> str:
         params_str = []
+        tensor_inits = []
         for p in node.params:
             p_name = p.base_name or p.name
             if p.default:
                 params_str.append(f"{p_name}={self._gen_expr(p.default)}")
             else:
                 params_str.append(p_name)
+            if p.case == "m" or ":m" in p.name:
+                tensor_inits.append(p_name)
         params_joined = ", ".join(params_str)
         
         lines = [f"def {node.name}({params_joined}):"]
         self.indent_level += 1
         
+        for t_name in tensor_inits:
+            lines.append(f"{self._indent()}{t_name} = _janus_to_tensor({t_name})")
+
         if not node.body:
             lines.append(f"{self._indent()}pass")
         else:
@@ -152,11 +290,17 @@ class CodeGenerator:
                     c_base = base_t
                 clean_targets.append(f"{c_base}{idx_suffix}")
             targets_str = ", ".join(clean_targets)
-            return f"{targets_str} = {self._gen_expr(stmt.expr)}"
+            expr_val = self._gen_expr(stmt.expr)
+            if stmt.is_mut:
+                if isinstance(stmt.expr, LiteralExpr):
+                    expr_val = f"_janus_param({expr_val})"
+                else:
+                    expr_val = f"_janus_step_val({expr_val})"
+            return f"{targets_str} = {expr_val}"
         
         elif isinstance(stmt, RetStmt):
             if stmt.expr:
-                return f"return {self._gen_expr(stmt.expr)}"
+                return f"return _janus_result({self._gen_expr(stmt.expr)})"
             return "return"
 
         elif isinstance(stmt, IfStmt):
@@ -225,7 +369,7 @@ class CodeGenerator:
             return f"{expr.op}{self._gen_expr(expr.operand)}"
 
         elif isinstance(expr, RangeExpr):
-            return f"range({self._gen_expr(expr.start)}, {self._gen_expr(expr.end)})"
+            return f"range(int({self._gen_expr(expr.start)}), int({self._gen_expr(expr.end)}))"
 
         elif isinstance(expr, TupleExpr):
             el_str = ", ".join(self._gen_expr(e) for e in expr.elements)
@@ -244,7 +388,7 @@ class CodeGenerator:
             if expr.field_name == "trans":
                 return f"{self._gen_expr(expr.target)}.transpose(-2, -1)"
             if expr.field_name == "sqrt":
-                return f"math.sqrt({self._gen_expr(expr.target)})"
+                return f"_janus_sqrt({self._gen_expr(expr.target)})"
             if expr.field_name == "dim_last":
                 return f"{self._gen_expr(expr.target)}.size(-1)"
             if expr.field_name == "len":
@@ -259,7 +403,7 @@ class CodeGenerator:
         elif isinstance(expr, DiffExpr):
             target_s = self._gen_expr(expr.target)
             wrt_s = self._gen_expr(expr.wrt)
-            return f"torch.autograd.grad({target_s}, {wrt_s})"
+            return f"_janus_diff({target_s}, {wrt_s})"
 
         elif isinstance(expr, AgentCallExpr):
             prompt_s = self._gen_expr(expr.prompt)
@@ -290,18 +434,60 @@ class CodeGenerator:
                 elif step.op == "gelu":
                     current = f"F.gelu({current})"
                 elif step.op == "sum":
-                    current = f"torch.sum({current})"
+                    dim_val = None
+                    keepdim_val = None
+                    i = 0
+                    while i < len(args):
+                        a_str = str(args[i])
+                        if "ax" in a_str and i + 1 < len(args):
+                            dim_val = args[i + 1]
+                            i += 2
+                        elif "keep" in a_str and i + 1 < len(args):
+                            keepdim_val = args[i + 1]
+                            i += 2
+                        elif a_str in ("True", "False"):
+                            keepdim_val = a_str
+                            i += 1
+                        elif a_str.lstrip("-").isdigit():
+                            dim_val = a_str
+                            i += 1
+                        else:
+                            i += 1
+                    opts = []
+                    if dim_val is not None:
+                        opts.append(f"dim={dim_val}")
+                    if keepdim_val is not None:
+                        opts.append(f"keepdim={keepdim_val}")
+                    opts_s = f", {', '.join(opts)}" if opts else ""
+                    current = f"torch.sum({current}{opts_s})"
                 elif step.op == "sqrt":
-                    current = f"torch.sqrt({current})"
+                    current = f"_janus_sqrt({current})"
                 elif step.op == "pow":
                     current = f"torch.pow({current}, {args[0]})"
                 elif step.op == "flat":
                     start_dim = args[0] if args else "1"
                     current = f"torch.flatten({current}, start_dim={start_dim})"
                 elif step.op == "conv2d":
-                    current = f"F.conv2d({current}, {args[0]})"
+                    k = args[0] if args else "None"
+                    stride = "[1, 1]"
+                    padding = "[1, 1]"
+                    for a_str in args[1:]:
+                        s = str(a_str)
+                        if "str[" in s:
+                            sub = s[s.index("["):]
+                            stride = sub[:sub.index("]") + 1] if "]" in sub else sub
+                        elif "pad[" in s:
+                            sub = s[s.index("["):]
+                            padding = sub[:sub.index("]") + 1] if "]" in sub else sub
+                    current = f"F.conv2d({current}, {k}, stride={stride}, padding={padding})"
                 elif step.op == "pool":
-                    current = f"F.max_pool2d({current}, kernel_size=2, stride=2)"
+                    stride = "[2, 2]"
+                    for a_str in args:
+                        s = str(a_str)
+                        if "str[" in s:
+                            sub = s[s.index("["):]
+                            stride = sub[:sub.index("]") + 1] if "]" in sub else sub
+                    current = f"F.max_pool2d({current}, kernel_size=2, stride={stride})"
                 elif step.op == "norm":
                     current = f"F.layer_norm({current}, {current}.shape[-1:])"
                 else:
