@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "janus-lang"
 version = "0.1.0"
 authors = [
-  { name="Gianluca Bernardo" },
+  { name="Pnda90" },
 ]
 description = "JANUS: A Token-Efficient, AI-Native Programming Language for Foundation Models"
 readme = "README.md"

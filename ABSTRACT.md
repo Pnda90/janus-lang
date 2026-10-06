@@ -1,9 +1,9 @@
 # JANUS: A Token-Efficient, AI-Native Programming Language
 ### Executive Summary & Technical Abstract
 
-**Authors:** Gianluca Bernardo & The Janus Core Team  
+**Authors:** Pnda90 & The Janus Core Team  
 **Date:** October 2026  
-**Repository:** [github.com/gianlucabernardo/janus-lang](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice)  
+**Repository:** [https://github.com/Pnda90/janus-lang](https://github.com/Pnda90/janus-lang)  
 **Status:** Sprint 1 Implementation Complete (Compiler, Type Checker, CLI Toolchain, Test Suite)
 
 ---

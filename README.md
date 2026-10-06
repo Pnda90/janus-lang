@@ -100,16 +100,16 @@ Misura il numero effettivo di token consumati:
 
 | File | Nome Programma | Caratteristiche Tecniche Chiave |
 | :--- | :--- | :--- |
-| [`examples/01_linreg.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/01_linreg.jn) | Regressione Lineare con SGD | Autodiff nativo `diff`, loop compatto |
-| [`examples/02_mlp.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/02_mlp.jn) | MLP a 2 Strati con ReLU | Struct immutabile `type`, pipeline GEMM fusa |
-| [`examples/03_attention.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/03_attention.jn) | Scaled Multi-Head Attention | Contrazioni $Q, K, V$, trasposizione unificata |
-| [`examples/04_training_loop.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/04_training_loop.jn) | Training Loop con Batching | Slicing di memoria contigua, mutazione controllata |
-| [`examples/05_conv2d.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/05_conv2d.jn) | Conv2D con Pooling e Flatten | Pipeline di 3 trasformazioni in 1 riga senza allocazioni |
-| [`examples/06_rmsnorm.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/06_rmsnorm.jn) | RMSNorm con Pesi Affini | Riduzione sull'ultimo asse, standard Llama/Mistral |
-| [`examples/07_diffusion.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/07_diffusion.jn) | Diffusion Denoising Step | Effetto `stoc` con seed esplicito per riproducibilità |
-| [`examples/08_rag_pipeline.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/08_rag_pipeline.jn) | Pipeline RAG con Agente | Chiamate `call agentv` tipizzate con `schema` |
-| [`examples/09_react_agent.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/09_react_agent.jn) | Agente Autonomo ReAct | Gestione fallimenti, retry e schema di azione |
-| [`examples/10_gpu_saxpy.jn`](file:///Users/gianlucabernardo/Desktop/Gianluca/Progetti/nuovo_codice/examples/10_gpu_saxpy.jn) | Kernel GPU SAXPY Parallelo | Sintassi `kern` con mapping thread GPU SIMT |
+| [`examples/01_linreg.jn`](examples/01_linreg.jn) | Regressione Lineare con SGD | Autodiff nativo `diff`, loop compatto |
+| [`examples/02_mlp.jn`](examples/02_mlp.jn) | MLP a 2 Strati con ReLU | Struct immutabile `type`, pipeline GEMM fusa |
+| [`examples/03_attention.jn`](examples/03_attention.jn) | Scaled Multi-Head Attention | Contrazioni $Q, K, V$, trasposizione unificata |
+| [`examples/04_training_loop.jn`](examples/04_training_loop.jn) | Training Loop con Batching | Slicing di memoria contigua, mutazione controllata |
+| [`examples/05_conv2d.jn`](examples/05_conv2d.jn) | Conv2D con Pooling e Flatten | Pipeline di 3 trasformazioni in 1 riga senza allocazioni |
+| [`examples/06_rmsnorm.jn`](examples/06_rmsnorm.jn) | RMSNorm con Pesi Affini | Riduzione sull'ultimo asse, standard Llama/Mistral |
+| [`examples/07_diffusion.jn`](examples/07_diffusion.jn) | Diffusion Denoising Step | Effetto `stoc` con seed esplicito per riproducibilità |
+| [`examples/08_rag_pipeline.jn`](examples/08_rag_pipeline.jn) | Pipeline RAG con Agente | Chiamate `call agentv` tipizzate con `schema` |
+| [`examples/09_react_agent.jn`](examples/09_react_agent.jn) | Agente Autonomo ReAct | Gestione fallimenti, retry e schema di azione |
+| [`examples/10_gpu_saxpy.jn`](examples/10_gpu_saxpy.jn) | Kernel GPU SAXPY Parallelo | Sintassi `kern` con mapping thread GPU SIMT |
 
 ---
 
