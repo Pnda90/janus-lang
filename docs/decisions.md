@@ -55,3 +55,25 @@ Adottare `torch.autograd.grad` potenziato dal runtime JANUS:
 - `_janus_step_val(v)` esegue il detach delle foglie tensoriali dopo l'aggiornamento SGD mantenendo attivo il gradiente per le epoche successive.
 - `_janus_result(v)` converte in modo trasparente tensori scalari in numeri Python (`float`) o ritorna tensori/tuple.
 - I tipi composti (`type MLP`) generano classi che ereditano da `JanusStruct`.
+
+## ADR 003: Eliminazione Script di Benchmark Legacy e Tabelle Hardcoded
+
+### Data
+2026-10-06
+
+### Contesto
+I vecchi file di benchmark nel repository (`bench_10_programs.py`, `test_hypotheses.py`, `test_15_snippets.py`, ecc.) presentavano gravi anomalie metodologiche (Bug B5):
+- Contenevano tabelle di token hardcoded (`reference_data` in `test_hypotheses.py`).
+- Impiegavano conteggi basati su espressioni regolari euristiche anziché tokenizer BPE ufficiali.
+- Utilizzavano snippet asimmetrici tra le varianti linguistiche.
+- Tali script alimentavano l'affermazione ingannevole nel README di una riduzione del 50% dei token.
+
+### Alternative Considerate
+1. **Conservare i vecchi script in una cartella `benchmarks/legacy/`:**
+   - *Contro:* Genera ambiguità per gli utenti e per la CI; rischia di far persistere file con numeri inventati nel repository.
+2. **Riscrivere da zero due strumenti dedicati e rimuovere i file obsoleti:**
+   - *Pro:* `benchmarks/tokens.py` usa `tiktoken` (`cl100k_base`, `o200k_base`) e `transformers` direttamente sui 10 programmi del repository a parità semantica; `benchmarks/llm_eval.py` implementa l'harness di valutazione su 30 compiti con calcolo `pass@k` e ciclo di riparazione via diagnostica; nessun numero è hardcoded; la cronologia Git preserva integralmente i file storici per futura consultazione.
+
+### Decisione
+Rimuovere i 10 script obsoleti e stabilire `benchmarks/tokens.py` e `benchmarks/llm_eval.py` come unici punti di riferimento per la misurazione empirica, tracciando i risultati grezzi esclusivamente in `benchmarks/results/*.json`. In CI, il test `tests/test_no_hardcoded_benchmarks.py` verifica in modo continuativo l'assenza di pattern di dati inventati o hardcoded.
+

@@ -1,59 +1,45 @@
-# JANUS: A Token-Efficient, AI-Native Programming Language
-### Executive Summary & Technical Abstract
+# JANUS: A Domain-Specific Language for Neural Computing and Constrained Decoding
+### Technical Abstract & Investigation Report
 
-**Authors:** Pnda90 & The Janus Core Team  
+**Authors:** Pnda90 & The Janus Engineering Team  
 **Date:** October 2026  
 **Repository:** [https://github.com/Pnda90/janus-lang](https://github.com/Pnda90/janus-lang)  
-**Status:** Sprint 1 Implementation Complete (Compiler, Type Checker, CLI Toolchain, Test Suite)
+**Status:** Verification & Hardening Complete (LL(1) Transpiler, PyTorch Runtime Interop, GBNF Generation, Honest Benchmark Suite)
 
 ---
 
 ## 📄 Abstract
 
-As Foundation Models (Large Language Models) become the primary consumers and generators of software, traditional programming languages reveal significant structural inefficiencies. Languages like Python, Rust, and C++ were designed for human keyboard entry, characterized by syntactic verbosity, delimiter overhead, positional parameter ambiguity, and loose type-effect guarantees. In LLM generation workflows, this verbosity inflates context window consumption, increases autoregressive generation latency, elevates API inference costs, and introduces syntax hallucinations.
+As Foundation Models (Large Language Models) increasingly generate executable code, domain-specific languages (DSLs) have been proposed to overcome syntactic verbosity, delimiter overhead, and non-deterministic parsing in general-purpose languages like Python. We present an empirical investigation of **JANUS**, a domain-specific programming language designed for neural computing, automatic differentiation, and grammar-constrained decoding.
 
-We present **JANUS**, a novel, domain-specific programming language engineered from first principles for artificial intelligence, tensor computation, and autonomous agent orchestration. Named after the Roman deity *Janus Bifrons* to symbolize the dual forward and backward passes of automatic differentiation, JANUS introduces four fundamental innovations:
+JANUS features:
+1. **Agglutinative Latin Case Morphology (`ident:case`):** Explicit semantic role tagging on variables (`:m` accusative operands, `:b` ablative parameters, `:t` dative buffers, `:n` nominative definitions, `:s` genitive shapes, `:v` vocative agents).
+2. **Strict LL(1) Grammar:** A deterministic grammar enabling linear-time parsing and the automatic synthesis of valid GBNF grammars for constrained decoding in inference engines (*llama.cpp*, *vLLM*).
+3. **Structured JSON Diagnostics:** Machine-readable diagnostics with standardized error codes, precise source coordinates, offending tokens, and corrective patches for automated multi-turn LLM repair loops.
+4. **PyTorch Transpilation & Execution Runtime:** A transpilation pipeline supporting native autodiff (`diff loss wrt (wb, bb)`), tensor arithmetic dataclasses (`JanusStruct`), and full execution against PyTorch references.
 
-1. **Agglutinative Latin Case Morphology:** Rather than relying on separate punctuation or keywords that fragment into multiple BPE (Byte-Pair Encoding) subwords, JANUS fuses single-letter case suffixes directly onto identifiers:
-   - **Accusative (`-m`):** Primary inputs and operands (Dataflow Patients).
-   - **Ablative (`-b`):** Weights, hyperparameters, and auxiliary instruments.
-   - **Dative (`-t`):** In-place mutation targets and scratch memory buffers.
-   - **Nominative (`-n`):** Left-hand side SSA value definitions.
-   - **Genitive (`-s`):** Symbolic shapes, dimensions, and type qualifications.
-   - **Vocative (`-v`):** Cognitive agents, external tools, and RPC invocations.  
-   This design eliminates positional parameter drift while reducing token consumption by **35% to 51%** compared to typed Python across OpenAI (`cl100k`, `o200k`), Meta (`Llama 3`), and Alibaba (`Qwen 2.5`) tokenizers.
+### Empirical Evaluation of Core Hypotheses
+We investigated the central hypothesis: *"An LL(1) DSL with machine-readable diagnostics enables LLMs to produce correct tensor computation with fewer total tokens and higher correctness compared to Python."*
 
-2. **Deterministic LL(1) Grammar for Zero-Syntax-Error Generation:** JANUS is strictly LL(1), enabling native compilation into finite automata (GBNF / DFA) for grammar-constrained decoding. In constrained decoding engines (*llama.cpp*, *vLLM*, *Outlines*), JANUS mathematically guarantees 100% valid syntax without sampling rejections.
-
-3. **First-Class Automatic Differentiation & 4-Domain Monadic Effects:** Automatic differentiation is a primitive expression (`diff loss wrt wb`), while side-effects are verified at compile-time across four disjoint domains: `pure` (functional compute), `mut` (controlled affine mutation), `stoc` (reproducible stochastic operations with explicit seeds), and `io` (agentic tool calls and network actions).
-
-4. **Zero-Copy Interoperability:** JANUS compiles into clean Python 3.13 / PyTorch code and interfaces directly with C ABI and DLPack tensor pointers, ensuring zero-overhead integration with existing deep learning infrastructure.
-
-Empirical evaluation on 10 complete reference architectures—including Linear Regression, Multi-Layer Perceptrons, Scaled Multi-Head Attention, Conv2D pipelines, RMSNorm, Diffusion denoising steps, RAG pipelines, ReAct agents, and GPU kernels—confirms that JANUS reduces average lines of code by **18.1%** and token requirements by up to **51.3%** without sacrificing numerical precision, readability, or expressiveness.
+Our empirical measurements reveal:
+- **Token Efficiency (Refuted):** On standard BPE tokenizers (`cl100k_base` and `o200k_base`), JANUS code consumes **+51.5% to +52.2% more tokens** than equivalent idiomatic Python across 10 complete reference architectures. This is caused by BPE subword fragmentation: standard tokenizers have single-token vocabulary entries for common Python keywords, whereas novel DSL constructs undergo multi-token splitting. The in-context prompt overhead (+229 tokens) is never amortized on generic tokenizers.
+- **Parsing Determinism & Constrained Decoding (Confirmed):** The LL(1) grammar allows robust export of clean GBNF grammars for schema validation without quotation imbalance or non-deterministic lookahead.
+- **Automated Self-Correction (Confirmed):** Machine-readable JSON diagnostics allow LLMs to systematically rectify syntax and typing errors within multi-turn agentic loops.
 
 ---
 
-## 🎯 Key Metrics & Empirical Results
+## 🎯 Verified Empirical Metrics
 
-| Metric | Python (Standard / PyTorch) | JANUS | Delta |
-| :--- | :---: | :---: | :---: |
-| **Token Count (15 Standard AI Snippets)** | 71 – 76 tokens | 35 – 38 tokens | **-50.7%** |
-| **Lines of Code (10 Reference Programs)** | 94 LoC | 77 LoC | **-18.1%** |
-| **LL(1) Grammar Predictability** | Ambiguous / Indentation | 100% Deterministic | **Eliminates Syntax Errors** |
-| **Constrained Decoding Compatibility** | Complex CFG parser needed | Native GBNF / DFA | **100% Valid by Construction** |
-| **Shape Verification** | Runtime shape mismatch | Compile-time symbolic check | **Zero Runtime Shape Faults** |
-
----
-
-## 🚀 Deliverables & Current Toolchain (`v0.1.0`)
-
-- **Compiler Executable (`janusc`):** CLI toolchain supporting `check`, `compile`, `run`, `gbnf`, and `tokens`.
-- **Reference Standard Library (`stdlib/`):** Core modules for Tensors (`tensor.jn`), Neural Networks (`nn.jn`), Math/RNG (`math.jn`), and Agents (`agent.jn`).
-- **Comprehensive Benchmark Suite (`examples/`):** 10 production-grade programs compiling directly to accelerated Python/PyTorch.
-- **Automated Test Suite (`tests/`):** 100% passing unit tests covering Lexer, Parser, Semantic Type Checker, and Code Generator.
-- **LLM System Prompt (<1,000 tokens):** Ready-to-use in-context specification enabling instant zero-shot code generation by Claude 3.5, GPT-4o, and DeepSeek.
+| Metric | Python (Idiomatic PyTorch) | Python (Compact) | JANUS (`.jn`) | Delta vs Idiomatic |
+| :--- | :---: | :---: | :---: | :---: |
+| **Lines of Code (10 Programs)** | 86 LoC | 40 LoC | 99 LoC | **+15.1%** |
+| **Tokens `cl100k_base` (GPT-4)** | 929 tokens | 718 tokens | 1,414 tokens | **+52.2%** |
+| **Tokens `o200k_base` (GPT-4o)** | 933 tokens | 720 tokens | 1,413 tokens | **+51.5%** |
+| **System Prompt In-Context Cost** | 0 tokens | 0 tokens | 229 tokens | +229 tokens |
+| **Pass Rate on Test Suite** | 100% (Reference) | - | 100% (66/66 tests) | Parity |
+| **Grammar Class** | Context-Free / Indented | Context-Free | Strict LL(1) | Deterministic |
 
 ---
 
-## 📌 Keywords
-`AI-Native Programming Languages`, `Token Efficiency`, `Constrained Decoding`, `GBNF`, `Automatic Differentiation`, `Latin Case Morphology`, `LLM Code Generation`, `Tensor Compilers`, `MLSys`.
+## 📌 Conclusions
+A custom DSL without a dedicated BPE vocabulary cannot yield token savings on off-the-shelf Foundation Models. However, the value of JANUS lies in **constrained decoding guarantees (GBNF)** and **structured machine-readable feedback for agentic self-repair**, demonstrating that grammar determinism and diagnostic precision, rather than token compression, are the genuine advantages of specialized AI-targeted languages.
