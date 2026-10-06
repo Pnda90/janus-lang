@@ -9,10 +9,10 @@ schema Action {
     ok: bool
 }
 
-fn agent_exec(taskm: str, max_retries: i32 = 3) io {
-    mut history = [taskm]
+fn agent_exec(task:m: str, max_retries: i32 = 3) io {
+    mut history = [task:m]
     for r in 0..max_retries {
-        action = call agentv Planner promptm history toolb Action
+        action = call agentv Planner prompt:m history tool:b Action
         if action.ok {
             ret action.result
         }

@@ -1,10 +1,10 @@
 # examples/07_diffusion.jn
 # Programma 7: Diffusion Denoising Step (PRNG Deterministico)
 
-fn denoise(xtm, noise_predb, a: f32, a_prev: f32, seedb: Seed) stoc {
+fn denoise(xt:m, noise_pred:b, a: f32, a_prev: f32, seed:b: Seed) stoc {
     sig = (((1.0 - a_prev) / (1.0 - a)) * (1.0 - a / a_prev)) sqrt
-    x0 = (xtm - (1.0 - a sqrt) * noise_predb) / (a sqrt)
-    dir_xt = (1.0 - a_prev - sig * sig sqrt) * noise_predb
-    eps, next_s = rand gauss shapes xtm.shape seedb
+    x0 = (xt:m - (1.0 - a sqrt) * noise_pred:b) / (a sqrt)
+    dir_xt = (1.0 - a_prev - sig * sig sqrt) * noise_pred:b
+    eps, next_s = rand gauss shapes:s xt:m.shape seed:b
     ret ((a_prev sqrt) * x0 + dir_xt + sig * eps, next_s)
 }

@@ -6,7 +6,7 @@ from janus.lexer import Lexer, TokenType
 
 class TestLexer(unittest.TestCase):
     def test_case_identification(self):
-        code = "xm wb bb yn qm kb vb buft loss.m"
+        code = "x:m w:b b:b y:n q:m k:b v:b buf:t loss.m"
         tokens = Lexer(code).tokenize()
         case_toks = [t for t in tokens if t.type == TokenType.CASE_IDENT]
         self.assertEqual(len(case_toks), 9)
@@ -18,6 +18,12 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(case_toks[7].base_name, "buf")
         self.assertEqual(case_toks[8].case, "m")
         self.assertEqual(case_toks[8].base_name, "loss")
+
+        # Verifica che gli identificatori ordinari NON vengano troncati
+        plain_code = "ab bb gb loss total dim param"
+        plain_tokens = Lexer(plain_code).tokenize()
+        ident_toks = [t for t in plain_tokens if t.type == TokenType.IDENT]
+        self.assertEqual([t.value for t in ident_toks], ["ab", "bb", "gb", "loss", "total", "dim", "param"])
 
     def test_scientific_floats(self):
         code = "1e-5 1e-6 1e-8 2.5e+3 42"

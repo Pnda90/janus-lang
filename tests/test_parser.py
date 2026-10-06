@@ -16,7 +16,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(len(ast.declarations[0].fields), 2)
 
     def test_pipeline_chaining(self):
-        code = "fn fwd(xm, wb, bb) pure { ret xm matmul wb add bb relu }"
+        code = "fn fwd(x:m, w:b, b:b) pure { ret x:m matmul w:b add b:b relu }"
         ast = Parser(Lexer(code).tokenize()).parse()
         fn = ast.declarations[0]
         self.assertIsInstance(fn, FnDecl)

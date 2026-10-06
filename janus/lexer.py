@@ -156,13 +156,6 @@ KEYWORDS = {
 
 CASE_LETTERS = {'m', 'b', 't', 'n', 's', 'v'}
 
-# Identificatori comuni di 1 lettera con desinenza saldata
-COMMON_SHORT_CASE_IDS = {
-    f"{char}{case}"
-    for char in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for case in CASE_LETTERS
-}
-
 @dataclass
 class Token:
     type: TokenType
@@ -311,9 +304,25 @@ class Lexer:
                     ident_chars.append(self._advance())
                 ident_str = "".join(ident_chars)
 
-                # Verifica se seguito da .case (es. dim.m o x.b)
-                if self._peek() == '.' and self._peek(1) in CASE_LETTERS and not self._peek(2).isalnum():
-                    self._advance() # salta il '.'
+                # Verifica keyword esatta
+                if ident_str in KEYWORDS:
+                    tokens.append(Token(KEYWORDS[ident_str], ident_str, start_line, start_col, len(ident_str)))
+                    continue
+
+                # Verifica se seguito da :case (es. x:m o w:b o loss:m)
+                if self._peek() == ':' and self._peek(1) in CASE_LETTERS and not (self._peek(2).isalnum() or self._peek(2) == '_'):
+                    self._advance() # salta ':'
+                    case_char = self._advance() # consuma lettera di caso
+                    tokens.append(Token(
+                        TokenType.CASE_IDENT, f"{ident_str}:{case_char}",
+                        start_line, start_col, len(ident_str) + 2,
+                        case=case_char, base_name=ident_str
+                    ))
+                    continue
+
+                # Verifica se seguito da .case (es. dim.s o x.b)
+                if self._peek() == '.' and self._peek(1) in CASE_LETTERS and not (self._peek(2).isalnum() or self._peek(2) == '_'):
+                    self._advance() # salta '.'
                     case_char = self._advance()
                     tokens.append(Token(
                         TokenType.CASE_IDENT, f"{ident_str}.{case_char}",
@@ -322,46 +331,7 @@ class Lexer:
                     ))
                     continue
 
-                # Verifica keyword esatta
-                if ident_str in KEYWORDS:
-                    tokens.append(Token(KEYWORDS[ident_str], ident_str, start_line, start_col, len(ident_str)))
-                    continue
-
-                # Se inizia con maiuscola, è un nome di Tipo/Classe/Agente: sempre IDENT
-                if ident_str[0].isupper():
-                    tokens.append(Token(TokenType.IDENT, ident_str, start_line, start_col, len(ident_str)))
-                    continue
-
-                # Verifica identificatori con caso saldato
-                # 1. Identificatore breve di 2 caratteri (es. xm, wb, bb, yn, qm, kb, vb, am)
-                if ident_str in COMMON_SHORT_CASE_IDS:
-                    tokens.append(Token(
-                        TokenType.CASE_IDENT, ident_str, start_line, start_col, len(ident_str),
-                        case=ident_str[-1], base_name=ident_str[:-1]
-                    ))
-                    continue
-
-                # 2. Identificatore lungo terminante per desinenza di caso esplicita
-                # Desinenze sicure: 'm' (acc), 'b' (abl), 't' (dat), 'v' (voc)
-                # La 's' (genitivo) è ammessa solo se preceduta da '.' o '_' o in forme note (es. dims, shapes)
-                # e MAI per parole con doppia 's' come 'loss' o parole comuni come 'epochs', 'bias', 'params'
-                if len(ident_str) >= 3 and not ident_str.endswith("ss"):
-                    last_ch = ident_str[-1]
-                    if last_ch in ('m', 'b', 't', 'v') and ident_str not in ("sum", "dim", "param", "norm"):
-                        tokens.append(Token(
-                            TokenType.CASE_IDENT, ident_str, start_line, start_col, len(ident_str),
-                            case=last_ch, base_name=ident_str[:-1]
-                        ))
-                        continue
-                    elif last_ch == 's' and ident_str in ("dims", "shapes", "types", "weights", "biases"):
-                        # Forme genitive autorizzate
-                        tokens.append(Token(
-                            TokenType.CASE_IDENT, ident_str, start_line, start_col, len(ident_str),
-                            case='s', base_name=ident_str[:-1]
-                        ))
-                        continue
-
-                # Identificatore generico
+                # Identificatore generico (nessun troncamento euristico)
                 tokens.append(Token(TokenType.IDENT, ident_str, start_line, start_col, len(ident_str)))
                 continue
 

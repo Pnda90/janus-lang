@@ -9,8 +9,8 @@ from janus.type_checker import TypeChecker
 class TestTypeChecker(unittest.TestCase):
     def test_immutable_reassignment_error(self):
         code = """
-        fn bad_mutate(xm) pure {
-            val = xm * 2
+        fn bad_mutate(x:m) pure {
+            val = x:m * 2
             val = val + 1
         }
         """
@@ -24,8 +24,8 @@ class TestTypeChecker(unittest.TestCase):
 
     def test_mutable_reassignment_success(self):
         code = """
-        fn good_mutate(xm) pure {
-            mut val = xm * 2
+        fn good_mutate(x:m) pure {
+            mut val = x:m * 2
             val = val + 1
         }
         """
@@ -36,8 +36,8 @@ class TestTypeChecker(unittest.TestCase):
 
     def test_effect_purity_violation(self):
         code = """
-        fn bad_call(querym: str) pure {
-            ans = call agentv LLM promptm querym
+        fn bad_call(query:m: str) pure {
+            ans = call agentv LLM prompt:m query:m
             ret ans
         }
         """

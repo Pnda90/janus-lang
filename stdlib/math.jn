@@ -1,13 +1,13 @@
 # stdlib/math.jn: Operazioni matematiche elementari e stocastiche
 
-fn square(xm) pure {
-    ret xm pow 2
+fn square(x:m) pure {
+    ret x:m pow 2
 }
 
-fn safe_div(xm, yb, eps: f32 = 1e-8) pure {
-    ret xm / (yb + eps)
+fn safe_div(x:m, y:b, eps: f32 = 1e-8) pure {
+    ret x:m / (y:b + eps)
 }
 
-fn exp_scale(xm, scale: f32) pure {
-    ret (xm * scale) exp
+fn exp_scale(x:m, scale: f32) pure {
+    ret (x:m * scale) exp
 }

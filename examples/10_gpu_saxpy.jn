@@ -1,9 +1,9 @@
 # examples/10_gpu_saxpy.jn
 # Programma 10: Kernel GPU SAXPY Parallelo (Single-Instruction SIMT)
 
-kern saxpy(xm, yt, ab: f32) on gpu[grid, blk]: {
+kern saxpy(x:m, y:t, a:b: f32) on gpu[grid, blk]: {
     idx = tid.x + blk.id * blk.dim
-    if idx < xm.len {
-        yt[idx] = ab * xm[idx] + yt[idx]
+    if idx < x:m.len {
+        y:t[idx] = a:b * x:m[idx] + y:t[idx]
     }
 }

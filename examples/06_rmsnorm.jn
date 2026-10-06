@@ -1,7 +1,7 @@
 # examples/06_rmsnorm.jn
 # Programma 6: RMSNorm (Root Mean Square Normalization) con Pesi Affini
 
-fn rms_norm(xm, wb, eps: f32 = 1e-6) pure {
-    variance = (xm pow 2) sum axb -1 keepb true / xm.dim_last
-    ret (xm / (variance + eps sqrt)) * wb
+fn rms_norm(x:m, w:b, eps: f32 = 1e-6) pure {
+    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last
+    ret (x:m / (variance + eps sqrt)) * w:b
 }

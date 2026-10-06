@@ -6,20 +6,20 @@ type ModelWeights {
     b: vec[f32, C]
 }
 
-fn step(xm, ym, mut modelt: ModelWeights, lr: f32) pure {
-    pred = xm matmul modelt.w add modelt.b
-    loss = ((pred - ym) pow 2) sum / xm.len
-    g = diff loss wrt modelt
-    mut modelt = modelt - lr * g
-    ret loss
+fn step(x:m, y:m, mut model:t: ModelWeights, lr: f32) pure {
+    pred:n = x:m matmul model:t.w add model:t.b
+    loss:n = ((pred:n - y:m) pow 2) sum / x:m.len
+    g = diff loss:n wrt model:t
+    mut model:t = model:t - lr * g
+    ret loss:n
 }
 
-fn train_loop(datam, labelsm, mut modelt: ModelWeights, epochs: i32, bs: i32, lr: f32) pure {
+fn train_loop(data:m, labels:m, mut model:t: ModelWeights, epochs: i32, bs: i32, lr: f32) pure {
     for ep in 0..epochs {
-        for b in 0..(datam.len / bs) {
-            xb = datam[b * bs .. (b + 1) * bs]
-            yb = labelsm[b * bs .. (b + 1) * bs]
-            loss = step xb yb modelt lr
+        for b in 0..(data:m.len / bs) {
+            x:b = data:m[b * bs .. (b + 1) * bs]
+            y:b = labels:m[b * bs .. (b + 1) * bs]
+            loss:n = step x:b y:b model:t lr
         }
     }
 }

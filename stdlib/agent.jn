@@ -17,7 +17,7 @@ schema CodeExecTool {
     exit_code: i32
 }
 
-fn query_knowledge(querym: str) io {
-    docs_out = call agentv Retriever promptm querym toolb SearchTool
+fn query_knowledge(query:m: str) io {
+    docs_out = call agentv Retriever prompt:m query:m tool:b SearchTool
     ret docs_out
 }

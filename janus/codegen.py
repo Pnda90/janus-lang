@@ -144,16 +144,10 @@ class CodeGenerator:
                     base_t = t.split("[")[0]
                     idx_suffix = t[len(base_t):]
 
-                if "." in base_t and base_t.split(".")[-1] in ("m", "b", "t", "n", "s", "v"):
+                if ":" in base_t:
+                    c_base = base_t.split(":")[0]
+                elif "." in base_t and base_t.split(".")[-1] in ("m", "b", "t", "n", "s", "v"):
                     c_base = base_t.split(".")[0]
-                elif len(base_t) == 2 and base_t[1] in ("m", "b", "t", "n", "s", "v") and base_t[0].isalpha():
-                    c_base = base_t[0]
-                elif base_t.endswith("m") and base_t in ("datam", "labelsm", "imgm", "lossm", "querym", "taskm", "xm", "ym"):
-                    c_base = base_t[:-1]
-                elif base_t.endswith("b") and base_t in ("paramb", "linb", "mlpb", "noise_predb", "wb", "bb", "kb", "vb"):
-                    c_base = base_t[:-1]
-                elif base_t.endswith("t") and base_t in ("buft", "yt", "wt", "mlpt"):
-                    c_base = base_t[:-1]
                 else:
                     c_base = base_t
                 clean_targets.append(f"{c_base}{idx_suffix}")

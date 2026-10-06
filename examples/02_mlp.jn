@@ -8,9 +8,9 @@ type MLP {
     b2: vec[f32, C]
 }
 
-fn mlp_step(xm, ym, mlpb: MLP, lr: f32) pure {
-    pred = xm matmul mlpb.w1 add mlpb.b1 relu matmul mlpb.w2 add mlpb.b2
-    loss = ((pred - ym) pow 2) sum / xm.len
-    g = diff loss wrt mlpb
-    ret (mlpb - lr * g, loss)
+fn mlp_step(x:m, y:m, mlp:b: MLP, lr: f32) pure {
+    pred:n = x:m matmul mlp:b.w1 add mlp:b.b1 relu matmul mlp:b.w2 add mlp:b.b2
+    loss:n = ((pred:n - y:m) pow 2) sum / x:m.len
+    g = diff loss:n wrt mlp:b
+    ret (mlp:b - lr * g, loss:n)
 }

@@ -5,20 +5,20 @@ type Linear {
     b: vec[f32, D_out]
 }
 
-fn linear_fwd(xm, linb: Linear) pure {
-    ret xm matmul linb.w add linb.b
+fn linear_fwd(x:m, lin:b: Linear) pure {
+    ret x:m matmul lin:b.w add lin:b.b
 }
 
-fn linear_relu(xm, linb: Linear) pure {
-    ret xm matmul linb.w add linb.b relu
+fn linear_relu(x:m, lin:b: Linear) pure {
+    ret x:m matmul lin:b.w add lin:b.b relu
 }
 
-fn rms_norm(xm, wb, eps: f32 = 1e-6) pure {
-    variance = (xm pow 2) sum axb -1 keepb true / xm.dim_last
-    ret (xm / (variance + eps sqrt)) * wb
+fn rms_norm(x:m, w:b, eps: f32 = 1e-6) pure {
+    variance = (x:m pow 2) sum ax:b -1 keep:b true / x:m.dim_last
+    ret (x:m / (variance + eps sqrt)) * w:b
 }
 
-fn multi_head_attention(qm, kb, vb) pure {
-    scale = 1.0 / (kb.dim_last.sqrt)
-    ret (qm @ kb.trans) * scale smax @ vb
+fn multi_head_attention(q:m, k:b, v:b) pure {
+    scale = 1.0 / (k:b.dim_last.sqrt)
+    ret (q:m @ k:b.trans) * scale smax @ v:b
 }

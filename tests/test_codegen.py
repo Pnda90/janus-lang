@@ -31,9 +31,9 @@ class TestCodegen(unittest.TestCase):
 
     def test_transpile_attention(self):
         code = """
-        fn mha(qm, kb, vb) pure {
-            scale = 1.0 / (kb.dim_last.sqrt)
-            ret (qm @ kb.trans) * scale smax @ vb
+        fn mha(q:m, k:b, v:b) pure {
+            scale = 1.0 / (k:b.dim_last.sqrt)
+            ret (q:m @ k:b.trans) * scale smax @ v:b
         }
         """
         ast = Parser(Lexer(code).tokenize()).parse()

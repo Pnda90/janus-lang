@@ -9,9 +9,9 @@ schema SearchQuery {
     scores: vec[f32]
 }
 
-fn rag_pipeline(querym: str) io {
-    docs_out = call agentv Retriever promptm querym toolb SearchQuery
+fn rag_pipeline(query:m: str) io {
+    docs_out = call agentv Retriever prompt:m query:m tool:b SearchQuery
     selected = docs_out.docs
-    ans = call agentv LLM promptm ["Contesto:", selected, "Domanda:", querym]
+    ans = call agentv LLM prompt:m ["Contesto:", selected, "Domanda:", query:m]
     ret ans
 }

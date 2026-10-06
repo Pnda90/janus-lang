@@ -384,13 +384,21 @@ class Parser:
         args = []
         while True:
             cur = self._current()
+            if self._peek(1).type == TokenType.ASSIGN:
+                break
             if cur.type == TokenType.CASE_IDENT:
+                if cur.case == "n":
+                    break
                 case_val = cur.case or "m"
                 arg_expr = self._parse_postfix_expr()
                 args.append(CaseArg(case=case_val, expr=arg_expr, line=cur.line, col=cur.col))
-            elif cur.type == TokenType.IDENT and cur.value in ("max", "avg", "true", "false"):
-                self.cursor += 1
-                args.append(CaseArg(case="b", expr=IdentExpr(name=cur.value, line=cur.line, col=cur.col), line=cur.line, col=cur.col))
+            elif cur.type == TokenType.IDENT:
+                if self._peek(1).type in (TokenType.ASSIGN, TokenType.COMMA):
+                    break
+                if self.cursor > 0 and cur.line > self.tokens[self.cursor - 1].line:
+                    break
+                arg_expr = self._parse_postfix_expr()
+                args.append(CaseArg(case="b", expr=arg_expr, line=cur.line, col=cur.col))
             elif cur.type in (TokenType.LIT_INT, TokenType.LIT_FLOAT):
                 self.cursor += 1
                 val = float(cur.value) if '.' in cur.value or 'e' in cur.value else int(cur.value)
@@ -535,8 +543,8 @@ class Parser:
                 line=call_tok.line, col=call_tok.col
             )
 
-        # Chiamata a funzione definita dall'utente in notazione prefissa (es. step xb yb modelt lr)
-        AGENT_LABELS = {"promptm", "toolb", "timeoutb", "ctxb"}
+        # Chiamata a funzione definita dall'utente in notazione prefissa (es. step x:b y:b model:t lr)
+        AGENT_LABELS = {"promptm", "toolb", "timeoutb", "ctxb", "prompt:m", "tool:b", "timeout:b", "ctx:b"}
         if (cur.type == TokenType.IDENT and 
             self._peek(1).type == TokenType.CASE_IDENT and 
             self._peek(1).value not in AGENT_LABELS and
