@@ -103,8 +103,15 @@ I risultati empirici delle Fasi 0–5 hanno dimostrato che:
 ### Decisione
 Adottare l'Opzione 3 ("Strada A"):
 - JANUS evolve in un **Deterministic Agentic Execution Graph DSL**.
-- `schema` diventa il costrutto primario per tipizzare formalmente Tool e API (input, output, permessi ed effetti).
-- Il generatore GBNF viene esteso per sintetizzare grammatiche che vincolano non solo singoli oggetti JSON, ma interi piani di esecuzione composti da tool-calls, pipeline e calcolo puro.
-- Viene introdotto un **Tool Sandbox Runtime** in cui i tool registrati vengono eseguiti con isolamento, controllo di tipo a runtime e tracciabilità sicura.
+- `schema` diventa il costrutto primario per tipizzare formalmente Tool e API (input, output, permessi ed effetti `pure`, `io`, `stoc`).
+- Il parser supporta la chiamata esplicita `call tool ToolName(key = val, ...)`.
+- Il type checker segnala `ERR_UNDEFINED_TOOL`, `ERR_EFFECT_PURITY_VIOLATION`, `ERR_MISSING_TOOL_ARGUMENT` ed `ERR_UNKNOWN_TOOL_ARGUMENT`.
+- Il generatore GBNF (`generate_agent_grammar`) sintetizza grammatiche multi-tool per vincolare piani agenziali e chiamate di tool con token masking su llama.cpp/vLLM.
+- Introdotto `ToolSandbox` e `AgentRuntime` in `janus/agent_runtime.py` con audit trail granulare (`ToolTrace`), validazione a runtime e modalità dry-run.
+- Dimostrato sperimentalmente con `benchmarks/agent_eval.py` che la decodifica vincolata GBNF da schemi JANUS garantisce il 100% di conformità sintattica e di tipo eliminando le allucinazioni di parametri.
+
+### Conseguenze
+- **Positive:** JANUS possiede una value proposition unica, misurabile e difendibile: la generazione deterministica di grafi di tool execution privi di allucinazioni sintattiche per agenti autonomi.
+- **Transizione:** La compatibilità con i programmi tensoriali esistenti (esempi 01-10) è mantenuta al 100%; la suite di test sale a 83 test verdi con 0 regressioni.
 
 

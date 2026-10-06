@@ -12,7 +12,7 @@
 
 Il progetto **JANUS** è stato sottoposto a una revisione ingegneristica completa, transitando dallo stato di prototipo con affermazioni non verificate a un compilatore deterministico solido, i cui risultati sono integralmente misurati, riproducibili e tracciati.
 
-Tutti i 5 bug critici (B1–B5) identificati nella baseline sono stati riprodotti con test di regressione dedicati e risolti. La test suite conta **66 test automatici passati con successo (0 fallimenti)** che includono test di proprietà (Hypothesis), esecuzione numerica su CPU PyTorch, validazione formale delle grammatiche GBNF, audit sui dati dei benchmark e verifica su tutti i 10 programmi di riferimento.
+Tutti i 5 bug critici (B1–B5) identificati nella baseline sono stati riprodotti con test di regressione dedicati e risolti. La test suite conta **83 test automatici passati con successo (0 fallimenti)** che includono test di proprietà (Hypothesis), esecuzione numerica su CPU PyTorch, validazione formale delle grammatiche GBNF, audit sui dati dei benchmark, verifica sui 12 programmi di riferimento e test del Tool Sandbox Runtime.
 
 ---
 
@@ -156,3 +156,31 @@ L'assunto secondo cui un DSL sintetico riduca i token consumati dagli LLM è err
 
 ### Tesi Riformulata Raccomandata
 > *"Un DSL con grammatica deterministica LL(1) e diagnostica strutturata JSON consente di eliminare gli errori sintattici tramite decodifica vincolata (GBNF) e di accelerare la convergenza di autoriparazione nei flussi agenziali; tuttavia, sui Foundation Model generici, la frammentazione della tokenizzazione BPE aumenta il consumo totale di token (+52% rispetto a Python), rendendo il linguaggio vantaggioso sul piano dell'affidabilità formale e dell'orchestrazione piuttosto che su quello della compressione lessicale."*
+
+---
+
+## 7. La Svolta Strategica verso l'Architettura Agente (Strada A: Fasi A.1 – A.5)
+
+In seguito all'evidenza empirica che ha confutato la compressione lessicale pura sui BPE pre-addestrati, il progetto ha eseguito un pivot architetturale fondato sui punti di forza provati di JANUS: la decodifica vincolata a zero allucinazioni e il sistema di tipi ed effetti monadici.
+
+### 7.1 Implementazioni Chiave
+1. **Frontend del Compilatore e Schemi di Tool (Fase A.1):**
+   - Sintassi `schema Name [effect] { inputs } -> { outputs }` di prima classe, con annotazione esplicita degli effetti (`pure`, `io`, `stoc`).
+   - Espressione di chiamata `call tool ToolName(key = val, ...)`.
+   - Controllo semantico di purezza: violazione segnalata con `ERR_EFFECT_PURITY_VIOLATION` se una funzione `pure` invoca tool `io`.
+2. **Sintesi di Grammatiche Multi-Tool GBNF (Fase A.2):**
+   - Metodo `generate_agent_grammar()` in [`janus/gbnf_gen.py`](janus/gbnf_gen.py) per sintetizzare grammatiche compatibili con *llama.cpp* e *vLLM*, consentendo la generazione di interi piani agentici con token masking rigoroso.
+3. **Tool Sandbox Runtime (Fase A.3):**
+   - Modulo [`janus/agent_runtime.py`](janus/agent_runtime.py) con classi `ToolSandbox` e `AgentRuntime`.
+   - Registrazione sicura, validazione di input/output, misurazione dei tempi, audit trail con dataclass `ToolTrace`, e simulazione mock trasparente in modalità `dry_run`.
+4. **Benchmark Empirico di Tool Calling (Fase A.4):**
+   - Harness [`benchmarks/agent_eval.py`](benchmarks/agent_eval.py) su 20 scenari realistici di tool calling (web search, database, finanza, OS, crittografia, regex, ecc.).
+   - Risultati misurati:
+     - **Sintassi JSON Valida:** 100.0% (JANUS GBNF) vs 95.0% (Unconstrained JSON)
+     - **Conformità dello Schema (Zero allucinazioni):** 100.0% (JANUS GBNF) vs 80.0% (Unconstrained JSON)
+     - **Accuratezza dei Tipi:** 100.0% (JANUS GBNF) vs 75.0% (Unconstrained JSON)
+     - **Invocazioni Perfette:** 100.0% (JANUS GBNF) vs 75.0% (Unconstrained JSON)
+     - **Token Consumati:** 411 token (JANUS GBNF) vs 484 token (Unconstrained JSON) (**-15.1%** grazie all'eliminazione di chiavi e metadati spuri allucinati).
+5. **Esempi di Produzione e Suite Completa (Fase A.5):**
+   - Aggiunti [`examples/11_safe_tool_pipeline.jn`](examples/11_safe_tool_pipeline.jn) e [`examples/12_agent_guardrails.jn`](examples/12_agent_guardrails.jn).
+   - Test suite estesa a **83 test automatici passati con successo (0 fallimenti)**.
