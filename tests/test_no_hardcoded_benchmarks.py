@@ -54,7 +54,7 @@ def test_all_10_examples_compile_cleanly():
 
     examples_dir = "examples"
     files = sorted([f for f in os.listdir(examples_dir) if f.endswith(".jn")])
-    assert len(files) == 10, f"Attesi 10 esempi, trovati {len(files)}"
+    assert len(files) >= 10, f"Attesi almeno 10 esempi, trovati {len(files)}"
 
     for f_name in files:
         f_path = os.path.join(examples_dir, f_name)

@@ -1,0 +1,26 @@
+# examples/12_agent_guardrails.jn
+# Programma 12: Dimostrazione dei guardrail di effetto: calcoli verificabili (pure) vs azioni con side-effects (io)
+
+schema SafeMathEvaluator pure {
+    expression: str
+} -> {
+    value: f32,
+    valid: bool
+}
+
+schema AuditTrail io {
+    action: str,
+    actor: str,
+    details: str
+} -> {
+    logged: bool
+}
+
+fn safe_audit_and_compute(expr: str, user_id: str) io {
+    math_res = call tool SafeMathEvaluator(expression = expr)
+    if math_res.valid {
+        logged = call tool AuditTrail(action = "compute", actor = user_id, details = expr)
+        ret math_res.value
+    }
+    ret 0.0
+}
