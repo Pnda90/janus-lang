@@ -5,6 +5,7 @@ Traduce l'AST di JANUS in codice Python (3.10+) / PyTorch / NumPy ad alte presta
 
 import keyword
 from typing import List, Optional, Any
+from janus import __version__
 from janus.ast_nodes import (
     Program, ASTNode, TypeDecl, FieldDecl, SchemaDecl, FnDecl, KernelDecl, Param,
     Stmt, BindingStmt, RetStmt, IfStmt, ForStmt, LoopStmt, BreakStmt, ContinueStmt, ExprStmt,
@@ -33,7 +34,7 @@ class CodeGenerator:
 
     def generate(self, program: Program) -> str:
         lines = [
-            "# Generated automatically by JANUS Compiler (janusc v0.1.0)",
+            f"# Generated automatically by JANUS Compiler (janusc v{__version__})",
             "# Target: Python (3.10+) / PyTorch / NumPy Acceleration",
             "",
             "import math",

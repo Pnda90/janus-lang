@@ -1,6 +1,5 @@
 """
-JANUS: The Forward & Backward AI-Native Programming Language
-Inspired by Regularized Latin Morphology, Autodiff & Modern ML Systems.
+JANUS: DSL con effect system per tool agentici e sintesi GBNF.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

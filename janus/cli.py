@@ -247,14 +247,20 @@ def cmd_tokens(args):
         print(f"Errore I/O: Impossibile leggere '{source_path}': {e}", file=sys.stderr)
         sys.exit(2)
 
-    import re
-    tokens = re.findall(r"[a-zA-Z_]+|[0-9]+|[:\.\,\;\(\)\[\]\{\}\=\+\-\*\/\@\>\<\_\~]|\s+", source)
-    non_empty = [t for t in tokens if t.strip() or t == '\n']
-    
     print(f"Analisi dei Token per: {source_path}")
     print(f"  Lunghezza caratteri: {len(source)}")
     print(f"  Righe di codice (LoC): {len([l for l in source.splitlines() if l.strip()])}")
-    print(f"  Token BPE stimati:     {len(non_empty)}")
+
+    try:
+        import tiktoken
+        enc = tiktoken.get_encoding("cl100k_base")
+        bpe_count = len(enc.encode(source))
+        print(f"  Token BPE (cl100k_base, tiktoken): {bpe_count}")
+    except ImportError:
+        import re
+        tokens = re.findall(r"[a-zA-Z_]+|[0-9]+|[:\.\,\;\(\)\[\]\{\}\=\+\-\*\/\@\>\<\_\~]|\s+", source)
+        non_empty = [t for t in tokens if t.strip() or t == '\n']
+        print(f"  Token stimati: {len(non_empty)} (stima euristica regex, non BPE reale; installa tiktoken per il conteggio esatto)")
 
 def cmd_export_jsonschema(args):
     source_path = args.file
@@ -291,7 +297,7 @@ def cmd_export_jsonschema(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="janusc",
-        description="JANUS Compiler & Toolchain: Token-Efficient, AI-Native Language"
+        description="JANUS: DSL con effect system per tool agentici e sintesi GBNF"
     )
     subparsers = parser.add_subparsers(dest="command", help="Comando da eseguire")
 
