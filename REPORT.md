@@ -92,7 +92,7 @@ I tokenizer moderni sono ottimizzati sui linguaggi di programmazione mainstream.
 - In JANUS, l'annotazione di caso `x:m` viene frammentata in due token (`x` e `:m`), `w:b` in due token, la keyword `stoc` in due token subword (`st` + `oc`). Di conseguenza, pur avendo una sintassi concisa a caratteri, la densità token/carattere di JANUS è nettamente peggiore di quella di Python.
 
 ### 3.2 Valutazione LLM (Harness 30 Compiti)
-File sorgente dei risultati: [`benchmarks/results/llm_eval_dry_run.json`](benchmarks/results/llm_eval_dry_run.json)
+File sorgente dei risultati: [`benchmarks/results/simulated_llm_eval.json`](benchmarks/results/simulated_llm_eval.json)
 - L'harness è implementato in [`benchmarks/llm_eval.py`](benchmarks/llm_eval.py) e copre 30 operazioni tensoriali tipiche del deep learning (forward lineare, MSE, softmax, RMSNorm, attenzione scalata, GELU, residual connection, cosine similarity, ecc.).
 - Tutti i 30 compiti sono validati continuativamente da [`tests/test_llm_eval_tasks.py`](tests/test_llm_eval_tasks.py).
 - **Stato Esecuzione API:** *Non misurata su API remota a pagamento* nell'ambiente locale per assenza di chiavi di autenticazione fornite dall'utente (`OPENAI_API_KEY` non definita). L'esecuzione è stata convalidata in modalità `--dry-run` deterministica, confermando l'efficacia del protocollo di autoriparazione multi-turn con passaggio della diagnostica JSON.
@@ -118,7 +118,7 @@ pytest -v
 # 3. Esecuzione benchmark dei token (genera benchmarks/results/tokens_benchmark.json)
 python benchmarks/tokens.py
 
-# 4. Esecuzione harness LLM in modalita' simulata (genera benchmarks/results/llm_eval_dry_run.json)
+# 4. Esecuzione harness LLM in modalita' simulata (genera benchmarks/results/simulated_llm_eval.json)
 python benchmarks/llm_eval.py --dry-run
 
 # 5. Esecuzione harness LLM con API reale (opzionale con credenziali)
@@ -175,12 +175,45 @@ In seguito all'evidenza empirica che ha confutato la compressione lessicale pura
    - Registrazione sicura, validazione di input/output, misurazione dei tempi, audit trail con dataclass `ToolTrace`, e simulazione mock trasparente in modalità `dry_run`.
 4. **Benchmark Empirico di Tool Calling (Fase A.4):**
    - Harness [`benchmarks/agent_eval.py`](benchmarks/agent_eval.py) su 20 scenari realistici di tool calling (web search, database, finanza, OS, crittografia, regex, ecc.).
-   - Risultati misurati:
+   - Risultati simulati (dry-run baseline):
      - **Sintassi JSON Valida:** 100.0% (JANUS GBNF) vs 95.0% (Unconstrained JSON)
-     - **Conformità dello Schema (Zero allucinazioni):** 100.0% (JANUS GBNF) vs 80.0% (Unconstrained JSON)
+     - **Conformità dello Schema:** 100.0% (JANUS GBNF) vs 80.0% (Unconstrained JSON)
      - **Accuratezza dei Tipi:** 100.0% (JANUS GBNF) vs 75.0% (Unconstrained JSON)
      - **Invocazioni Perfette:** 100.0% (JANUS GBNF) vs 75.0% (Unconstrained JSON)
      - **Token Consumati:** 411 token (JANUS GBNF) vs 484 token (Unconstrained JSON) (**-15.1%** grazie all'eliminazione di chiavi e metadati spuri allucinati).
+   - *Nota metodologica:* Si veda la Sezione 8 ("Audit del benchmark") per la demarcazione formale tra simulazione euristica e misure su LLM reali.
 5. **Esempi di Produzione e Suite Completa (Fase A.5):**
    - Aggiunti [`examples/11_safe_tool_pipeline.jn`](examples/11_safe_tool_pipeline.jn) e [`examples/12_agent_guardrails.jn`](examples/12_agent_guardrails.jn).
    - Test suite estesa a **84 test automatici passati con successo (0 fallimenti)**.
+
+---
+
+## 8. Audit del Benchmark (Simulato vs Misurato)
+
+In conformità con i principi di trasparenza scientifica del progetto, è stato condotto un audit approfondito degli script e dei risultati in `benchmarks/`:
+
+### 8.1 Cosa fa `--dry-run` in `benchmarks/agent_eval.py`
+- L'analisi del codice di `benchmarks/agent_eval.py` rivela che la modalità `--dry-run` (impostata originariamente di default) non effettua alcuna chiamata a un LLM (locale o remoto).
+- La funzione `simulate_unconstrained_response(task, task_idx)` genera le risposte non vincolate applicando regole deterministiche basate sull'operatore modulo:
+  - `task_idx % 7 == 2` inietta una violazione di tipo (es. conversione di un intero in stringa).
+  - `task_idx % 5 == 4` inietta parametri allucinati (`reasoning_step`, `tool_version`).
+  - `task_idx % 19 == 6` inietta un errore di sintassi JSON (trailing comma).
+- I valori risultanti (95.0% validità sintattica, 80.0% conformità di schema, 75.0% accuratezza dei tipi, 75.0% chiamate perfette) sono dunque **prodotti da una simulazione sintetica ad hoc** che riproduce i tipici failure mode della letteratura, **non da un campionamento sperimentale su un modello reale**.
+- Parallelamente, `simulate_gbnf_response()` restituisce direttamente `json.dumps(task["sample_valid_input"])`, producendo tautologicamente il 100.0% su tutte le metriche.
+
+### 8.2 Rinegoziazione e Trasparenza dei File di Risultato
+Per evitare qualsiasi fraintendimento e separare nettamente le simulazioni dalle misure empiriche:
+- I file di benchmark dry-run in `benchmarks/results/` sono stati rinominati con il prefisso esplicito `simulated_`:
+  - `agent_eval_dry_run_*.json` $\rightarrow$ `simulated_agent_eval_*.json`
+  - `llm_eval_dry_run.json` $\rightarrow$ `simulated_llm_eval.json`
+- Tutti i file contengono nel proprio blocco `metadata` l'avvertenza formale: `"warning": "SIMULATED / DRY-RUN DATA: DO NOT REPORT AS REAL MEASUREMENTS"`.
+
+### 8.3 Tabella di Demarcazione: Misurato vs Simulato
+| Ambito / Script | File di Output | Tipologia | Dettagli |
+| :--- | :--- | :---: | :--- |
+| **Token ed Efficienza Lessicale** (`benchmarks/tokens.py`) | `benchmarks/results/tokens_benchmark.json` | **Misurato** | Tokenizer BPE ufficiali (`cl100k_base`, `o200k_base` via `tiktoken`) eseguiti sui 10 programmi reali su disco. |
+| **Correttezza Numerica e Autodiff** (`tests/test_execution_reference.py`) | Esecuzione suite PyTest | **Misurato** | Esecuzione reale con PyTorch CPU: convergenza pesi, loss, gradienti e layer di riferimento. |
+| **Validità Grammatiche GBNF** (`tests/test_gbnf_validator.py`) | Esecuzione suite PyTest | **Misurato** | Parsing a discesa ricorsiva della grammatica BNF/GBNF generata e test accept/reject. |
+| **Sandbox Runtime** (`tests/test_agent_runtime.py`) | Esecuzione suite PyTest | **Misurato** | Esecuzione su interprete Python con intercettazione eccezioni, profiling temporale e audit trail. |
+| **Agentic Tool Calling** (`benchmarks/agent_eval.py --dry-run`) | `benchmarks/results/simulated_agent_eval_*.json` | **Simulato** | Simulazione euristica dei failure mode senza inferenza su LLM reale. |
+| **LLM Self-Repair Harness** (`benchmarks/llm_eval.py --dry-run`) | `benchmarks/results/simulated_llm_eval.json` | **Simulato** | Valutazione del protocollo a feedback JSON tramite mock engine senza chiamate API. |

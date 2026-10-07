@@ -850,7 +850,7 @@ def main():
     if args.output:
         out_path = args.output
     elif is_dry_run:
-        out_path = "benchmarks/results/llm_eval_dry_run.json"
+        out_path = "benchmarks/results/simulated_llm_eval.json"
     else:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         out_path = f"benchmarks/results/llm_eval_{model}_{ts}.json"

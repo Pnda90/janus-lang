@@ -468,7 +468,7 @@ def main():
         out_path = args.output
     else:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        prefix = "agent_eval_dry_run" if args.dry_run else "agent_eval_live"
+        prefix = "simulated_agent_eval" if args.dry_run else "real_agent_eval"
         out_path = f"benchmarks/results/{prefix}_{ts}.json"
 
     payload = {
