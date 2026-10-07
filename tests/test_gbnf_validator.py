@@ -44,37 +44,44 @@ def test_schema_search_query_accept_reject():
     schemas = load_schemas_from_file("examples/08_rag_pipeline.jn")
     schema = next(s for s in schemas if s.name == "SearchQuery")
 
-    # CASO VALIDO: accettato
+    # CASO VALIDO (senza status fittizio per default)
     valid_json = json.dumps({
-        "status": "ok",
         "docs": ["Documento 1", "Documento 2"],
         "scores": [0.95, 0.82]
     })
     ok, msg = GBNFValidator.validate_json_against_schema(schema, valid_json)
     assert ok is True, f"JSON valido rifiutato: {msg}"
 
-    # CASO NON VALIDO: status mancante
+    # CASO CON with_status=True
+    valid_with_status = json.dumps({
+        "status": "ok",
+        "docs": ["Documento 1"],
+        "scores": [0.5]
+    })
+    ok, _ = GBNFValidator.validate_json_against_schema(schema, valid_with_status, with_status=True)
+    assert ok is True
+
     invalid_status = json.dumps({"status": "error", "docs": ["D1"], "scores": [0.5]})
-    ok, _ = GBNFValidator.validate_json_against_schema(schema, invalid_status)
+    ok, _ = GBNFValidator.validate_json_against_schema(schema, invalid_status, with_status=True)
     assert ok is False
 
     # CASO NON VALIDO: campo scores mancante
-    missing_field = json.dumps({"status": "ok", "docs": ["D1"]})
+    missing_field = json.dumps({"docs": ["D1"]})
     ok, _ = GBNFValidator.validate_json_against_schema(schema, missing_field)
     assert ok is False
 
     # CASO NON VALIDO: tipo scores errato (stringa invece di lista di numeri)
-    wrong_type = json.dumps({"status": "ok", "docs": ["D1"], "scores": "0.95"})
+    wrong_type = json.dumps({"docs": ["D1"], "scores": "0.95"})
     ok, _ = GBNFValidator.validate_json_against_schema(schema, wrong_type)
     assert ok is False
 
     # CASO NON VALIDO: tipo docs errato (lista di numeri invece di stringhe)
-    wrong_elem_type = json.dumps({"status": "ok", "docs": [1, 2, 3], "scores": [0.1, 0.2, 0.3]})
+    wrong_elem_type = json.dumps({"docs": [1, 2, 3], "scores": [0.1, 0.2, 0.3]})
     ok, _ = GBNFValidator.validate_json_against_schema(schema, wrong_elem_type)
     assert ok is False
 
     # CASO NON VALIDO: campo extra non previsto
-    extra_field = json.dumps({"status": "ok", "docs": ["D1"], "scores": [0.5], "extra": 123})
+    extra_field = json.dumps({"docs": ["D1"], "scores": [0.5], "extra": 123})
     ok, _ = GBNFValidator.validate_json_against_schema(schema, extra_field)
     assert ok is False
 
@@ -86,7 +93,6 @@ def test_schema_action_accept_reject():
 
     # CASO VALIDO
     valid_json = json.dumps({
-        "status": "ok",
         "result": "Operazione completata con successo",
         "ok": True
     })
@@ -95,7 +101,6 @@ def test_schema_action_accept_reject():
 
     # CASO NON VALIDO: ok è stringa anziché boolean
     wrong_bool = json.dumps({
-        "status": "ok",
         "result": "test",
         "ok": "true"
     })
@@ -104,7 +109,6 @@ def test_schema_action_accept_reject():
 
     # CASO NON VALIDO: result è un numero anziché str
     wrong_result = json.dumps({
-        "status": "ok",
         "result": 404,
         "ok": False
     })
@@ -119,7 +123,6 @@ def test_schema_code_exec_tool_accept_reject():
 
     # CASO VALIDO
     valid_json = json.dumps({
-        "status": "ok",
         "stdout": "Hello world\n",
         "stderr": "",
         "exit_code": 0
@@ -129,7 +132,6 @@ def test_schema_code_exec_tool_accept_reject():
 
     # CASO NON VALIDO: exit_code è un float invece di un intero
     wrong_code = json.dumps({
-        "status": "ok",
         "stdout": "",
         "stderr": "error",
         "exit_code": 1.5
@@ -144,7 +146,6 @@ def test_schema_search_tool_accept_reject():
     schema = next(s for s in schemas if s.name == "SearchTool")
 
     valid_json = json.dumps({
-        "status": "ok",
         "docs": ["Knowledge article A"],
         "scores": [0.99]
     })

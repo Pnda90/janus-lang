@@ -81,9 +81,10 @@ class GBNFValidator:
             defined_rules.add(rule_name)
 
             # Estrai identificatori di non-terminali referenziati
-            # Rimuovi stringhe tra virgolette e classi tra parentesi quadre prima di cercare simboli
-            clean_expr = re.sub(r'"(\\"|[^"])*"', ' ', expr)
-            clean_expr = re.sub(r'\[(\\]|[^\]])*\]', ' ', clean_expr)
+            # Rimuovi prima le classi di caratteri [ ... ] (che possono contenere apici come ["])
+            # e poi le stringhe letterali " ... "
+            clean_expr = re.sub(r'\[(?:\\.|[^\]])*\]', ' ', expr)
+            clean_expr = re.sub(r'"(?:\\.|[^"])*"', ' ', clean_expr)
             tokens = re.findall(r'\b[a-zA-Z0-9_-]+\b', clean_expr)
             rule_dependencies[rule_name] = tokens
 
@@ -100,10 +101,14 @@ class GBNFValidator:
         return True
 
     @staticmethod
-    def validate_json_against_schema(schema: SchemaDecl, json_text: str) -> Tuple[bool, str]:
+    def reference_validate_json_against_schema(schema: SchemaDecl, json_text: str, with_status: bool = False) -> Tuple[bool, str]:
         """
-        Verifica se un testo JSON è accettato o rifiutato dalla grammatica GBNF dello schema.
-        Restituisce (True, "OK") oppure (False, reason).
+        Validatore di riferimento in Python per verificare se un payload JSON rispetta i campi di uno schema JANUS.
+        
+        NOTA METODOLOGICA:
+        Questo è un controllo euristico di riferimento in Python, NON il motore di riconoscimento della grammatica GBNF.
+        Per la verifica formale del riconoscimento sintattico della grammatica GBNF generata,
+        utilizzare il recognizer dedicato `tests/support/gbnf_engine.py`.
         """
         try:
             data = json.loads(json_text)
@@ -113,12 +118,13 @@ class GBNFValidator:
         if not isinstance(data, dict):
             return False, "La radice deve essere un oggetto JSON dict"
 
-        # Lo schema GBNF vincola `"status": "ok"`
-        if data.get("status") != "ok":
-            return False, f"Manca campo obbligatorio status='ok' (trovato: {data.get('status')})"
+        expected_fields = set()
+        if with_status:
+            if data.get("status") != "ok":
+                return False, f"Manca campo obbligatorio status='ok' (trovato: {data.get('status')})"
+            expected_fields.add("status")
 
         # Verifica tutti i campi definiti in outputs
-        expected_fields = {"status"}
         for out in schema.outputs:
             fname = out.name
             expected_fields.add(fname)
@@ -132,10 +138,10 @@ class GBNFValidator:
                 if texpr.name == "str":
                     if not isinstance(val, str):
                         return False, f"Campo '{fname}' atteso str, trovato {type(val).__name__}"
-                elif texpr.name in ("f32", "f16"):
+                elif texpr.name in ("f32", "f16", "f64", "bf16"):
                     if not isinstance(val, (int, float)) or isinstance(val, bool):
                         return False, f"Campo '{fname}' atteso float/number, trovato {type(val).__name__}"
-                elif texpr.name in ("i32", "i64"):
+                elif texpr.name in ("i32", "i64", "i8", "i16"):
                     if not isinstance(val, int) or isinstance(val, bool):
                         return False, f"Campo '{fname}' atteso int, trovato {type(val).__name__}"
                 elif texpr.name == "bool":
@@ -148,6 +154,9 @@ class GBNFValidator:
                 if texpr.dtype == "str":
                     if not all(isinstance(item, str) for item in val):
                         return False, f"Tutti gli elementi di '{fname}' devono essere str"
+                elif texpr.dtype in ("i32", "i64", "i8", "i16"):
+                    if not all(isinstance(item, int) and not isinstance(item, bool) for item in val):
+                        return False, f"Tutti gli elementi di '{fname}' devono essere int"
                 else:
                     if not all(isinstance(item, (int, float)) and not isinstance(item, bool) for item in val):
                         return False, f"Tutti gli elementi di '{fname}' devono essere numeri"
@@ -158,3 +167,7 @@ class GBNFValidator:
             return False, f"Campi inattesi non ammessi dalla grammatica: {extra_fields}"
 
         return True, "OK"
+
+    # Alias retrocompatibile
+    validate_json_against_schema = reference_validate_json_against_schema
+
