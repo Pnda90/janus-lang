@@ -36,6 +36,11 @@ class CustomType(TypeExpr):
 class ListType(TypeExpr):
     inner: TypeExpr = field(default_factory=PrimitiveType)
 
+@dataclass
+class ToolOutputType(TypeExpr):
+    tool_name: str = ""
+    fields: Dict[str, Optional[TypeExpr]] = field(default_factory=dict)
+
 # =========================================================================
 # Espressioni
 # =========================================================================
@@ -104,6 +109,7 @@ class ToolCallExpr(Expr):
     tool_name: str = ""
     named_args: Dict[str, Expr] = field(default_factory=dict)
     positional_args: List[Expr] = field(default_factory=list)
+    duplicate_args: List[str] = field(default_factory=list)
 
 @dataclass
 class DiffExpr(Expr):

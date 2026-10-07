@@ -102,7 +102,10 @@ def cmd_run(args):
 def cmd_check(args):
     source_path = args.file
     if not os.path.exists(source_path):
-        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
+        if getattr(args, "json", False):
+            print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "cli", "message": f"File non trovato: '{source_path}'"}], indent=2))
+        else:
+            print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
         sys.exit(1)
 
     with open(source_path, "r", encoding="utf-8") as f:
@@ -114,16 +117,41 @@ def cmd_check(args):
         checker = TypeChecker()
         diags = checker.check(ast)
 
-        if args.json:
-            print(json.dumps([d.to_dict() for d in diags], indent=2))
-        else:
-            if not diags:
-                print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
+        if getattr(args, "effects", False):
+            summary = checker.get_effects_summary()
+            if args.json:
+                result = {
+                    "effects": summary,
+                    "diagnostics": [d.to_dict() for d in diags],
+                    "valid": not any(d.code.startswith("ERR") for d in diags)
+                }
+                print(json.dumps(result, indent=2))
             else:
-                for d in diags:
-                    print(d.to_cli(source.splitlines()), file=sys.stderr)
-                if any(d.code.startswith("ERR") for d in diags):
-                    sys.exit(1)
+                print(f"Tabella degli Effetti per: {source_path}")
+                print(f"{'Funzione':<24} {'Dichiarato':<12} {'Calcolato':<12} {'Tool Raggiungibili'}")
+                print("-" * 72)
+                for item in summary:
+                    tools_str = ", ".join(item["reachable_tools"]) if item["reachable_tools"] else "-"
+                    print(f"{item['function']:<24} {item['declared_effect']:<12} {item['computed_effect']:<12} {tools_str}")
+                print()
+                if not diags:
+                    print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
+                else:
+                    for d in diags:
+                        print(d.to_cli(source.splitlines()), file=sys.stderr)
+                    if any(d.code.startswith("ERR") for d in diags):
+                        sys.exit(1)
+        else:
+            if args.json:
+                print(json.dumps([d.to_dict() for d in diags], indent=2))
+            else:
+                if not diags:
+                    print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
+                else:
+                    for d in diags:
+                        print(d.to_cli(source.splitlines()), file=sys.stderr)
+                    if any(d.code.startswith("ERR") for d in diags):
+                        sys.exit(1)
 
     except ParseError as pe:
         if args.json:
@@ -135,7 +163,10 @@ def cmd_check(args):
                 "span": {"line": pe.token.line, "col": pe.token.col, "len": pe.token.length},
                 "offending": pe.token.value
             }
-            print(json.dumps([diag], indent=2))
+            if getattr(args, "effects", False):
+                print(json.dumps({"effects": [], "diagnostics": [diag], "valid": False}, indent=2))
+            else:
+                print(json.dumps([diag], indent=2))
         else:
             print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message}", file=sys.stderr)
         sys.exit(1)
@@ -295,6 +326,7 @@ def main():
     p_check = subparsers.add_parser("check", help="Esegue type-checking e analisi semantica")
     p_check.add_argument("file", help="File sorgente .jn")
     p_check.add_argument("--json", action="store_true", help="Emetti diagnosi in formato JSON per LLM")
+    p_check.add_argument("--effects", action="store_true", help="Mostra tabella riassuntiva degli effetti e dei tool raggiungibili per ciascuna funzione")
 
     # gbnf
     p_gbnf = subparsers.add_parser("gbnf", help="Genera grammatica GBNF per decodifica vincolata da uno schema")

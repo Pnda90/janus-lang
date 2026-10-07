@@ -208,6 +208,12 @@ class Parser:
 
     def _parse_type_expr(self) -> TypeExpr:
         tok = self._current()
+        if tok.type == TokenType.LBRACKET:
+            self.cursor += 1
+            inner_type = self._parse_type_expr()
+            self._expect(TokenType.RBRACKET, "Atteso ']' chiusura tipo lista")
+            return ListType(inner=inner_type, line=tok.line, col=tok.col)
+
         if tok.value in ("tens", "mat", "vec", "scal"):
             self.cursor += 1
             kind = tok.value
@@ -536,6 +542,7 @@ class Parser:
                 tool_name = tool_tok.value
                 named_args = {}
                 positional_args = []
+                duplicate_args = []
                 if self._match(TokenType.LPAREN):
                     while not self._match(TokenType.RPAREN):
                         tok = self._current()
@@ -544,6 +551,8 @@ class Parser:
                             arg_name = tok.base_name if tok.type == TokenType.CASE_IDENT else tok.value
                             self.cursor += 2
                             val = self._parse_expr()
+                            if arg_name in named_args and arg_name not in duplicate_args:
+                                duplicate_args.append(arg_name)
                             named_args[arg_name] = val
                         else:
                             val = self._parse_expr()
@@ -553,6 +562,7 @@ class Parser:
                     tool_name=tool_name,
                     named_args=named_args,
                     positional_args=positional_args,
+                    duplicate_args=duplicate_args,
                     line=call_tok.line,
                     col=call_tok.col
                 )
