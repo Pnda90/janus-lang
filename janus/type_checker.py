@@ -3,7 +3,7 @@ Type Checker & Semantic Analyzer per JANUS:
 Verifica delle forme simboliche, rispetto dei ruoli morfologici ed algebra degli effetti.
 """
 
-from typing import Dict, List, Optional, Any, Set
+from typing import Dict, List, Optional, Any, Set, Tuple
 from janus.ast_nodes import (
     Program, ASTNode, TypeDecl, SchemaDecl, FnDecl, KernelDecl, Param,
     Stmt, BindingStmt, RetStmt, IfStmt, ForStmt, LoopStmt, ExprStmt,
@@ -59,11 +59,16 @@ class TypeChecker:
         self.types: Dict[str, TypeDecl] = {}
         self.schemas: Dict[str, SchemaDecl] = {}
         self.functions: Dict[str, FnDecl] = {}
+        self.transitive_effects: Dict[str, Set[str]] = {}
         self.diagnostics: List[Diagnostic] = []
         self.current_fn: Optional[FnDecl] = None
 
     def check(self, program: Program) -> List[Diagnostic]:
         self.diagnostics.clear()
+        self.types.clear()
+        self.schemas.clear()
+        self.functions.clear()
+        self.transitive_effects.clear()
 
         # Pass 1: Registrazione tipi, schemi e funzioni
         for decl in program.declarations:
@@ -74,6 +79,9 @@ class TypeChecker:
             elif isinstance(decl, FnDecl):
                 self.functions[decl.name] = decl
 
+        # Pass 1.5: Calcolo della propagazione transitiva degli effetti (chiusura fissa)
+        self._compute_transitive_effects()
+
         # Pass 2: Controllo semantico delle funzioni e kernel
         for decl in program.declarations:
             if isinstance(decl, FnDecl):
@@ -82,6 +90,127 @@ class TypeChecker:
                 self._check_kernel(decl)
 
         return self.diagnostics
+
+    def _collect_direct_calls_and_effects(self, fn: FnDecl) -> Tuple[Set[str], Set[str]]:
+        called_fns: Set[str] = set()
+        effects: Set[str] = set()
+
+        def visit_expr(expr: Any):
+            if expr is None:
+                return
+            if isinstance(expr, ToolCallExpr):
+                if expr.tool_name in self.schemas:
+                    s_eff = self.schemas[expr.tool_name].effect
+                    if s_eff in ("io", "stoc"):
+                        effects.add(s_eff)
+                for val in expr.named_args.values():
+                    visit_expr(val)
+                for pos in expr.positional_args:
+                    visit_expr(pos)
+            elif isinstance(expr, AgentCallExpr):
+                effects.add("io")
+                visit_expr(expr.prompt)
+                visit_expr(expr.tool)
+                for v in expr.extra_args.values():
+                    visit_expr(v)
+            elif isinstance(expr, CallExpr):
+                func_name = None
+                if isinstance(expr.func, IdentExpr):
+                    func_name = expr.func.name
+                elif isinstance(expr.func, CaseIdentExpr):
+                    func_name = expr.func.base_name or expr.func.name
+                if func_name:
+                    clean_name = func_name.split(":")[0]
+                    called_fns.add(clean_name)
+                visit_expr(expr.func)
+                for a in expr.args:
+                    visit_expr(a)
+            elif isinstance(expr, PipelineExpr):
+                visit_expr(expr.head)
+                for step in expr.steps:
+                    if step.op == "rand":
+                        effects.add("stoc")
+                    for a in step.args:
+                        visit_expr(a.expr)
+            elif isinstance(expr, BinaryExpr):
+                visit_expr(expr.lhs)
+                visit_expr(expr.rhs)
+            elif isinstance(expr, UnaryExpr):
+                visit_expr(expr.operand)
+            elif isinstance(expr, TupleExpr):
+                for e in expr.elements:
+                    visit_expr(e)
+            elif isinstance(expr, ListExpr):
+                for e in expr.elements:
+                    visit_expr(e)
+            elif isinstance(expr, IndexExpr):
+                visit_expr(expr.target)
+                for idx in expr.indices:
+                    visit_expr(idx)
+            elif isinstance(expr, FieldAccessExpr):
+                visit_expr(expr.target)
+            elif isinstance(expr, DiffExpr):
+                visit_expr(expr.target)
+                visit_expr(expr.wrt)
+            elif isinstance(expr, RangeExpr):
+                visit_expr(expr.start)
+                visit_expr(expr.end)
+
+        def visit_stmt(stmt: Any):
+            if stmt is None:
+                return
+            if isinstance(stmt, BindingStmt):
+                visit_expr(stmt.expr)
+            elif isinstance(stmt, RetStmt):
+                visit_expr(stmt.expr)
+            elif isinstance(stmt, ExprStmt):
+                visit_expr(stmt.expr)
+            elif isinstance(stmt, IfStmt):
+                visit_expr(stmt.cond)
+                for s in stmt.then_branch:
+                    visit_stmt(s)
+                if stmt.else_branch:
+                    for s in stmt.else_branch:
+                        visit_stmt(s)
+            elif isinstance(stmt, ForStmt):
+                visit_expr(stmt.iterable)
+                for s in stmt.body:
+                    visit_stmt(s)
+            elif isinstance(stmt, LoopStmt):
+                for s in stmt.body:
+                    visit_stmt(s)
+
+        for s in fn.body:
+            visit_stmt(s)
+
+        return called_fns, effects
+
+    def _compute_transitive_effects(self):
+        direct_calls: Dict[str, Set[str]] = {}
+        for name, fn in self.functions.items():
+            called_fns, effects = self._collect_direct_calls_and_effects(fn)
+            direct_calls[name] = called_fns
+            eff_set = set(effects)
+            if fn.effect in ("io", "stoc"):
+                eff_set.add(fn.effect)
+            self.transitive_effects[name] = eff_set
+
+        # Chiusura transitiva con algoritmo a punto fisso (gestisce cicli e ricorsione)
+        changed = True
+        while changed:
+            changed = False
+            for name, called_set in direct_calls.items():
+                for called in called_set:
+                    if called in self.transitive_effects:
+                        for eff in self.transitive_effects[called]:
+                            if eff not in self.transitive_effects[name]:
+                                self.transitive_effects[name].add(eff)
+                                changed = True
+                    if called in self.functions:
+                        decl_eff = self.functions[called].effect
+                        if decl_eff in ("io", "stoc") and decl_eff not in self.transitive_effects[name]:
+                            self.transitive_effects[name].add(decl_eff)
+                            changed = True
 
     def _check_fn(self, fn: FnDecl):
         self.current_fn = fn
@@ -248,6 +377,30 @@ class TypeChecker:
             return None
 
         if isinstance(expr, CallExpr):
+            func_name = None
+            if isinstance(expr.func, IdentExpr):
+                func_name = expr.func.name
+            elif isinstance(expr.func, CaseIdentExpr):
+                func_name = expr.func.base_name or expr.func.name
+
+            if func_name:
+                clean_func_name = func_name.split(":")[0]
+                if clean_func_name in self.functions and self.current_fn and self.current_fn.effect == "pure":
+                    target_fn = self.functions[clean_func_name]
+                    target_trans = self.transitive_effects.get(clean_func_name, set())
+                    active_eff = target_fn.effect if target_fn.effect in ("io", "stoc") else (
+                        "io" if "io" in target_trans else ("stoc" if "stoc" in target_trans else None)
+                    )
+                    if active_eff:
+                        self.diagnostics.append(Diagnostic(
+                            code="ERR_EFFECT_PURITY_VIOLATION",
+                            phase="type_check",
+                            message=f"Invocazione della funzione non pura '{clean_func_name}' (effetto transitivo '{active_eff}') proibita in funzione 'pure'.",
+                            span=SourceSpan(expr.line, expr.col, len(clean_func_name)),
+                            offending=clean_func_name,
+                            patch=DiagnosticPatch(target=f"fn {self.current_fn.name}", replacement=f"fn {self.current_fn.name} ... {active_eff}")
+                        ))
+
             self._check_expr(expr.func, scope)
             for a in expr.args:
                 self._check_expr(a, scope)
@@ -302,12 +455,12 @@ class TypeChecker:
 
             schema = self.schemas[expr.tool_name]
 
-            # Controllo purezza effetti
-            if schema.effect == "io" and self.current_fn and self.current_fn.effect == "pure":
+            # Controllo purezza effetti (diretto: io o stoc in pure)
+            if schema.effect in ("io", "stoc") and self.current_fn and self.current_fn.effect == "pure":
                 self.diagnostics.append(Diagnostic(
                     code="ERR_EFFECT_PURITY_VIOLATION",
                     phase="type_check",
-                    message=f"Invocazione del tool I/O '{expr.tool_name}' proibita in funzione 'pure'.",
+                    message=f"Invocazione del tool con effetto '{schema.effect}' '{expr.tool_name}' proibita in funzione 'pure'.",
                     span=SourceSpan(expr.line, expr.col, len(expr.tool_name)),
                     offending=expr.tool_name,
                     patch=DiagnosticPatch(target="pure", replacement="io")

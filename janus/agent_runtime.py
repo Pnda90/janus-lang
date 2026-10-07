@@ -24,9 +24,76 @@ class ToolExecutionError(Exception):
     pass
 
 
+class StrictPurityViolationError(ToolExecutionError):
+    """
+    Sollevata da ToolSandbox quando la modalità opzionale strict_effects è attiva
+    e una funzione registrata come 'pure' tenta di eseguire operazioni di I/O (file, socket, subprocess).
+    """
+    pass
+
+
 class ToolValidationError(Exception):
     """Sollevata quando gli argomenti forniti a un tool violano lo schema."""
     pass
+
+
+import builtins
+import os
+import subprocess
+import socket
+from contextlib import contextmanager
+
+@contextmanager
+def _strict_purity_guard(tool_name: str):
+    """
+    Difesa applicativa best-effort in-process:
+    Intercetta tentativi evidenti di I/O (apertura file, socket, subprocess, chiamate di sistema)
+    all'interno di tool registrati con effetto 'pure'.
+    
+    AVVISO DI SICUREZZA:
+    Questo meccanismo è una difesa best-effort applicativa per scovare violazioni di purezza.
+    NON costituisce un isolamento di sicurezza a livello di processo o di sistema operativo
+    (non sostituisce container, seccomp, gVisor o microVM).
+    """
+    orig_open = builtins.open
+    orig_popen = subprocess.Popen
+    orig_socket = socket.socket
+    orig_system = getattr(os, "system", None)
+
+    def guarded_open(*args, **kwargs):
+        raise StrictPurityViolationError(
+            f"Violazione di purezza: operazione I/O 'open' tentata dal tool pure '{tool_name}' (strict_effects attivo)."
+        )
+
+    def guarded_popen(*args, **kwargs):
+        raise StrictPurityViolationError(
+            f"Violazione di purezza: operazione 'subprocess.Popen' tentata dal tool pure '{tool_name}' (strict_effects attivo)."
+        )
+
+    def guarded_socket(*args, **kwargs):
+        raise StrictPurityViolationError(
+            f"Violazione di purezza: apertura socket di rete tentata dal tool pure '{tool_name}' (strict_effects attivo)."
+        )
+
+    def guarded_system(*args, **kwargs):
+        raise StrictPurityViolationError(
+            f"Violazione di purezza: chiamata di sistema 'os.system' tentata dal tool pure '{tool_name}' (strict_effects attivo)."
+        )
+
+    builtins.open = guarded_open
+    subprocess.Popen = guarded_popen
+    socket.socket = guarded_socket
+    if orig_system is not None:
+        os.system = guarded_system
+
+    try:
+        yield
+    finally:
+        builtins.open = orig_open
+        subprocess.Popen = orig_popen
+        socket.socket = orig_socket
+        if orig_system is not None:
+            os.system = orig_system
 
 
 @dataclass
@@ -48,10 +115,15 @@ class ToolSandbox:
     Sandbox per l'esecuzione sicura e isolata di tool.
     Gestisce la registrazione delle funzioni, la validazione dei vincoli
     e la registrazione dettagliata di ogni invocazione (audit trail).
+    
+    Supporta:
+    - dry_run: sintetizzazione trasparente di output mock
+    - strict_effects: difesa best-effort in-process contro operazioni I/O evidenti in tool 'pure'
     """
 
-    def __init__(self, dry_run: bool = False):
+    def __init__(self, dry_run: bool = False, strict_effects: bool = False):
         self.dry_run = dry_run
+        self.strict_effects = strict_effects
         self._tools: Dict[str, Dict[str, Any]] = {}
         self._traces: List[ToolTrace] = []
         self._scope_globals: Optional[Dict[str, Any]] = None
@@ -130,7 +202,12 @@ class ToolSandbox:
         effect = entry.get("effect", "io")
 
         try:
-            res = fn(*args, **kwargs)
+            if self.strict_effects and effect == "pure":
+                with _strict_purity_guard(tool_name):
+                    res = fn(*args, **kwargs)
+            else:
+                res = fn(*args, **kwargs)
+
             duration_ms = (time.perf_counter() - start) * 1000.0
             trace = ToolTrace(
                 tool_name=tool_name,
@@ -142,6 +219,18 @@ class ToolSandbox:
             )
             self._traces.append(trace)
             return res
+        except StrictPurityViolationError as e:
+            duration_ms = (time.perf_counter() - start) * 1000.0
+            trace = ToolTrace(
+                tool_name=tool_name,
+                inputs=kwargs,
+                error=str(e),
+                duration_ms=duration_ms,
+                success=False,
+                effect=effect
+            )
+            self._traces.append(trace)
+            raise
         except Exception as e:
             duration_ms = (time.perf_counter() - start) * 1000.0
             trace = ToolTrace(
@@ -167,11 +256,11 @@ class ToolSandbox:
 class AgentRuntime:
     """
     Coordinatore di alto livello per compilare ed eseguire piani agentici in JANUS.
-    Garantisce il binding con la ToolSandbox e produce trace di esecuzione deterministici.
+    Garantisce il binding con la ToolSandbox e produce trace di esecuzione.
     """
 
-    def __init__(self, sandbox: Optional[ToolSandbox] = None):
-        self.sandbox = sandbox or ToolSandbox()
+    def __init__(self, sandbox: Optional[ToolSandbox] = None, strict_effects: bool = False):
+        self.sandbox = sandbox or ToolSandbox(strict_effects=strict_effects)
 
     def register_tool(self, name: str, func: Callable, effect: str = "io") -> None:
         """Registra un tool direttamente nella sandbox associata."""
@@ -194,13 +283,17 @@ class AgentRuntime:
         entrypoint: str,
         args: Optional[List[Any]] = None,
         kwargs: Optional[Dict[str, Any]] = None,
-        dry_run: bool = False
+        dry_run: bool = False,
+        strict_effects: Optional[bool] = None
     ) -> Tuple[Any, List[ToolTrace]]:
         """
         Compila ed esegue una funzione agentica catturando tutti i tool trace.
         """
         prev_dry_run = self.sandbox.dry_run
+        prev_strict = self.sandbox.strict_effects
         self.sandbox.dry_run = dry_run
+        if strict_effects is not None:
+            self.sandbox.strict_effects = strict_effects
         self.sandbox.clear_traces()
 
         py_code = self.compile(code)
