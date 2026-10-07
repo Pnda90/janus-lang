@@ -47,7 +47,9 @@ from janus.parser import Parser
 from janus.type_checker import TypeChecker
 from janus.gbnf_gen import GBNFGenerator
 from janus.gbnf_validator import GBNFValidator
+from janus.jsonschema_export import schema_to_json_schema
 from janus.agent_runtime import AgentRuntime, ToolSandbox
+from tests.support.gbnf_engine import GBNFSampler
 
 
 # ---------------------------------------------------------------------------
@@ -517,23 +519,45 @@ def simulate_mock_response(
     condition: str,
     task: Dict[str, Any],
     task_idx: int,
-    seed: int
+    seed: int,
+    gbnf_grammar: Optional[str] = None,
+    json_schema_dict: Optional[Dict[str, Any]] = None,
 ) -> Tuple[str, int]:
     """
     Simulatore deterministico per test e sviluppo locale senza modello reale.
     Dichiarato esplicitamente come MOCK.
+    - Per 'janus_gbnf': campiona stringhe da GBNFSampler e verifica la validità con jsonschema.
+    - Per 'json_schema': garantisce conformità strutturale identica.
+    - Per 'unconstrained': genera errori sintetici realistici (sintassi JSON invalida,
+      campi extra/allucinati, type mismatch) usando un generatore pseudo-stocastico.
     """
     base = dict(task["sample_valid_input"])
     tool_name = task["tool_name"]
 
-    if condition in ("janus_gbnf", "json_schema"):
-        # La decodifica vincolata forza la struttura esatta
+    if condition == "janus_gbnf":
+        if gbnf_grammar:
+            try:
+                sampler = GBNFSampler(gbnf_grammar)
+                sampled_str = sampler.sample(seed=seed * 1000 + task_idx * 17)
+                parsed = json.loads(sampled_str)
+                if json_schema_dict:
+                    import jsonschema
+                    jsonschema.validate(parsed, json_schema_dict)
+            except Exception:
+                # Riporta la stringa non conforme se la grammatica dovesse fallire
+                return sampled_str, count_tokens(sampled_str)
+
+        payload = {"tool": tool_name, "args": base}
+        txt = json.dumps(payload)
+        return txt, count_tokens(txt)
+
+    if condition == "json_schema":
         payload = {"tool": tool_name, "args": base}
         txt = json.dumps(payload)
         return txt, count_tokens(txt)
 
     # Condition: unconstrained
-    # Riproduce i tipici failure mode dei modelli senza vincoli
+    # Riproduce i tipici failure mode dei modelli senza vincoli tramite simulatore sintetico
     pseudo_rand = (task_idx * 17 + seed * 31) % 100
 
     if pseudo_rand < 5:
@@ -719,7 +743,7 @@ def run_benchmark(
 
         gbnf_grammar = gen.generate_tool_json_call_grammar(schema_decl)
         assert gbnf_validator.validate_grammar_syntax(gbnf_grammar), f"Grammatica non valida per {task['name']}"
-        json_schema_dict = task_to_json_schema(task)
+        json_schema_dict = schema_to_json_schema(schema_decl, mode="call")
         prompt_text = build_task_prompt(task)
 
         compiled_tasks.append({
@@ -755,7 +779,9 @@ def run_benchmark(
 
             for cond in conditions:
                 if is_mock:
-                    out_text, tokens = simulate_mock_response(cond, task, idx, seed)
+                    out_text, tokens = simulate_mock_response(
+                        cond, task, idx, seed, gbnf_grammar=gbnf_grammar, json_schema_dict=json_schema_dict
+                    )
                 else:
                     out_text, tokens = call_http_backend(
                         backend=active_backend,
@@ -860,6 +886,31 @@ def main():
     seed_list = [int(s.strip()) for s in args.seeds.split(",") if s.strip()]
     cond_list = [c.strip() for c in args.conditions.split(",") if c.strip()]
 
+    if active_backend in ("llama-cpp", "ollama", "vllm"):
+        target_url = args.url
+        if not target_url:
+            if active_backend == "llama-cpp":
+                target_url = os.environ.get("LLAMA_CPP_URL", os.environ.get("JANUS_BENCH_URL", "http://localhost:8080"))
+            elif active_backend == "ollama":
+                target_url = os.environ.get("OLLAMA_URL", os.environ.get("JANUS_BENCH_URL", "http://localhost:11434"))
+            elif active_backend == "vllm":
+                target_url = os.environ.get("VLLM_URL", os.environ.get("JANUS_BENCH_URL", "http://localhost:8000"))
+
+        endpoint_alive = False
+        if requests is not None and target_url:
+            try:
+                requests.get(target_url.rstrip("/"), timeout=1.5)
+                endpoint_alive = True
+            except Exception:
+                endpoint_alive = False
+
+        if not endpoint_alive:
+            print(
+                "Nessun server LLM configurato. Per eseguire il benchmark reale avvia un server (es. llama-server) e specifica --url. Per la simulazione usa --dry-run.",
+                file=sys.stderr
+            )
+            sys.exit(2)
+
     start_time = time.time()
     results = run_benchmark(
         dry_run=(active_backend == "mock"),
@@ -887,6 +938,8 @@ def main():
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "backend": active_backend,
             "is_mock": results["is_mock"],
+            "is_simulated": results["is_mock"],
+            "janus_version": "0.2.0",
             "warning": "SIMULATED / MOCK DATA: DO NOT REPORT AS REAL MEASUREMENTS" if results["is_mock"] else None,
             "url": results["url"],
             "model": results["model"],
