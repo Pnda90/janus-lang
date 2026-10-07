@@ -42,13 +42,13 @@ Traditional Agent Tool Calling:
 
 JANUS Constrained Execution Graph:
 [LLM] ===(GBNF Logit Masking)====> [Typed JANUS DSL] ---> [Static Effect Checker] ---> [ToolSandbox]
-     (Mathematically Constrained)      (Zero Hallucination)       (Pure vs IO)           (Audited Trace)
+     (Grammatically Constrained)   (Schema-Conformant)         (Pure vs IO)           (Audited Trace)
 ```
 
 To address these vulnerabilities, we design and implement **JANUS**, an LL(1) Domain-Specific Language and compiler toolchain. JANUS treats tool calling not as an unconstrained text generation task, but as the synthesis of a typed, statically verifiable execution graph.
 
 ### Research Questions
-* **RQ1 (Constrained Decoding Reliability):** Does compiling JANUS tool schemas to GBNF grammars eliminate syntax errors, argument hallucinations, and type mismatches compared to unconstrained JSON tool calling?
+* **RQ1 (Constrained Decoding Reliability):** Does compiling JANUS tool schemas to GBNF grammars eliminate syntax errors, schema violations, and type mismatches compared to unconstrained JSON tool calling?
 * **RQ2 (Effect Separation):** Can a static monadic effect system effectively safeguard agent workflows by enforcing separation between deterministic computation and external side-effects?
 * **RQ3 (Tokenization Reality Check):** Does a compact, custom DSL reduce token consumption on contemporary BPE tokenizers compared to idiomatic Python, or does subword fragmentation penalize novel syntax?
 

@@ -154,7 +154,7 @@ Il compilatore applica rigorosamente le regole di purezza monadica:
 | **Tool Sandbox Runtime** | ✅ Implementato | `ToolSandbox`, tracciamento `ToolTrace`, audit trail, modalità dry-run e `strict_effects` |
 | **Sintetizzatore GBNF** | ✅ Implementato | Generazione multi-tool per script e JSON tool calling, validatore formale |
 | **Transpiler Python/PyTorch**| ✅ Implementato | Compatibile con Python 3.10+, supporto autodiff verificato |
-| **Suite di Test (87+ test)** | ✅ Implementato | Regressione B1-B5, test Hypothesis, conformità GBNF, benchmark audit |
+| **Suite di Test (101 test)** | ✅ Implementato | Regressione B1-B5, test Hypothesis, conformità GBNF, benchmark audit, propagazione transitiva effetti |
 | **Backend Nativo MLIR / LLVM** | 📋 Pianificato | Compilazione nativa bare-metal senza interprete host |
 
 ---
@@ -206,9 +206,42 @@ result, traces = runtime.execute(code, entrypoint="orchestrate_search_and_cache"
 print(f"Esito: {result}, Traces registrate: {len(traces)}")
 ```
 
+Per una guida passo-passo con un modello locale reale su `llama-server`, consulta la [Guida Quickstart con llama.cpp](examples/quickstart_llamacpp.md).
+
+---
+
+## 🗺️ Roadmap di Sviluppo
+
+### Stato Attuale (v0.2.0)
+- ✅ **Frontend & Compilatore**: Parser LL(1), type checker affine e diagnostiche machine-readable (JSON).
+- ✅ **Effect System Statico**: Chiusura transitiva a punto fisso per la propagazione rigorosa degli effetti (`pure`, `io`, `stoc`).
+- ✅ **Sintesi GBNF**: Generatore di grammatiche formali multi-tool con validatore sintattico per `llama.cpp`.
+- ✅ **Runtime & Sandbox**: `ToolSandbox` con audit trail e difesa applicativa opzionale `strict_effects`.
+- ✅ **Harness di Benchmark**: Supporto multi-backend (`mock`, `llama-cpp`, `ollama`, `vllm`) con validazione semantica su 20 task e statistiche multi-seed.
+- ✅ **Test Suite Completa**: 101 test automatizzati con copertura dell'intera pipeline.
+
+### Prossimi Obiettivi (Pianificati)
+1. **Benchmark Empirico su Modelli Reali**:
+   - Esecuzione sistematica su LLM open source (Llama-3-8B-Instruct, Qwen-2.5-7B-Instruct, Mistral-7B) per quantificare su scala l'impatto della decodifica vincolata sull'accuratezza semantica e sul consumo di token.
+2. **Supporto a Motori di Decodifica Alternativi**:
+   - Integrazione e confronto diretto con [Outlines](https://github.com/outlines-dev/outlines) e [XGrammar](https://github.com/mlc-ai/xgrammar) per misurare overhead di compilazione della grammatica e velocità di campionamento (token/s).
+3. **Interoperabilità OpenAPI e JSON Schema**:
+   - Tool di conversione bidirezionale per importare schemi OpenAPI esistenti in file `.jn` ed esportare specifiche JANUS verso JSON Schema standard.
+4. **Isolamento Sandbox a Livello OS**:
+   - Estensione della sandbox oltre i guard applicativi in-process tramite containerizzazione OCI (Docker/Podman), profili `seccomp` o microVM per ambienti multi-tenant ad alto rischio.
+5. **Backend Nativo (MLIR/C/Rust)**:
+   - Compilazione AOT verso librerie condivise native C/Rust per integrare runtime JANUS in contesti ad alte prestazioni e ridotto footprint di memoria.
+
+---
+
+## 🤝 Come Contribuire
+
+Per dettagli su linee guida del codice, esecuzione dei test e convenzioni di commit, consulta [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ---
 
 ## 📄 Licenza
 
 Rilasciato sotto licenza [Apache 2.0](LICENSE).
 Autore: **Pnda90** ([GitHub](https://github.com/Pnda90/janus-lang)).
+
