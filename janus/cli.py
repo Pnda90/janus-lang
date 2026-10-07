@@ -8,208 +8,197 @@ import sys
 import os
 import argparse
 import json
-from typing import List
+from typing import List, Tuple
 
-from janus.lexer import Lexer
+from janus.lexer import Lexer, LexError
 from janus.parser import Parser, ParseError
 from janus.type_checker import TypeChecker
 from janus.codegen import CodeGenerator
 from janus.gbnf_gen import GBNFGenerator, GBNFGenerationError
-from janus.ast_nodes import SchemaDecl
+from janus.ast_nodes import Program, SchemaDecl, TypeDecl
+from janus.diagnostics import Diagnostic
 
-def cmd_compile(args):
-    source_path = args.file
+def _load_and_check(
+    source_path: str,
+    json_mode: bool = False,
+    check_types: bool = False
+) -> Tuple[str, Program, TypeChecker, List[Diagnostic]]:
+    """
+    Carica un file sorgente .jn, esegue tokenizzazione, parsing ed eventuale type checking.
+    Gestisce uniformemente gli errori con exit code:
+      0: successo
+      1: errore nel sorgente (lex/parse/type)
+      2: errore di I/O o uso errato
+    Nessun traceback Python non gestito viene propagato all'utente.
+    """
     if not os.path.exists(source_path):
-        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+        if json_mode:
+            print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "io", "message": f"File non trovato: '{source_path}'"}], indent=2))
+        else:
+            print(f"Errore I/O: File non trovato '{source_path}'", file=sys.stderr)
+        sys.exit(2)
 
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
+    try:
+        with open(source_path, "r", encoding="utf-8") as f:
+            source = f.read()
+    except OSError as e:
+        if json_mode:
+            print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "io", "message": f"Errore lettura file '{source_path}': {e}"}], indent=2))
+        else:
+            print(f"Errore I/O: Impossibile leggere '{source_path}': {e}", file=sys.stderr)
+        sys.exit(2)
 
     try:
         tokens = Lexer(source).tokenize()
-        ast = Parser(tokens).parse()
-        
-        # Type Check
-        checker = TypeChecker()
-        diags = checker.check(ast)
-        if diags and not args.ignore_warnings:
-            if args.json:
-                print(json.dumps([d.to_dict() for d in diags], indent=2))
-            else:
-                for d in diags:
-                    print(d.to_cli(source.splitlines()), file=sys.stderr)
-            if any(d.code.startswith("ERR") for d in diags):
-                sys.exit(1)
-
-        generator = CodeGenerator(target=args.target)
-        output_code = generator.generate(ast)
-
-        if args.output:
-            with open(args.output, "w", encoding="utf-8") as out_f:
-                out_f.write(output_code)
-            if not args.quiet:
-                print(f"Compilazione completata con successo: {args.output}")
+    except LexError as le:
+        diag = {
+            "status": "error",
+            "code": "ERR_LEX",
+            "phase": "lexer",
+            "message": le.message,
+            "span": {"line": le.line, "col": le.col, "len": max(1, len(le.char))},
+            "offending": le.char
+        }
+        if json_mode:
+            print(json.dumps([diag], indent=2))
         else:
-            print(output_code)
+            print(f"Errore lessicale [{le.line}:{le.col}]: {le.message}", file=sys.stderr)
+        sys.exit(1)
 
+    try:
+        ast = Parser(tokens).parse()
     except ParseError as pe:
-        if args.json:
-            diag = {
-                "status": "error",
-                "code": "ERR_SYNTAX",
-                "phase": "parser",
-                "message": pe.message,
-                "span": {"line": pe.token.line, "col": pe.token.col, "len": pe.token.length},
-                "offending": pe.token.value
-            }
-            print(json.dumps(diag, indent=2))
+        diag = {
+            "status": "error",
+            "code": "ERR_SYNTAX",
+            "phase": "parser",
+            "message": pe.message,
+            "span": {"line": pe.token.line, "col": pe.token.col, "len": pe.token.length},
+            "offending": pe.token.value
+        }
+        if json_mode:
+            print(json.dumps([diag], indent=2))
         else:
             print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message} (token: '{pe.token.value}')", file=sys.stderr)
         sys.exit(1)
 
-def cmd_run(args):
-    source_path = args.file
-    if not os.path.exists(source_path):
-        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
-
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
-
-    try:
-        tokens = Lexer(source).tokenize()
-        ast = Parser(tokens).parse()
-        
-        checker = TypeChecker()
-        diags = checker.check(ast)
-        if any(d.code.startswith("ERR") for d in diags):
+    checker = TypeChecker()
+    diags = checker.check(ast)
+    if check_types and any(d.code.startswith("ERR") for d in diags):
+        if json_mode:
+            print(json.dumps([d.to_dict() for d in diags], indent=2))
+        else:
             for d in diags:
                 print(d.to_cli(source.splitlines()), file=sys.stderr)
+        sys.exit(1)
+
+    return source, ast, checker, diags
+
+def cmd_compile(args):
+    source_path = args.file
+    json_mode = getattr(args, "json", False)
+    source, ast, checker, diags = _load_and_check(source_path, json_mode=json_mode, check_types=not args.ignore_warnings)
+
+    if diags and not args.ignore_warnings:
+        if json_mode:
+            print(json.dumps([d.to_dict() for d in diags], indent=2))
+        else:
+            for d in diags:
+                print(d.to_cli(source.splitlines()), file=sys.stderr)
+        if any(d.code.startswith("ERR") for d in diags):
             sys.exit(1)
 
+    try:
+        generator = CodeGenerator(target=args.target)
+        output_code = generator.generate(ast)
+    except Exception as e:
+        if json_mode:
+            print(json.dumps([{"status": "error", "code": "ERR_CODEGEN", "phase": "codegen", "message": str(e)}], indent=2))
+        else:
+            print(f"Errore generazione codice: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if args.output:
+        try:
+            with open(args.output, "w", encoding="utf-8") as out_f:
+                out_f.write(output_code)
+            if not args.quiet:
+                print(f"Compilazione completata con successo: {args.output}")
+        except OSError as e:
+            if json_mode:
+                print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "io", "message": f"Errore scrittura '{args.output}': {e}"}], indent=2))
+            else:
+                print(f"Errore I/O scrittura file '{args.output}': {e}", file=sys.stderr)
+            sys.exit(2)
+    else:
+        print(output_code)
+
+def cmd_run(args):
+    source_path = args.file
+    source, ast, checker, diags = _load_and_check(source_path, json_mode=False, check_types=True)
+
+    try:
         generator = CodeGenerator()
         py_code = generator.generate(ast)
-        
-        # Esecuzione immediata in runtime Python
-        env = {}
-        exec(py_code, env)
+    except Exception as e:
+        print(f"Errore generazione codice: {e}", file=sys.stderr)
+        sys.exit(1)
 
+    # Esecuzione immediata in runtime Python
+    env = {}
+    try:
+        exec(py_code, env)
     except Exception as e:
         print(f"Errore a runtime: {e}", file=sys.stderr)
         sys.exit(1)
 
 def cmd_check(args):
     source_path = args.file
-    if not os.path.exists(source_path):
-        if getattr(args, "json", False):
-            print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "cli", "message": f"File non trovato: '{source_path}'"}], indent=2))
-        else:
-            print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+    json_mode = getattr(args, "json", False)
+    effects_mode = getattr(args, "effects", False)
+    source, ast, checker, diags = _load_and_check(source_path, json_mode=json_mode, check_types=False)
 
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
-
-    try:
-        tokens = Lexer(source).tokenize()
-        ast = Parser(tokens).parse()
-        checker = TypeChecker()
-        diags = checker.check(ast)
-
-        if getattr(args, "effects", False):
-            summary = checker.get_effects_summary()
-            if args.json:
-                result = {
-                    "effects": summary,
-                    "diagnostics": [d.to_dict() for d in diags],
-                    "valid": not any(d.code.startswith("ERR") for d in diags)
-                }
-                print(json.dumps(result, indent=2))
-            else:
-                print(f"Tabella degli Effetti per: {source_path}")
-                print(f"{'Funzione':<24} {'Dichiarato':<12} {'Calcolato':<12} {'Tool Raggiungibili'}")
-                print("-" * 72)
-                for item in summary:
-                    tools_str = ", ".join(item["reachable_tools"]) if item["reachable_tools"] else "-"
-                    print(f"{item['function']:<24} {item['declared_effect']:<12} {item['computed_effect']:<12} {tools_str}")
-                print()
-                if not diags:
-                    print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
-                else:
-                    for d in diags:
-                        print(d.to_cli(source.splitlines()), file=sys.stderr)
-                    if any(d.code.startswith("ERR") for d in diags):
-                        sys.exit(1)
-        else:
-            if args.json:
-                print(json.dumps([d.to_dict() for d in diags], indent=2))
-            else:
-                if not diags:
-                    print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
-                else:
-                    for d in diags:
-                        print(d.to_cli(source.splitlines()), file=sys.stderr)
-                    if any(d.code.startswith("ERR") for d in diags):
-                        sys.exit(1)
-
-    except ParseError as pe:
-        if args.json:
-            diag = {
-                "status": "error",
-                "code": "ERR_SYNTAX",
-                "phase": "parser",
-                "message": pe.message,
-                "span": {"line": pe.token.line, "col": pe.token.col, "len": pe.token.length},
-                "offending": pe.token.value
+    if effects_mode:
+        summary = checker.get_effects_summary()
+        if json_mode:
+            result = {
+                "effects": summary,
+                "diagnostics": [d.to_dict() for d in diags],
+                "valid": not any(d.code.startswith("ERR") for d in diags)
             }
-            if getattr(args, "effects", False):
-                print(json.dumps({"effects": [], "diagnostics": [diag], "valid": False}, indent=2))
-            else:
-                print(json.dumps([diag], indent=2))
+            print(json.dumps(result, indent=2))
         else:
-            print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message}", file=sys.stderr)
-        sys.exit(1)
+            print(f"Tabella degli Effetti per: {source_path}")
+            print(f"{'Funzione':<24} {'Dichiarato':<12} {'Calcolato':<12} {'Tool Raggiungibili'}")
+            print("-" * 72)
+            for item in summary:
+                tools_str = ", ".join(item["reachable_tools"]) if item["reachable_tools"] else "-"
+                print(f"{item['function']:<24} {item['declared_effect']:<12} {item['computed_effect']:<12} {tools_str}")
+            print()
+            if not diags:
+                print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
+            else:
+                for d in diags:
+                    print(d.to_cli(source.splitlines()), file=sys.stderr)
+        if any(d.code.startswith("ERR") for d in diags):
+            sys.exit(1)
+    else:
+        if json_mode:
+            print(json.dumps([d.to_dict() for d in diags], indent=2))
+        else:
+            if not diags:
+                print(f"Controllo semantico superato con successo: 0 errori ({source_path})")
+            else:
+                for d in diags:
+                    print(d.to_cli(source.splitlines()), file=sys.stderr)
+        if any(d.code.startswith("ERR") for d in diags):
+            sys.exit(1)
 
 def cmd_gbnf(args):
     source_path = args.file
     json_mode = getattr(args, "json", False)
-    if not os.path.exists(source_path):
-        if json_mode:
-            print(json.dumps([{"status": "error", "code": "ERR_IO", "phase": "cli", "message": f"File non trovato: '{source_path}'"}], indent=2))
-        else:
-            print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+    source, ast, checker, diags = _load_and_check(source_path, json_mode=json_mode, check_types=False)
 
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
-
-    try:
-        tokens = Lexer(source).tokenize()
-        ast = Parser(tokens).parse()
-    except ParseError as pe:
-        if json_mode:
-            diag = {
-                "status": "error",
-                "code": "ERR_SYNTAX",
-                "phase": "parser",
-                "message": pe.message,
-                "span": {"line": pe.token.line, "col": pe.token.col, "len": pe.token.length},
-                "offending": pe.token.value
-            }
-            print(json.dumps([diag], indent=2))
-        else:
-            print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        if json_mode:
-            diag = {"status": "error", "code": "ERR_PARSER", "phase": "parser", "message": str(e)}
-            print(json.dumps([diag], indent=2))
-        else:
-            print(f"Errore durante l'analisi: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    from janus.ast_nodes import TypeDecl
     schemas = [d for d in ast.declarations if isinstance(d, SchemaDecl)]
     type_decls = {d.name: d for d in ast.declarations if isinstance(d, TypeDecl)}
     gbnf_gen = GBNFGenerator(type_decls=type_decls)
@@ -217,19 +206,22 @@ def cmd_gbnf(args):
     mode = getattr(args, "mode", "call")
     with_status = getattr(args, "with_status", False)
 
+    if mode == "agent":
+        print(gbnf_gen.generate_agent_grammar(schemas))
+        return
+
+    if not schemas:
+        if json_mode:
+            print(json.dumps([{"status": "error", "code": "ERR_NO_SCHEMA", "phase": "gbnf", "message": f"Nessuna dichiarazione schema trovata in '{source_path}'"}], indent=2))
+        else:
+            print(f"Errore: Nessuna dichiarazione schema trovata in '{source_path}'", file=sys.stderr)
+        sys.exit(2)
+
     try:
-        if mode == "agent":
-            print(gbnf_gen.generate_agent_grammar(schemas))
-        elif mode == "output":
-            if not schemas:
-                print(f"# Nessuna dichiarazione 'schema' trovata in {source_path}")
-                return
+        if mode == "output":
             outputs = [gbnf_gen.generate_for_schema(s, with_status=with_status) for s in schemas]
             print(("\n" + "=" * 50 + "\n").join(outputs))
         else:  # mode == "call"
-            if not schemas:
-                print(f"# Nessuna dichiarazione 'schema' trovata in {source_path}")
-                return
             if len(schemas) == 1:
                 print(gbnf_gen.generate_tool_json_call_grammar(schemas[0]))
             else:
@@ -245,14 +237,17 @@ def cmd_gbnf(args):
 def cmd_tokens(args):
     source_path = args.file
     if not os.path.exists(source_path):
-        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+        print(f"Errore I/O: File non trovato '{source_path}'", file=sys.stderr)
+        sys.exit(2)
 
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
+    try:
+        with open(source_path, "r", encoding="utf-8") as f:
+            source = f.read()
+    except OSError as e:
+        print(f"Errore I/O: Impossibile leggere '{source_path}': {e}", file=sys.stderr)
+        sys.exit(2)
 
     import re
-    # Analisi dei token
     tokens = re.findall(r"[a-zA-Z_]+|[0-9]+|[:\.\,\;\(\)\[\]\{\}\=\+\-\*\/\@\>\<\_\~]|\s+", source)
     non_empty = [t for t in tokens if t.strip() or t == '\n']
     
@@ -263,27 +258,14 @@ def cmd_tokens(args):
 
 def cmd_export_jsonschema(args):
     source_path = args.file
-    if not os.path.exists(source_path):
-        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+    source, ast, checker, diags = _load_and_check(source_path, json_mode=False, check_types=False)
 
-    with open(source_path, "r", encoding="utf-8") as f:
-        source = f.read()
-
-    try:
-        tokens = Lexer(source).tokenize()
-        ast = Parser(tokens).parse()
-    except ParseError as pe:
-        print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message}", file=sys.stderr)
-        sys.exit(1)
-
-    from janus.ast_nodes import TypeDecl
     schemas = [d for d in ast.declarations if isinstance(d, SchemaDecl)]
     type_decls = {d.name: d for d in ast.declarations if isinstance(d, TypeDecl)}
 
     if not schemas:
-        print(f"# Nessuna dichiarazione schema trovata in '{source_path}'", file=sys.stderr)
-        sys.exit(1)
+        print(f"Errore: Nessuna dichiarazione schema trovata in '{source_path}'", file=sys.stderr)
+        sys.exit(2)
 
     from janus.jsonschema_export import schema_to_json_schema
 
@@ -296,9 +278,13 @@ def cmd_export_jsonschema(args):
     out_str = json.dumps(output_data, indent=args.indent)
 
     if args.output:
-        with open(args.output, "w", encoding="utf-8") as out_f:
-            out_f.write(out_str)
-        print(f"JSON Schema esportato con successo in {args.output}")
+        try:
+            with open(args.output, "w", encoding="utf-8") as out_f:
+                out_f.write(out_str)
+            print(f"JSON Schema esportato con successo in {args.output}")
+        except OSError as e:
+            print(f"Errore I/O scrittura file '{args.output}': {e}", file=sys.stderr)
+            sys.exit(2)
     else:
         print(out_str)
 

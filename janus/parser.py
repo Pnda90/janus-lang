@@ -27,13 +27,17 @@ class Parser:
     def _current(self) -> Token:
         if self.cursor < len(self.tokens):
             return self.tokens[self.cursor]
-        return self.tokens[-1]
+        if self.tokens:
+            return self.tokens[-1]
+        return Token(TokenType.EOF, "", 1, 1, 0)
 
     def _peek(self, offset: int = 1) -> Token:
         idx = self.cursor + offset
         if idx < len(self.tokens):
             return self.tokens[idx]
-        return self.tokens[-1]
+        if self.tokens:
+            return self.tokens[-1]
+        return Token(TokenType.EOF, "", 1, 1, 0)
 
     def _match(self, *types: TokenType) -> bool:
         if self._current().type in types:
@@ -464,13 +468,13 @@ class Parser:
             TokenType.RANGE: 1,
             TokenType.EQ: 2, TokenType.NEQ: 2, TokenType.LT: 2, TokenType.LTE: 2, TokenType.GT: 2, TokenType.GTE: 2,
             TokenType.PLUS: 3, TokenType.MINUS: 3,
-            TokenType.STAR: 4, TokenType.SLASH: 4, TokenType.AT: 4,
+            TokenType.STAR: 4, TokenType.SLASH: 4, TokenType.PERCENT: 4, TokenType.CARET: 4, TokenType.AT: 4,
         }
         return precedences.get(token_type, 0)
 
     def _parse_unary_expr(self) -> Expr:
         cur = self._current()
-        if cur.type in (TokenType.MINUS,):
+        if cur.type in (TokenType.MINUS, TokenType.BANG):
             self.cursor += 1
             op = self._parse_unary_expr()
             return UnaryExpr(op=cur.value, operand=op, line=cur.line, col=cur.col)
@@ -510,10 +514,18 @@ class Parser:
         # Letterali
         if cur.type == TokenType.LIT_INT:
             self.cursor += 1
-            return LiteralExpr(value=int(cur.value), lit_type="int", line=cur.line, col=cur.col)
+            try:
+                val = int(cur.value)
+            except ValueError:
+                raise ParseError(f"Numero intero non valido '{cur.value}'", cur)
+            return LiteralExpr(value=val, lit_type="int", line=cur.line, col=cur.col)
         if cur.type == TokenType.LIT_FLOAT:
             self.cursor += 1
-            return LiteralExpr(value=float(cur.value), lit_type="float", line=cur.line, col=cur.col)
+            try:
+                val = float(cur.value)
+            except ValueError:
+                raise ParseError(f"Numero decimale non valido '{cur.value}'", cur)
+            return LiteralExpr(value=val, lit_type="float", line=cur.line, col=cur.col)
         if cur.type == TokenType.LIT_STR:
             self.cursor += 1
             return LiteralExpr(value=cur.value, lit_type="str", line=cur.line, col=cur.col)

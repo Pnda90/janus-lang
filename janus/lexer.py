@@ -90,6 +90,9 @@ class TokenType(Enum):
     COMMA = auto()          # ,
     DOT = auto()            # .
     RANGE = auto()          # ..
+    PERCENT = auto()        # %
+    CARET = auto()          # ^
+    BANG = auto()           # !
     
     # Delimitatori
     LPAREN = auto()         # (
@@ -100,6 +103,14 @@ class TokenType(Enum):
     RBRACKET = auto()       # ]
 
     EOF = auto()
+
+class LexError(Exception):
+    def __init__(self, message: str, line: int = 1, col: int = 1, char: str = ""):
+        super().__init__(f"[{line}:{col}] {message}")
+        self.message = message
+        self.line = line
+        self.col = col
+        self.char = char
 
 KEYWORDS = {
     "fn": TokenType.KW_FN,
@@ -242,6 +253,9 @@ class Lexer:
                 '-': TokenType.MINUS,
                 '*': TokenType.STAR,
                 '/': TokenType.SLASH,
+                '%': TokenType.PERCENT,
+                '^': TokenType.CARET,
+                '!': TokenType.BANG,
                 '@': TokenType.AT,
                 '<': TokenType.LT,
                 '>': TokenType.GT,
@@ -262,46 +276,106 @@ class Lexer:
                 tokens.append(Token(single_symbols[ch], ch, start_line, start_col, 1))
                 continue
 
-            # Stringhe letterali
-            if ch == '"':
+            # Stringhe letterali (doppie o singole virgolette)
+            if ch in ('"', "'"):
+                quote_char = ch
                 self._advance()
                 str_val = []
-                while self._peek() != '"' and self._peek() != '\0':
-                    if self._peek() == '\\':
+                closed = False
+                while self.cursor < self.length:
+                    nxt = self._peek()
+                    if nxt == '\0':
+                        break
+                    if nxt == '\n':
+                        raise LexError("Stringa non chiusa prima della fine della riga", start_line, start_col, quote_char)
+                    if nxt == '\\':
                         self._advance()
+                        if self.cursor >= self.length or self._peek() == '\0':
+                            raise LexError("Stringa non chiusa con carattere di escape pendente", start_line, start_col, '\\')
+                        esc_ch = self._advance()
+                        if esc_ch == 'n': str_val.append('\n')
+                        elif esc_ch == 't': str_val.append('\t')
+                        elif esc_ch == 'r': str_val.append('\r')
+                        elif esc_ch == '\\': str_val.append('\\')
+                        elif esc_ch == '"': str_val.append('"')
+                        elif esc_ch == "'": str_val.append("'")
+                        elif esc_ch == '/': str_val.append('/')
+                        else: str_val.append(esc_ch)
+                        continue
+                    if nxt == quote_char:
+                        self._advance()
+                        closed = True
+                        break
                     str_val.append(self._advance())
-                if self._peek() == '"':
-                    self._advance()
+
+                if not closed:
+                    raise LexError("Stringa non chiusa alla fine del file", start_line, start_col, quote_char)
                 text = "".join(str_val)
                 tokens.append(Token(TokenType.LIT_STR, text, start_line, start_col, len(text) + 2))
                 continue
 
             # Numeri (Interi e Float, inclusa notazione scientifica tipo 1e-5)
-            if ch.isdigit():
-                num_chars = []
-                is_float = False
-                while self._peek().isdigit() or self._peek() in ('.', 'e', 'E'):
-                    if self._peek() == '.' and self._peek(1) == '.':
+            if '0' <= ch <= '9':
+                num_chars = [self._advance()]
+                has_dot = False
+                has_exp = False
+
+                while True:
+                    cur = self._peek()
+                    if cur == '.' and self._peek(1) == '.':
                         # Interrompi se è un operatore di range ..
                         break
-                    if self._peek() == '.':
-                        is_float = True
-                    if self._peek() in ('e', 'E'):
-                        is_float = True
+                    if cur == '.':
+                        if has_dot:
+                            num_chars.append(self._advance())
+                            while ('0' <= self._peek() <= '9') or self._peek() in ('.', 'e', 'E'):
+                                num_chars.append(self._advance())
+                            malformed = "".join(num_chars)
+                            raise LexError(f"Numero malformato '{malformed}': punti decimali multipli", start_line, start_col, malformed)
+                        if has_exp:
+                            num_chars.append(self._advance())
+                            while ('0' <= self._peek() <= '9') or self._peek() in ('.', 'e', 'E'):
+                                num_chars.append(self._advance())
+                            malformed = "".join(num_chars)
+                            raise LexError(f"Numero malformato '{malformed}': punto decimale dopo esponente", start_line, start_col, malformed)
+                        has_dot = True
+                        num_chars.append(self._advance())
+                        if not ('0' <= self._peek() <= '9'):
+                            malformed = "".join(num_chars)
+                            raise LexError(f"Numero malformato '{malformed}': attese cifre dopo il punto decimale", start_line, start_col, malformed)
+                        continue
+
+                    if cur in ('e', 'E'):
+                        if has_exp:
+                            num_chars.append(self._advance())
+                            while ('0' <= self._peek() <= '9') or self._peek() in ('.', 'e', 'E', '+', '-'):
+                                num_chars.append(self._advance())
+                            malformed = "".join(num_chars)
+                            raise LexError(f"Numero malformato '{malformed}': esponente multiplo", start_line, start_col, malformed)
+                        has_exp = True
                         num_chars.append(self._advance())
                         if self._peek() in ('+', '-'):
                             num_chars.append(self._advance())
+                        if not ('0' <= self._peek() <= '9'):
+                            malformed = "".join(num_chars)
+                            raise LexError(f"Numero malformato '{malformed}': attese cifre dopo l'esponente", start_line, start_col, malformed)
                         continue
-                    num_chars.append(self._advance())
+
+                    if '0' <= cur <= '9':
+                        num_chars.append(self._advance())
+                        continue
+
+                    break
+
                 num_str = "".join(num_chars)
-                ttype = TokenType.LIT_FLOAT if is_float else TokenType.LIT_INT
+                ttype = TokenType.LIT_FLOAT if (has_dot or has_exp) else TokenType.LIT_INT
                 tokens.append(Token(ttype, num_str, start_line, start_col, len(num_str)))
                 continue
 
             # Identificatori, parole chiave e casi morfologici
-            if ch.isalpha() or ch == '_':
+            if ('a' <= ch <= 'z') or ('A' <= ch <= 'Z') or ch == '_':
                 ident_chars = []
-                while self._peek().isalnum() or self._peek() == '_':
+                while ('a' <= self._peek() <= 'z') or ('A' <= self._peek() <= 'Z') or ('0' <= self._peek() <= '9') or self._peek() == '_':
                     ident_chars.append(self._advance())
                 ident_str = "".join(ident_chars)
 
@@ -311,7 +385,7 @@ class Lexer:
                     continue
 
                 # Verifica se seguito da :case (es. x:m o w:b o loss:m)
-                if self._peek() == ':' and self._peek(1) in CASE_LETTERS and not (self._peek(2).isalnum() or self._peek(2) == '_'):
+                if self._peek() == ':' and self._peek(1) in CASE_LETTERS and not (('a' <= self._peek(2) <= 'z') or ('A' <= self._peek(2) <= 'Z') or ('0' <= self._peek(2) <= '9') or self._peek(2) == '_'):
                     self._advance() # salta ':'
                     case_char = self._advance() # consuma lettera di caso
                     tokens.append(Token(
@@ -322,7 +396,7 @@ class Lexer:
                     continue
 
                 # Verifica se seguito da .case (es. dim.s o x.b)
-                if self._peek() == '.' and self._peek(1) in CASE_LETTERS and not (self._peek(2).isalnum() or self._peek(2) == '_'):
+                if self._peek() == '.' and self._peek(1) in CASE_LETTERS and not (('a' <= self._peek(2) <= 'z') or ('A' <= self._peek(2) <= 'Z') or ('0' <= self._peek(2) <= '9') or self._peek(2) == '_'):
                     self._advance() # salta '.'
                     case_char = self._advance()
                     tokens.append(Token(
@@ -336,8 +410,9 @@ class Lexer:
                 tokens.append(Token(TokenType.IDENT, ident_str, start_line, start_col, len(ident_str)))
                 continue
 
-            # Carattere sconosciuto
-            self._advance()
+            # Carattere illegale o non riconosciuto
+            bad_ch = self._advance()
+            raise LexError(f"Carattere illegale o non riconosciuto: '{bad_ch}'", start_line, start_col, bad_ch)
 
         tokens.append(Token(TokenType.EOF, "", self.line, self.col, 0))
         return tokens

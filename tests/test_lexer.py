@@ -1,8 +1,17 @@
 """
-Unit test per il Lexer di JANUS.
+Unit test e Fuzz test per il Lexer e la gestione errori CLI di JANUS.
 """
 import unittest
-from janus.lexer import Lexer, TokenType
+import tempfile
+import os
+import argparse
+from io import StringIO
+from unittest.mock import patch
+from hypothesis import given, strategies as st, settings
+
+from janus.lexer import Lexer, TokenType, LexError
+from janus.parser import Parser, ParseError
+from janus.cli import cmd_compile, cmd_run, cmd_check, cmd_gbnf, cmd_export_jsonschema
 
 class TestLexer(unittest.TestCase):
     def test_case_identification(self):
@@ -48,6 +57,140 @@ class TestLexer(unittest.TestCase):
             TokenType.OP_RELU, TokenType.OP_SMAX
         ]
         self.assertEqual([t.type for t in tokens[:-1]], expected)
+
+    def test_illegal_character_raises_lex_error(self):
+        code = "fn foo() pure { let x = $10; }"
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("Carattere illegale", str(ctx.exception))
+        self.assertEqual(ctx.exception.char, "$")
+
+    def test_unclosed_string_newline_raises_lex_error(self):
+        code = 'x = "unclosed string without closing quote\n y = 2'
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("Stringa non chiusa prima della fine della riga", str(ctx.exception))
+
+    def test_unclosed_string_eof_raises_lex_error(self):
+        code = 'x = "string at eof without closing'
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("Stringa non chiusa", str(ctx.exception))
+
+    def test_malformed_number_multiple_dots_raises_lex_error(self):
+        code = "val = 1.2.3"
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("punti decimali multipli", str(ctx.exception))
+
+    def test_malformed_number_incomplete_exponent_raises_lex_error(self):
+        code = "val = 1e"
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("attese cifre dopo l'esponente", str(ctx.exception))
+
+        code2 = "val = 2.5e+"
+        with self.assertRaises(LexError) as ctx2:
+            Lexer(code2).tokenize()
+        self.assertIn("attese cifre dopo l'esponente", str(ctx2.exception))
+
+    def test_malformed_number_trailing_dot_raises_lex_error(self):
+        code = "val = 1."
+        with self.assertRaises(LexError) as ctx:
+            Lexer(code).tokenize()
+        self.assertIn("attese cifre dopo il punto decimale", str(ctx.exception))
+
+    def test_range_operator_number_not_malformed(self):
+        code = "for i in 1..10 { }"
+        tokens = Lexer(code).tokenize()
+        types = [t.type for t in tokens]
+        self.assertIn(TokenType.LIT_INT, types)
+        self.assertIn(TokenType.RANGE, types)
+
+class TestCLIErrorHandling(unittest.TestCase):
+    def test_cli_exit_code_2_on_io_error(self):
+        args = argparse.Namespace(file="/path/to/definitely/non_existent_file.jn", json=False)
+        with self.assertRaises(SystemExit) as ctx:
+            with patch("sys.stderr", new=StringIO()):
+                cmd_check(args)
+        self.assertEqual(ctx.exception.code, 2)
+
+    def test_cli_exit_code_1_on_lex_error(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".jn", delete=False) as f:
+            f.write("let x = $bad_character;")
+            tmp_path = f.name
+        try:
+            args = argparse.Namespace(file=tmp_path, json=False, effects=False)
+            with self.assertRaises(SystemExit) as ctx:
+                with patch("sys.stderr", new=StringIO()):
+                    cmd_check(args)
+            self.assertEqual(ctx.exception.code, 1)
+        finally:
+            os.remove(tmp_path)
+
+    def test_cli_exit_code_1_on_parse_error(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".jn", delete=False) as f:
+            f.write("fn { { {")
+            tmp_path = f.name
+        try:
+            args = argparse.Namespace(file=tmp_path, json=False, effects=False)
+            with self.assertRaises(SystemExit) as ctx:
+                with patch("sys.stderr", new=StringIO()):
+                    cmd_check(args)
+            self.assertEqual(ctx.exception.code, 1)
+        finally:
+            os.remove(tmp_path)
+
+    def test_cli_exit_code_0_on_success(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".jn", delete=False) as f:
+            f.write("fn ok() pure { ret 42; }")
+            tmp_path = f.name
+        try:
+            args = argparse.Namespace(file=tmp_path, json=False, effects=False)
+            with patch("sys.stdout", new=StringIO()):
+                cmd_check(args)  # non solleva SystemExit, termina con 0
+        finally:
+            os.remove(tmp_path)
+
+    def test_cli_compile_exit_code_1_on_syntax_error_no_traceback(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".jn", delete=False) as f:
+            f.write("fn syntax_error(")
+            tmp_path = f.name
+        try:
+            args = argparse.Namespace(file=tmp_path, json=False, target="pytorch", output=None, quiet=True, ignore_warnings=False)
+            with self.assertRaises(SystemExit) as ctx:
+                with patch("sys.stderr", new=StringIO()) as fake_err:
+                    cmd_compile(args)
+                    self.assertIn("Errore di sintassi", fake_err.getvalue())
+            self.assertEqual(ctx.exception.code, 1)
+        finally:
+            os.remove(tmp_path)
+
+    def test_cli_run_exit_code_1_on_syntax_error_no_traceback(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".jn", delete=False) as f:
+            f.write("fn syntax_error(")
+            tmp_path = f.name
+        try:
+            args = argparse.Namespace(file=tmp_path)
+            with self.assertRaises(SystemExit) as ctx:
+                with patch("sys.stderr", new=StringIO()):
+                    cmd_run(args)
+            self.assertEqual(ctx.exception.code, 1)
+        finally:
+            os.remove(tmp_path)
+
+# =========================================================================
+# Fuzz Testing con Hypothesis: garantisce l'assenza di crash non gestiti
+# =========================================================================
+@given(st.text(max_size=300))
+@settings(max_examples=150, deadline=None)
+def test_fuzz_lexer_and_parser(random_code):
+    try:
+        tokens = Lexer(random_code).tokenize()
+        Parser(tokens).parse()
+    except (LexError, ParseError):
+        # Rifiuto corretto di testo casuale non conforme
+        pass
 
 if __name__ == "__main__":
     unittest.main()
