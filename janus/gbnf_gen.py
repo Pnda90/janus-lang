@@ -104,6 +104,50 @@ class GBNFGenerator:
 
         return "\n".join(lines)
 
+    def generate_tool_json_call_grammar(self, schema: SchemaDecl) -> str:
+        """
+        Sintetizza una grammatica GBNF per invocare un tool in formato JSON:
+        {"tool": "NomeTool", "args": { ... }}
+        """
+        field_parts = []
+        for i, p in enumerate(schema.inputs):
+            ptype = self._map_type(p.type_expr)
+            field_rule = f'"\\"{p.name}\\": " ws {ptype}'
+            if p.default is not None:
+                if i == 0:
+                    field_parts.append(f'({field_rule})?')
+                else:
+                    field_parts.append(f'("," ws {field_rule})?')
+            else:
+                if i == 0:
+                    field_parts.append(f'({field_rule})')
+                else:
+                    field_parts.append(f'("," ws {field_rule})')
+
+        fields_str = ' ws '.join(field_parts) if field_parts else ''
+        if fields_str:
+            args_rule = f'{schema.name}Args ::= "{{" ws {fields_str} ws "}}"'
+        else:
+            args_rule = f'{schema.name}Args ::= "{{" ws "}}"'
+
+        call_rule = f'{schema.name}Call ::= "{{" ws "\\"tool\\": \\"{schema.name}\\", \\"args\\": " ws {schema.name}Args ws "}}"'
+
+        lines = [
+            f"# GBNF JSON Tool Call Grammar for JANUS: {schema.name}",
+            f"root ::= {schema.name}Call",
+            "",
+            call_rule,
+            args_rule,
+            "",
+            'ws ::= [ \\t\\n\\r]*',
+            'string ::= ["] [^"\\\\]* ["]',
+            'number ::= ("-"? [0-9]+ ("." [0-9]+)?)',
+            'boolean ::= ("true" | "false")',
+            'string_list ::= "[" ws (string ("," ws string)*)? ws "]"',
+            'number_list ::= "[" ws (number ("," ws number)*)? ws "]"',
+        ]
+        return "\n".join(lines)
+
     def _map_type(self, type_expr: Any) -> str:
         if isinstance(type_expr, PrimitiveType):
             if type_expr.name == "str":

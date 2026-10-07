@@ -1,0 +1,2955 @@
+{
+  "metadata": {
+    "commit": "527cac47544812328f54ad944e8fdb4ac1995a34",
+    "timestamp": "2026-10-07T16:22:54.998067+00:00",
+    "backend": "mock",
+    "is_mock": true,
+    "warning": "SIMULATED / MOCK DATA: DO NOT REPORT AS REAL MEASUREMENTS",
+    "url": "mock://internal",
+    "model": "mock-model",
+    "temperature": 0.0,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "conditions": [
+      "unconstrained",
+      "json_schema",
+      "janus_gbnf"
+    ],
+    "num_tasks": 20,
+    "elapsed_seconds": 0.0107
+  },
+  "summary": {
+    "unconstrained": {
+      "syntax_validity": {
+        "mean": 0.9,
+        "std": 0.0
+      },
+      "schema_conformance": {
+        "mean": 0.7667,
+        "std": 0.0236
+      },
+      "type_conformance": {
+        "mean": 0.7333,
+        "std": 0.0236
+      },
+      "tool_choice": {
+        "mean": 0.9,
+        "std": 0.0
+      },
+      "semantic_args": {
+        "mean": 0.9,
+        "std": 0.0
+      },
+      "perfect_calls": {
+        "mean": 0.7333,
+        "std": 0.0236
+      },
+      "total_tokens": {
+        "mean": 679.3333,
+        "std": 8.7305
+      }
+    },
+    "json_schema": {
+      "syntax_validity": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "schema_conformance": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "type_conformance": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "tool_choice": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "semantic_args": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "perfect_calls": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "total_tokens": {
+        "mean": 615.0,
+        "std": 0.0
+      }
+    },
+    "janus_gbnf": {
+      "syntax_validity": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "schema_conformance": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "type_conformance": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "tool_choice": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "semantic_args": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "perfect_calls": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "total_tokens": {
+        "mean": 615.0,
+        "std": 0.0
+      }
+    }
+  },
+  "results": {
+    "42": {
+      "unconstrained": {
+        "syntax_valid": 18,
+        "schema_conformance": 15,
+        "type_conformance": 14,
+        "tool_choice": 18,
+        "semantic_args": 18,
+        "perfect_calls": 14,
+        "total_tokens": 686,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 101 (char 100)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042, \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 43
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 88 (char 87)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\", \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 52
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\", \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 57
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": \"8421\", \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Field 'pid': expected int, got str"
+              ]
+            },
+            "perfect": false,
+            "tokens": 22
+          }
+        ]
+      },
+      "json_schema": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      },
+      "janus_gbnf": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      }
+    },
+    "43": {
+      "unconstrained": {
+        "syntax_valid": 18,
+        "schema_conformance": 16,
+        "type_conformance": 15,
+        "tool_choice": 18,
+        "semantic_args": 18,
+        "perfect_calls": 15,
+        "total_tokens": 667,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 93 (char 92)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true, \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 50
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 102 (char 101)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": \"6379\", \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Field 'port_map': expected int, got str"
+              ]
+            },
+            "perfect": false,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\", \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 52
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      },
+      "json_schema": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      },
+      "janus_gbnf": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      }
+    },
+    "44": {
+      "unconstrained": {
+        "syntax_valid": 18,
+        "schema_conformance": 15,
+        "type_conformance": 15,
+        "tool_choice": 18,
+        "semantic_args": 18,
+        "perfect_calls": 15,
+        "total_tokens": 685,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\", \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 54
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 153 (char 152)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 48
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3, \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 51
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}, \"trailing\": true, }",
+            "validation": {
+              "syntax_valid": false,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": false,
+              "semantic_args_correct": false,
+              "perfect_call": false,
+              "errors": [
+                "JSON Syntax Error: Illegal trailing comma before end of object: line 1 column 123 (char 122)"
+              ]
+            },
+            "perfect": false,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\", \"reasoning_step\": \"Calling default index\", \"tool_version\": \"2.1\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": false,
+              "type_conformance": false,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": false,
+              "errors": [
+                "Hallucinated unknown fields: ['reasoning_step', 'tool_version']"
+              ]
+            },
+            "perfect": false,
+            "tokens": 47
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      },
+      "json_schema": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      },
+      "janus_gbnf": {
+        "syntax_valid": 20,
+        "schema_conformance": 20,
+        "type_conformance": 20,
+        "tool_choice": 20,
+        "semantic_args": 20,
+        "perfect_calls": 20,
+        "total_tokens": 615,
+        "details": [
+          {
+            "task_id": "tool_01",
+            "output": "{\"tool\": \"WebSearch\", \"args\": {\"query\": \"PyTorch release notes\", \"max_results\": 5}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 27
+          },
+          {
+            "task_id": "tool_02",
+            "output": "{\"tool\": \"DbFetch\", \"args\": {\"table\": \"users\", \"record_id\": 1042}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 24
+          },
+          {
+            "task_id": "tool_03",
+            "output": "{\"tool\": \"SafeCalc\", \"args\": {\"expr\": \"3.14159 * 2.0^2\", \"precision\": 4}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_04",
+            "output": "{\"tool\": \"SendEmail\", \"args\": {\"recipient\": \"ops@company.org\", \"subject\": \"High Memory\", \"body\": \"RAM > 90%\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 36
+          },
+          {
+            "task_id": "tool_05",
+            "output": "{\"tool\": \"ReadFile\", \"args\": {\"filepath\": \"/etc/hosts\", \"max_bytes\": 1024}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_06",
+            "output": "{\"tool\": \"WriteFile\", \"args\": {\"filepath\": \"/var/log/build.log\", \"content\": \"BUILD SUCCESS\", \"append\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 31
+          },
+          {
+            "task_id": "tool_07",
+            "output": "{\"tool\": \"StockTicker\", \"args\": {\"symbol\": \"NVDA\", \"currency\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 23
+          },
+          {
+            "task_id": "tool_08",
+            "output": "{\"tool\": \"SummarizeText\", \"args\": {\"text\": \"Q3 earnings rose 15% due to robust AI chip demand...\", \"max_words\": 50}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 37
+          },
+          {
+            "task_id": "tool_09",
+            "output": "{\"tool\": \"HttpPost\", \"args\": {\"url\": \"https://api.gateway.io/v1/notify\", \"payload_json\": \"{\\\"event\\\": \\\"deploy\\\"}\", \"timeout_sec\": 10}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 41
+          },
+          {
+            "task_id": "tool_10",
+            "output": "{\"tool\": \"VectorSearch\", \"args\": {\"collection\": \"kb_articles\", \"vector_dim\": 1536, \"top_k\": 3}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_11",
+            "output": "{\"tool\": \"GitCheckout\", \"args\": {\"branch\": \"feature/agent-dsl\", \"create_new\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 26
+          },
+          {
+            "task_id": "tool_12",
+            "output": "{\"tool\": \"ContainerRun\", \"args\": {\"image\": \"redis:7-alpine\", \"port_map\": 6379, \"detached\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 34
+          },
+          {
+            "task_id": "tool_13",
+            "output": "{\"tool\": \"RegexMatch\", \"args\": {\"pattern\": \"^[\\\\w.-]+@[\\\\w.-]+$\", \"text\": \"user@example.com\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_14",
+            "output": "{\"tool\": \"ParseJson\", \"args\": {\"json_str\": \"{\\\"id\\\": 1, \\\"active\\\": true}\", \"strict\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_15",
+            "output": "{\"tool\": \"SlackNotify\", \"args\": {\"channel\": \"#ml-training\", \"message\": \"Model checkpoint saved: ep=100\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 30
+          },
+          {
+            "task_id": "tool_16",
+            "output": "{\"tool\": \"GenerateHash\", \"args\": {\"data\": \"janus-runtime-2026\", \"algorithm\": \"sha256\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 28
+          },
+          {
+            "task_id": "tool_17",
+            "output": "{\"tool\": \"TranscribeAudio\", \"args\": {\"file_uri\": \"s3://media/meeting_01.mp3\", \"language\": \"en\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 33
+          },
+          {
+            "task_id": "tool_18",
+            "output": "{\"tool\": \"ConvertCurrency\", \"args\": {\"amount\": 150.5, \"from_curr\": \"EUR\", \"to_curr\": \"USD\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 32
+          },
+          {
+            "task_id": "tool_19",
+            "output": "{\"tool\": \"S3Upload\", \"args\": {\"bucket\": \"corporate-data\", \"key\": \"reports/q3.txt\", \"data\": \"Sales: $100k\"}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 38
+          },
+          {
+            "task_id": "tool_20",
+            "output": "{\"tool\": \"KillProcess\", \"args\": {\"pid\": 8421, \"force\": true}}",
+            "validation": {
+              "syntax_valid": true,
+              "schema_conformance": true,
+              "type_conformance": true,
+              "tool_choice_correct": true,
+              "semantic_args_correct": true,
+              "perfect_call": true,
+              "errors": []
+            },
+            "perfect": true,
+            "tokens": 22
+          }
+        ]
+      }
+    }
+  }
+}
