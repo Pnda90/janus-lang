@@ -13,6 +13,11 @@ from janus.ast_nodes import (
     IndexExpr, FieldAccessExpr, TupleExpr, ListExpr, RangeExpr
 )
 
+class JanusToolNotRegistered(Exception):
+    """Sollevata quando un tool invocato non è registrato nel runtime."""
+    pass
+
+
 class CodeGenerator:
     def __init__(self, target: str = "pytorch"):
         self.target = target
@@ -52,6 +57,13 @@ class CodeGenerator:
             "def _janus_agent_call(agent, prompt, tool=None):",
             "    return f'[Agent {agent}: prompt=\"{prompt}\"]'",
             "",
+            "try:",
+            "    from janus.codegen import JanusToolNotRegistered",
+            "except ImportError:",
+            "    class JanusToolNotRegistered(Exception):",
+            "        \"\"\"Sollevata quando un tool invocato non è registrato nel runtime.\"\"\"",
+            "        pass",
+            "",
             "_JANUS_TOOL_REGISTRY = {}",
             "",
             "def register_janus_tool(name):",
@@ -63,10 +75,7 @@ class CodeGenerator:
             "def _janus_call_tool(tool_name, *args, **kwargs):",
             "    if tool_name in _JANUS_TOOL_REGISTRY:",
             "        return _JANUS_TOOL_REGISTRY[tool_name](*args, **kwargs)",
-            "    out_cls = globals().get(f'{tool_name}Output')",
-            "    if out_cls:",
-            "        return out_cls(**{k: v for k, v in kwargs.items() if hasattr(out_cls, '__dataclass_fields__') and k in out_cls.__dataclass_fields__})",
-            "    return {'tool': tool_name, 'args': kwargs, 'status': 'simulated'}",
+            "    raise JanusToolNotRegistered(f\"Tool '{tool_name}' non registrato nel runtime.\")",
             "",
             "class JanusStruct:",
             "    def __sub__(self, other):",
