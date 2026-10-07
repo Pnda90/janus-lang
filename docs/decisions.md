@@ -98,20 +98,20 @@ I risultati empirici delle Fasi 0–5 hanno dimostrato che:
    - *Pro:* Indipendenza dal runtime Python.
    - *Contro:* Sforzo ingegneristico sproporzionato (anni-uomo) che non risolve il problema primario degli agenti AI contemporanei.
 3. **Pivot verso Agentic Execution Graph DSL (Road A):**
-   - *Pro:* Capitalizza interamente l'infrastruttura già creata (parser LL(1), validatore GBNF, type checker, runtime e test suite). Risolve un problema non risolto da Python: fornire a un agente un linguaggio formale sicuro, con tipi verificati a monte e decodifica vincolata a zero allucinazioni di schema.
+   - *Pro:* Capitalizza interamente l'infrastruttura già creata (parser LL(1), validatore GBNF, type checker, runtime e test suite). Risolve un problema non risolto da Python: fornire a un agente un linguaggio formale sicuro, con tipi ed effetti verificati a monte e decodifica vincolata per conformità sintattica e di tipo.
 
 ### Decisione
 Adottare l'Opzione 3 ("Strada A"):
-- JANUS evolve in un **Deterministic Agentic Execution Graph DSL**.
+- JANUS evolve in un **Agentic Execution Graph DSL con Effect System & Constrained Decoding**.
 - `schema` diventa il costrutto primario per tipizzare formalmente Tool e API (input, output, permessi ed effetti `pure`, `io`, `stoc`).
 - Il parser supporta la chiamata esplicita `call tool ToolName(key = val, ...)`.
 - Il type checker segnala `ERR_UNDEFINED_TOOL`, `ERR_EFFECT_PURITY_VIOLATION`, `ERR_MISSING_TOOL_ARGUMENT` ed `ERR_UNKNOWN_TOOL_ARGUMENT`.
 - Il generatore GBNF (`generate_agent_grammar`) sintetizza grammatiche multi-tool per vincolare piani agenziali e chiamate di tool con token masking su llama.cpp/vLLM.
 - Introdotto `ToolSandbox` e `AgentRuntime` in `janus/agent_runtime.py` con audit trail granulare (`ToolTrace`), validazione a runtime e modalità dry-run.
-- Dimostrato sperimentalmente con `benchmarks/agent_eval.py` che la decodifica vincolata GBNF da schemi JANUS garantisce il 100% di conformità sintattica e di tipo eliminando le allucinazioni di parametri.
+- Dimostrato sperimentalmente con `benchmarks/agent_eval.py` che la decodifica vincolata GBNF da schemi JANUS garantisce il 100% di conformità sintattica e di tipo eliminando gli errori di schema.
 
 ### Conseguenze
-- **Positive:** JANUS possiede una value proposition unica, misurabile e difendibile: la generazione deterministica di grafi di tool execution privi di allucinazioni sintattiche per agenti autonomi.
-- **Transizione:** La compatibilità con i programmi tensoriali esistenti (esempi 01-10) è mantenuta al 100%; la suite di test sale a 83 test verdi con 0 regressioni.
+- **Positive:** JANUS possiede una value proposition unica, misurabile e difendibile: la generazione di grafi di tool execution con conformità sintattica e di tipo garantita da token masking e confini formali di purezza per agenti autonomi.
+- **Transizione:** La compatibilità con i programmi tensoriali esistenti (esempi 01-10) è mantenuta al 100%; la suite di test sale a 87 test verdi con 0 regressioni.
 
 

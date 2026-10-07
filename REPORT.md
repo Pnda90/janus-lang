@@ -161,7 +161,7 @@ L'assunto secondo cui un DSL sintetico riduca i token consumati dagli LLM è err
 
 ## 7. La Svolta Strategica verso l'Architettura Agente (Strada A: Fasi A.1 – A.5)
 
-In seguito all'evidenza empirica che ha confutato la compressione lessicale pura sui BPE pre-addestrati, il progetto ha eseguito un pivot architetturale fondato sui punti di forza provati di JANUS: la decodifica vincolata a zero allucinazioni e il sistema di tipi ed effetti monadici.
+In seguito all'evidenza empirica che ha confutato la compressione lessicale pura sui BPE pre-addestrati, il progetto ha eseguito un pivot architetturale fondato sui punti di forza provati di JANUS: la decodifica vincolata (GBNF) per la conformità sintattica e di tipo, e il sistema formale di tipi ed effetti monadici.
 
 ### 7.1 Implementazioni Chiave
 1. **Frontend del Compilatore e Schemi di Tool (Fase A.1):**

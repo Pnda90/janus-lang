@@ -1,4 +1,4 @@
-# Deterministic Agentic Tool Orchestration via Grammar-Constrained Decoding and Monadic Effects: An Empirical Investigation of the JANUS DSL
+# Agentic Tool Orchestration via Grammar-Constrained Decoding and Monadic Effects: An Empirical Investigation of the JANUS DSL
 
 **Author:** Pnda90  
 **Affiliation:** Independent Open Source Research / The JANUS Project  

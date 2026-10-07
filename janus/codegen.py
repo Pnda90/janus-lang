@@ -1,6 +1,6 @@
 """
 Code Generator / Transpiler per JANUS:
-Traduce l'AST di JANUS in codice Python 3.13 / PyTorch / NumPy ad alte prestazioni.
+Traduce l'AST di JANUS in codice Python (3.10+) / PyTorch / NumPy ad alte prestazioni.
 """
 
 import keyword
@@ -29,7 +29,7 @@ class CodeGenerator:
     def generate(self, program: Program) -> str:
         lines = [
             "# Generated automatically by JANUS Compiler (janusc v0.1.0)",
-            "# Target: Python 3.13 / PyTorch / NumPy Acceleration",
+            "# Target: Python (3.10+) / PyTorch / NumPy Acceleration",
             "",
             "import math",
             "try:",

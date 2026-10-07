@@ -8,7 +8,7 @@ version = "0.1.0"
 authors = [
   { name="Pnda90" },
 ]
-description = "JANUS: A Token-Efficient, AI-Native Programming Language for Foundation Models"
+description = "JANUS: LL(1) Agentic Tool Orchestration DSL with Effect System and GBNF Synthesis"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
