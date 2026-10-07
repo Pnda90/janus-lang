@@ -230,6 +230,47 @@ def cmd_tokens(args):
     print(f"  Righe di codice (LoC): {len([l for l in source.splitlines() if l.strip()])}")
     print(f"  Token BPE stimati:     {len(non_empty)}")
 
+def cmd_export_jsonschema(args):
+    source_path = args.file
+    if not os.path.exists(source_path):
+        print(f"Errore: File non trovato '{source_path}'", file=sys.stderr)
+        sys.exit(1)
+
+    with open(source_path, "r", encoding="utf-8") as f:
+        source = f.read()
+
+    try:
+        tokens = Lexer(source).tokenize()
+        ast = Parser(tokens).parse()
+    except ParseError as pe:
+        print(f"Errore di sintassi [{pe.token.line}:{pe.token.col}]: {pe.message}", file=sys.stderr)
+        sys.exit(1)
+
+    from janus.ast_nodes import TypeDecl
+    schemas = [d for d in ast.declarations if isinstance(d, SchemaDecl)]
+    type_decls = {d.name: d for d in ast.declarations if isinstance(d, TypeDecl)}
+
+    if not schemas:
+        print(f"# Nessuna dichiarazione schema trovata in '{source_path}'", file=sys.stderr)
+        sys.exit(1)
+
+    from janus.jsonschema_export import schema_to_json_schema
+
+    results = []
+    for s in schemas:
+        js = schema_to_json_schema(s, mode=args.mode, type_decls=type_decls)
+        results.append(js)
+
+    output_data = results[0] if len(results) == 1 else results
+    out_str = json.dumps(output_data, indent=args.indent)
+
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as out_f:
+            out_f.write(out_str)
+        print(f"JSON Schema esportato con successo in {args.output}")
+    else:
+        print(out_str)
+
 def main():
     parser = argparse.ArgumentParser(
         prog="janusc",
@@ -262,6 +303,13 @@ def main():
     p_gbnf.add_argument("--with-status", action="store_true", help="Includi il campo 'status': 'ok' nella grammatica di output")
     p_gbnf.add_argument("--json", action="store_true", help="Emetti diagnostiche di errore in formato JSON")
 
+    # export-jsonschema
+    p_exp = subparsers.add_parser("export-jsonschema", help="Esporta dichiarazioni schema JANUS verso JSON Schema Draft-07")
+    p_exp.add_argument("file", help="File sorgente .jn contenente dichiarazioni schema")
+    p_exp.add_argument("--mode", default="call", choices=["call", "output"], help="Modalità esportazione: call (default, payload chiamata) o output (risultato)")
+    p_exp.add_argument("-o", "--output", help="File di destinazione (.json)")
+    p_exp.add_argument("--indent", type=int, default=2, help="Livello di indentazione JSON (default: 2)")
+
     # tokens
     p_tok = subparsers.add_parser("tokens", help="Analizza la densità di token del sorgente")
     p_tok.add_argument("file", help="File sorgente .jn")
@@ -276,6 +324,7 @@ def main():
         "run": cmd_run,
         "check": cmd_check,
         "gbnf": cmd_gbnf,
+        "export-jsonschema": cmd_export_jsonschema,
         "tokens": cmd_tokens,
     }
     dispatch[args.command](args)
